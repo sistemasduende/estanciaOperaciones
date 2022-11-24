@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="CreateDlgCA" style="font-size: 10pt; color: #045491" widgetVar="CreateDialogCA" modal="true" resizable="false" appendTo="@(body)" header="Crear gasto"
+                  onShow="PF('CreateDialogCA').initPosition()">
+            <h:form id="CreateFormCA">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{liqfletecontroller.registroModGasto != null}">
+
+                        <p:outputLabel value="Tipo de gasto:" for="tipoGasto" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="tipoGasto" value="#{liqfletecontroller.registroModGasto.tipoGasto.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listatiposgasto.items}" />
+                        </p:selectOneMenu>      
+                        
+                        <p:outputLabel for="fecha" value="Fecha:" style="font-size: 10pt; color: #045491"/>
+                        <p:calendar id="fecha"  pattern="dd/MM/yyyy" required="true" value="#{liqfletecontroller.registroModGasto.fecCarga}" style="font-size: 10pt; color: #045491" showOn="button">
+                            <f:convertDateTime timeZone="#{liqfletecontroller.zona}" pattern="dd/MM/yyyy" />        
+                        </p:calendar>                        
+
+                        <p:outputLabel value="Valor gravado:" for="valorGravado" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="valorGravado" autocomplete="off" value="#{liqfletecontroller.registroModGasto.valorGravado}"  
+                                     style="text-align: right; font-size: 10pt; color: #045491" size="35" maxlength="15" >
+                            <f:convertNumber pattern="#,##0.00" />
+                            <p:ajax process="@all" listener="#{liqfletecontroller.calculaValoresGasto()}" event="keyup" update="valorIva,valorTotal"/>
+                        </p:inputText>      
+                        
+                        <p:outputLabel value="Valor no gravado:" for="valorNoGravado" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="valorNoGravado" autocomplete="off" value="#{liqfletecontroller.registroModGasto.valorNoGravado}"  
+                                     style="text-align: right; font-size: 10pt; color: #045491" size="35" maxlength="15" >
+                            <f:convertNumber pattern="#,##0.00" />
+                            <p:ajax process="@all" listener="#{liqfletecontroller.calculaValoresGasto()}" event="keyup" update="valorTotal"/>
+                        </p:inputText>      
+                        
+                        <p:outputLabel value="Iva(%):" for="porcIva" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="porcIva" autocomplete="off" value="#{liqfletecontroller.registroModGasto.porcIva}"  
+                                     style="text-align: right; font-size: 10pt; color: #045491" size="35" maxlength="15" >
+                            <f:convertNumber pattern="#,##0.00" />
+                            <p:ajax process="@all" listener="#{liqfletecontroller.calculaValoresGasto()}" event="keyup" update="valorIva,valorTotal"/>
+                        </p:inputText> 
+                        
+                        <p:outputLabel value="Valor Iva:" for="valorIva" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="valorIva" value="#{liqfletecontroller.registroModGasto.valorIva}" style="float: right; text-align: right; font-size: 10pt; color: #045491">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                        <p:outputLabel value="Total:" for="valorTotal" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="valorTotal" value="#{liqfletecontroller.registroModGasto.valorTotal}" style="float: right; text-align: right; font-size: 10pt; color: #045491">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+
+                        <p:outputLabel value="Observaciones" for="observaciones" style="font-size: 10pt; color: #045491"/>                        
+                        <p:inputTextarea id="observaciones" maxlength="4000" rows="5" cols="40" 
+                                         value="#{liqfletecontroller.registroModGasto.observaciones}" style="font-size: 10pt; color: #045491 "/>  
+                        
+
+                    </p:panelGrid>
+                    <p:commandButton ajax="true" actionListener="#{liqfletecontroller.agregaGasto()}" value="#{bundle.Save}" 
+                                     update="display,:EditForm:tabViewLiq:datosGastos,:EditForm:tabViewLiq:efectivos,:EditForm:tabViewLiq:gastos,:EditForm:tabViewLiq:vueltoCaja,
+                                     :EditForm:tabViewLiq:cargasSociales,:EditForm:tabViewLiq:totalPagar,:growl" oncomplete="handleSubmit(args,'CreateDialogCA');"
+                                     style="font-size: 10pt; color: #045491"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="CreateDialogCA.hide()"
+                                     style="font-size: 10pt; color: #045491" immediate="true"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

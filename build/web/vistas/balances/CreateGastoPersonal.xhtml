@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="CreateDlgGastoPersonal" style="font-size: 10pt; color: #045491" widgetVar="CreateDialogGastoPersonal" modal="true" resizable="false" appendTo="@(body)" header="Gasto de personal"
+                  onShow="PF('CreateDialogGastoPersonal').initPosition()">
+            <h:form id="CreateFormGastoPersonal">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{balancecontroller.registroModGastoPersonal != null}">
+
+                        <p:outputLabel for="fecha" value="Fecha:" style="font-size: 10pt; color: #045491"/>
+                        <p:calendar id="fecha"  pattern="dd/MM/yyyy" required="true" value="#{balancecontroller.registroModGastoPersonal.fecha}" style="font-size: 10pt; color: #045491" showOn="button"
+                                    readonly="#{balancecontroller.noEditable}" >
+                                <f:convertDateTime timeZone="#{balancecontroller.zona}" pattern="dd/MM/yyyy" />        
+                        </p:calendar>  
+                        
+                        <p:outputLabel value="Empleado:" for="empleado" style="font-size: 10pt; color: #045491"/>
+                        <p:selectOneMenu id="empleado" value="#{balancecontroller.registroModGastoPersonal.empleado.id}" 
+                                     required="true" style="font-size: 10pt; color: #045491 "
+                                     disabled="#{balancecontroller.noEditable}"
+                                     filter="true" filterMatchMode="contains">
+                            <f:selectItems value="#{balancecontroller.listaEmpleados}"/>
+                        </p:selectOneMenu>                          
+                        
+                        <p:outputLabel value="Tipo de gasto:" for="tipoGasto" style="font-size: 10pt; color: #045491"/>
+                        <p:selectOneMenu id="tipoGasto" value="#{balancecontroller.registroModGastoPersonal.tipoGasto.id}" 
+                                     required="true" style="font-size: 10pt; color: #045491 "
+                                     disabled="#{balancecontroller.noEditable}"
+                                     filter="true" filterMatchMode="contains">
+                            <f:selectItems value="#{listatiposgasto.items}"/>
+                        </p:selectOneMenu>  
+                        
+                        <p:outputLabel value="Valor:" for="valorGasto"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="valorGasto" required="true"  value="#{balancecontroller.registroModGastoPersonal.valor}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right" 
+                                     readonly="#{balancecontroller.noEditable}"
+                                     autocomplete="off" >
+                        </p:inputNumber>
+                        
+                        <p:outputLabel value="Observaciones" for="obs" style="font-size: 10pt; color: #045491 "/>
+                        <p:inputTextarea id="obs" maxlength="255" rows="5" cols="20" 
+                                         readonly="#{balancecontroller.noEditable}"
+                                         value="#{balancecontroller.registroModGastoPersonal.observaciones}" style="font-size: 10pt; color: #045491 "/>  
+                        
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton ajax="true" actionListener="#{balancecontroller.agregaGastoPersonal()}" 
+                                     value="#{bundle.Save}" disabled="#{balancecontroller.noEditable}"
+                                     update="display,
+                                     :EditForm:tabViewCab:datosGastosPersonal,
+                                     :EditForm:tabViewCab:valorEfectivo,
+                                     :EditForm:tabViewCab:valorGastos,
+                                     :growl" 
+                                     oncomplete="handleSubmit(args,'CreateDialogGastoPersonal');"
+                                     style="font-size: 10pt; color: #045491" />
+                    <p:commandButton value="#{bundle.Cancel}" onclick="CreateDialogGastoPersonal.hide()"
+                                     style="font-size: 10pt; color: #045491" immediate="true"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

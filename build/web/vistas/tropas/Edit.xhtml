@@ -1,0 +1,638 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://java.sun.com/jsf/composite/componentes">
+    <body>
+    <ui:composition template="./../../Template04.xhtml">
+            <ui:define name="content">
+            <div style="align: center">
+            <h:form id="EditForm">
+                <p:tabView id="tabViewCab">
+                    <p:tab title="Tropa" >
+                    <p:panelGrid columns="4"  rendered="#{tropacontroller.registroMod != null}" style="background: white; width: 100%; border-width: thin; border-style: hidden">
+                        
+                        <h:outputText value="Usuario:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="usuario" value="#{tropacontroller.obtenerNombreUsuario(tropacontroller.registroMod.idUsuario)} " style="font-size: 10pt; color: #045491"/>                        
+
+                        <p:outputLabel for="fecha" value="Fecha ingreso:" style="font-size: 10pt; color: #045491"/>
+                        <p:calendar id="fecha"  pattern="dd/MM/yyyy" required="true" value="#{tropacontroller.registroMod.fecIng}" style="font-size: 10pt; color: #045491" showOn="button"
+                                    disabled="#{tropacontroller.registroMod.procesada eq '1'}" >
+                                <f:convertDateTime timeZone="#{tropacontroller.zona}" pattern="dd/MM/yyyy" />        
+                        </p:calendar>   
+                                
+                        <p:outputLabel value="Productor:" for="productor" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="productor" value="#{tropacontroller.registroMod.productor.id}" 
+                                     required="true" style="width: 100%; font-size: 10pt; color: #045491" disabled="#{tropacontroller.registroMod.procesada eq '1'}">
+                                <f:selectItems value="#{listaproductores.items}" />
+                        </p:selectOneMenu>    
+                        
+                        <p:outputLabel value="Número de tropa" for="numTropa" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="numTropa" value="#{tropacontroller.registroMod.numeroTropa}" required="true" 
+                                     style="width: 100%; text-align: right; font-size: 10pt; color: #045491" size="40" maxlength="15" 
+                                     autocomplete="off" 
+                                     readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                        </p:inputText>  
+                        
+                        <p:outputLabel value="Número de factura" for="numFactura" style="font-size: 10pt; color: #045491"/>
+                        <p:panelGrid columns="3"  rendered="#{tropacontroller.registroMod != null}" style="background: white; width: 100%; border-width: thin; border-style: hidden">
+                            <p:inputMask id="puntoVenta" value="#{tropacontroller.registroMod.puntoVenta}" 
+                                     style="width: 100%; text-align: right; font-size: 10pt; color: #045491" size="8" maxlength="5" 
+                                     autocomplete="off"
+                                     readonly="#{tropacontroller.registroMod.procesada eq '1'}" mask="99999" >
+                            </p:inputMask>
+                            <p:inputNumber id="numFactura" value="#{tropacontroller.registroMod.numFactura}" 
+                                     style="width: 100%; text-align: right; font-size: 10pt; color: #045491" size="15" maxlength="10" 
+                                     autocomplete="off" decimalPlaces="0" thousandSeparator=""
+                                     readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                            </p:inputNumber>
+                            <p:selectOneMenu id="tipoFactura" value="#{tropacontroller.registroMod.tipoFactura}" 
+                                         required="true" style="width: 100%; font-size: 10pt; color: #045491 "
+                                         disabled="#{tropacontroller.registroMod.procesada eq '1'}">
+                                <f:selectItem itemLabel="A" itemValue="A"  />
+                                <f:selectItem itemLabel="B" itemValue="B"  />
+                                <f:selectItem itemLabel="C" itemValue="C"  />
+                            </p:selectOneMenu> 
+                        </p:panelGrid>                        
+                        
+
+                        <p:outputLabel value="Dte" for="dte" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="dte" value="#{tropacontroller.registroMod.dte}" required="true" 
+                                     style="width: 100%; text-align: right; font-size: 10pt; color: #045491" maxlength="15" 
+                                     autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                                <f:convertNumber pattern="#,##0" />
+                        </p:inputText>    
+                                               
+                        <p:outputLabel value="Tipo:" for="tipo" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="tipo" value="#{tropacontroller.registroMod.tipo}" 
+                                         required="true" style="width: 100%; font-size: 10pt; color: #045491 "
+                                         disabled="#{tropacontroller.registroMod.procesada eq '1'}" >
+                                <f:selectItem itemLabel="Faena" itemValue="F"  />
+                                <f:selectItem itemLabel="Invernada" itemValue="I"  />
+                                <f:selectItem itemLabel="Terceros" itemValue="T"  />
+                                <p:ajax process="@all" update=":CreateFormDetalle"/>
+                        </p:selectOneMenu> 
+
+                        <p:outputLabel value="Depósito:" for="deposito" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="deposito" value="#{tropacontroller.codDepositoSel}"   
+                                         required="true" style="width: 100%; font-size: 10pt; color: #045491" 
+                                         disabled="#{tropacontroller.registroMod.procesada eq '1'}">
+                                <f:selectItems value="#{listadepositos.items}" />
+                                <p:ajax listener="#{tropacontroller.cambiaDeposito()}"/>
+                        </p:selectOneMenu>          
+
+                        <p:outputLabel value="Comisionista:" for="nombreComisionista" style="font-size: 10pt; color: #045491"/>                        
+                        <p:panelGrid columns="3" style="background: white; width: 100%; border-width: thin; border-style: hidden">
+                            <h:outputText id="nombreComisionista" value="#{tropacontroller.registroMod.comisionista.nombre}" style="font-size: 10pt; color: #045491"/>
+                            <p:commandButton id="createButton" icon="ui-icon-search"  actionListener="#{tropacontroller.buscaComisionista()}" oncomplete="PF('BuscaComisionistaDialog').show()"
+                                             style="font-size: 10pt; color: #045491" disabled="#{tropacontroller.registroMod.procesada eq '1'}"/>                        
+                            <p:commandButton icon="ui-icon-trash" actionListener="#{tropacontroller.eliminaComisionista()}" update="nombreComisionista"
+                                                        style="font-size: 10pt; color: #045491" disabled="#{tropacontroller.registroMod.procesada eq '1'}"/>                                                    
+                        </p:panelGrid>                        
+
+
+                        <p:outputLabel value="Producto:" for="producto" style="font-size: 10pt; color: #045491"/>
+                        <p:selectOneMenu id="producto" value="#{tropacontroller.registroMod.categoria.id}" 
+                                     required="true" style="width: 100%; font-size: 10pt; color: #045491 "
+                                     disabled="#{tropacontroller.registroMod.procesada eq '1'}">
+                                <f:selectItems value="#{listacategorias.items}"/>
+                        </p:selectOneMenu>  
+                           
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                           
+                        <h:outputText value="Cabezas según Dte:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="cabezasDte" value="#{tropacontroller.registroMod.cabezasDte}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0" />
+                        </h:outputText>
+
+                        <h:outputText value="Cabezas vivas:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="cabezasVivas" value="#{tropacontroller.registroMod.cabezasVivas}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0" />
+                        </h:outputText>
+                        
+                        <h:outputText value="Decomisos:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="decomisos" value="#{tropacontroller.registroMod.decomisos}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0" />
+                        </h:outputText>
+                        
+                        <h:outputText value="Cabezas muertas:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="cabMuertas" value="#{tropacontroller.registroMod.cabezasMuertas}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0" />
+                        </h:outputText>
+
+                        <h:outputText value="Cabezas faenadas:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="cabFaenadas" value="#{tropacontroller.registroMod.cabezasFaenadas}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0" />
+                        </h:outputText>
+                        
+                        <h:outputText value="Medias reses:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="mediasReses" value="#{tropacontroller.registroMod.mediasReces}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0" />
+                        </h:outputText>
+
+                        <h:outputText value="Kilos vivos:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="kilosVivos" value="#{tropacontroller.registroMod.kilosVivos}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+
+                        <h:outputText value="Kilos faenados:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="kilosFaenados" value="#{tropacontroller.registroMod.kilosFaenados}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                        <h:outputText value="Kilos decomisados:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="kilosDecomisados" value="#{tropacontroller.registroMod.kilosDecomisados}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+
+                        <h:outputText value="Importe kilos vivos:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="importeKiloVivo" value="#{tropacontroller.registroMod.importeKiloVivo}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                        <h:outputText value="Importe de faena:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="importeFaena" value="#{tropacontroller.registroMod.importeFaena}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+
+                        <h:outputText value="Valor ingresos brutos:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="valorIngBrutos" value="#{tropacontroller.registroMod.valorIngBrutos}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                        <h:outputText value="Pago a cuenta de Iva:" style="font-size: 10pt; color: #045491"/>
+                        <p:commandLink actionListener="#{tropacontroller.onClickPagoCIva()}" 
+                                       update=":PagosCuentaIvaForm" oncomplete="PF('PagosCuentaIvaDialog').show()"
+                                       immediate="true" style="text-decoration: underline; color: blue">
+                            <h:outputText id="pagoCuentaIva" value="#{tropacontroller.registroMod.pagoCuentaIva}" 
+                                          style="float: right; font-size: 10pt;text-align: right">                        
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>                            
+                        </p:commandLink>
+                        
+                        <h:outputText value="Importe Comisión:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="importeComision" value="#{tropacontroller.registroMod.importeComision}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>                        
+                        
+                        <h:outputText value="Costo total:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="importeCostoTotal" value="#{tropacontroller.registroMod.importeCostoTotal}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>                        
+                        
+                        <h:outputText value="Flete:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="fletes" value="#{tropacontroller.registroMod.valorFlete}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>                        
+
+                        <h:outputText value="Costo total Tropa:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="importeCostoTotalTropa" value="#{tropacontroller.registroMod.importeCostoTotalTropa}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>                        
+
+                        <h:outputText value="Costo unitario:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="costoUnitarioTropa" value="#{tropacontroller.registroMod.costoUnitario}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.0000" />
+                        </h:outputText>
+                        
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>     
+                        
+                        <h:outputText value="Rendimiento(%):" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="rendimiento" value="#{tropacontroller.registroMod.rendimiento}" style="float: right; text-align: right; font-size: 10pt; color: #045491">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>                               
+                        
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>     
+                        
+                        <p:outputLabel value="Observaciones:" for="observaciones" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="observaciones" value="#{tropacontroller.registroMod.observaciones}"  
+                                     style="width: 100%; text-align: left; font-size: 10pt; color: #045491" size="40" maxlength="255" 
+                                     autocomplete="off" 
+                                     readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                        </p:inputText>  
+                        
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>                             
+                        
+                        <p:outputLabel value="Estado:" for="estado" style="font-size: 10pt; color: #045491" />
+                        <p:selectOneMenu id="estado" value="#{tropacontroller.registroMod.procesada}" 
+                                         required="true" style="width: 100%; font-size: 10pt; color: #045491" disabled="#{tropacontroller.registroMod.procesada eq '1' or tropacontroller.modo eq 'N'}">
+                            <f:selectItem itemLabel="En trámite" itemValue="0" />                            
+                            <f:selectItem itemLabel="Procesada" itemValue="1" />
+                            <f:selectItem itemLabel="En stock" itemValue="2" />
+                        </p:selectOneMenu>
+                        
+                    </p:panelGrid>
+                    
+                    </p:tab>
+                    
+                    <p:tab title="Detalle de tropa" id="tabDetalle">
+                        <p:commandButton id="createDetTropa" icon="ui-icon-plus"   value="Crear detalle"  
+                           actionListener="#{tropacontroller.nuevoDetalle()}" update=":CreateFormDetalle" oncomplete="PF('CreateDialogDetalle').show()"
+                           style="font-size: 10pt; color: #045491" immediate="true" 
+                           disabled="#{tropacontroller.registroMod.procesada eq '1' or tropacontroller.registroMod.procesada eq '2'}"/>
+                        
+                        <br/>                           
+                        <br/> 
+                        
+                        <p:dataTable id="datosDetalles" 
+                                   paginatorPosition="top"
+                                   value="#{tropacontroller.registroMod.tropaDets}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                            
+                        <p:column style="width: 5%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Cat."/>
+                            </f:facet>
+                            <p:commandLink actionListener="#{tropacontroller.editaDetTropa(item)}" style="text-decoration: underline; color: blue"
+                                           update=":CreateFormDetalle" immediate="true" oncomplete="PF('CreateDialogDetalle').show()">
+                                <h:outputText id="CatNombre"  value="#{item.categoria.nombre}" />
+                            </p:commandLink>
+                        </p:column>
+                        
+                        <p:column style="width: 5%; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Cab. vivas"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.cabezasVivas}">
+                                <f:convertNumber pattern="#,##0" />
+                            </h:outputText>
+                        </p:column>          
+                            
+                        <p:column style="width: 5%; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Cab. Dte"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.cabezasDte}">
+                                <f:convertNumber pattern="#,##0" />
+                            </h:outputText>
+                        </p:column>    
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Kilos vivos"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.kilosVivos}">
+                                <f:convertNumber pattern="#,##0" />
+                            </h:outputText>
+                        </p:column>    
+
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Decomisos"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.decomisos}">
+                                <f:convertNumber pattern="#,##0" />
+                            </h:outputText>
+                        </p:column>                               
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Kilos faenados"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.kilosFaenados}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column> 
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Rendimiento"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.rendimiento}">
+                                <f:convertNumber pattern="#,##0.000" />
+                            </h:outputText>
+                        </p:column>          
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Precio del kilo vivo"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.precioKiloVivo}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>                             
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Importe kilos vivos"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.importeKiloVivo}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>                             
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Precio del kilo faenado"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.precioKiloFaenado}">
+                                <f:convertNumber pattern="#,##0.000" />
+                            </h:outputText>
+                        </p:column>   
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Importe de faena"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.importeFaena}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>                                
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Valor ingresos brutos"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valorIngBrutos}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>    
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Pago a cuenta de Iva"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.pagoCuentaIva}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>     
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Importe Comisión"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.importeComision}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>                               
+                                                        
+                        <p:column style="width: 10%;font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Costo total"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.importeCostoTotal}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column> 
+                            
+                        <p:column  style="width: 50px; text-align: center; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                            </f:facet>
+                            <p:commandButton icon="ui-icon-trash" immediate="true" actionListener="#{tropacontroller.eliminaDetalle(item)}" 
+                                             update="EditForm:tabViewCab, EditForm:tabViewCab:datosDetalles"
+                                             disabled="#{tropacontroller.registroMod.procesada eq '1' or tropacontroller.registroMod.procesada eq '2'}"
+                                             alt="Eliminar"/>
+                        </p:column>                              
+                            
+                        </p:dataTable>
+                    </p:tab>
+                    
+                    
+                    <p:tab title="Detalle de garrones" id="tabDetalleGarron">
+                        
+                        <p:fileUpload  fileUploadListener="#{tropacontroller.armadoArchivoTropa}" mode="advanced" 
+                                       dragDropSupport="false" disabled="#{tropacontroller.registroMod.procesada eq '1' or tropacontroller.registroMod.procesada eq '2'}"
+                                       style="font-size: 10pt; color: #045491"  update=":growl,EditForm:tabViewCab:datosDetallesGarron" sizeLimit="9000000" fileLimit="3" uploadLabel="Cargar" cancelLabel="Cancelar" label="Seleccionar Archivo" process="@this"  />                        
+                        
+                        <br/>                           
+                        
+                        <p:dataTable id="datosDetallesGarron" 
+                                   paginatorPosition="top"
+                                   value="#{tropacontroller.listaGarrones}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   rows="20"
+                                   paginator="true"
+                                   sortBy="#{item.numGarron}"
+                                   >
+                            
+                        <p:column style="width: 23%; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Garrón"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.numGarron}">
+                                <f:convertNumber pattern="#,##0" />
+                            </h:outputText>
+                        </p:column>          
+                            
+                        <p:column style="width: 20%; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Tipo"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.tipo}"/>
+                        </p:column>  
+                            
+                        <p:column style="width: 23%; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Categoría"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.categoria.nombre}"/>
+                        </p:column>    
+                            
+                        <p:column style="width: 24%; font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Kilos"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.kilos}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>    
+
+                        <p:column  style="width: 10%; text-align: center; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                            </f:facet>
+                            <p:commandButton icon="ui-icon-trash" immediate="true" actionListener="#{tropacontroller.eliminaDetalleGarron(item)}" update="EditForm:tabViewCab, EditForm:tabViewCab:datosDetallesGarron" 
+                                             alt="Eliminar" disabled="#{tropacontroller.registroMod.procesada eq '1' or tropacontroller.registroMod.procesada eq '2'}"/>
+                        </p:column>
+                            
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="3" style="text-align:right" footerText="Cantidad de registros: #{tropacontroller.listaGarrones.size()}"/>
+                                <p:column colspan="1" style="text-align:right" footerText="Total de kilos: #{tropacontroller.listaGarrones.stream().map(item->item.kilos).sum()}" />
+                                <p:column/>
+                            </p:row>
+                        </p:columnGroup>                                   
+                            
+                        </p:dataTable>
+                    </p:tab>
+                    
+                    
+                    
+                    <p:tab title="Viajes" id="tabViajes">
+                        <p:commandButton id="createViaje" icon="ui-icon-search"   value="Buscar viajes"
+                                         actionListener="#{tropacontroller.buscaViajes()}" update=":BuscaViajesForm" 
+                                         oncomplete="PF('BuscaViajesDialog').show()"
+                                         disabled="#{tropacontroller.registroMod.procesada eq '1'}"
+                                         style="font-size: 10pt; color: #045491" immediate="true"/>
+                        <br/>                           
+                        <br/> 
+                        
+                        <p:dataTable id="datosViajes" 
+                                   paginatorPosition="top"
+                                   value="#{tropacontroller.registroMod.tropaViajes}" 
+                                   var="item"
+                                   rowKey="#{item.id}"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                            
+                        <p:column style="width: 5%; text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Id"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.viaje.id}" />
+                        </p:column>
+                        
+                        <p:column sortBy="#{item.viaje.fecMov}" style="text-align: left; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText value="#{item.viaje.fecMov}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column style="text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Chofer"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.viaje.chofer.nombre}" />
+                        </p:column>
+                            
+                        <p:column style="text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Origen"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.viaje.localidadByIdOrigen.nombre}" />
+                        </p:column>
+
+                        <p:column style="text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Destino"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.viaje.localidadByIdDestino.nombre}" />
+                        </p:column>
+                        
+                        <p:column style="text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Unidades"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.viaje.unidadesTransportadas}" />
+                        </p:column>                            
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Valor total"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.viaje.valorTotal}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>                                 
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="%"/>
+                            </f:facet>
+                            <p:inputNumber value="#{item.porcAfectado}" required="true" size="10"
+                                     inputStyle="text-align: right"
+                                     style="font-size: 10pt; color: #045491" maxlength="15" 
+                                     readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                                <f:validateLongRange minimum="1" maximum="100"/>
+                                <p:ajax process="@this" 
+                                    listener="#{tropacontroller.calculaValorAfectadoViaje(item)}" event="keyup" 
+                                    update="EditForm:tabViewCab:datosViajes,EditForm:tabViewCab:fletes,
+                                            EditForm:tabViewCab:importeCostoTotalTropa,
+                                            EditForm:tabViewCab:costoUnitarioTropa"/>                                                                                        
+                            </p:inputNumber>        
+                        </p:column>      
+
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Valor afectado"/>
+                            </f:facet>
+                            <p:inputNumber value="#{item.valorAfectado}" required="true" size="10"
+                                     inputStyle="text-align: right"
+                                     style="font-size: 10pt; color: #045491" maxlength="15" 
+                                     readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                                <f:validateLongRange minimum="1"/>
+                                <p:ajax process="@this" 
+                                        listener="#{tropacontroller.calculaPorcAfectadoViaje(item)}" event="keyup" 
+                                    update="EditForm:tabViewCab:datosViajes,EditForm:tabViewCab:fletes,
+                                            EditForm:tabViewCab:importeCostoTotalTropa,
+                                            EditForm:tabViewCab:costoUnitarioTropa"/>                                                                                        
+                                
+                            </p:inputNumber>
+                        </p:column>      
+                            
+                        <p:column  style="text-align: center; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                            </f:facet>
+                            <p:commandButton icon="ui-icon-trash" actionListener="#{tropacontroller.eliminaViaje(item)}"
+                                             update="EditForm:tabViewCab, EditForm:tabViewCab:datosViajes" alt="Eliminar" 
+                                             disabled="#{tropacontroller.registroMod.procesada eq '1'}"
+                                             immediate="true"/>
+                        </p:column>                              
+                            
+                        </p:dataTable>
+                    </p:tab>
+                    
+                    
+                </p:tabView>
+                <br/>                    
+                <p:commandButton action="#{tropacontroller.graba()}" value="#{bundle.Save}" disabled="#{tropacontroller.registroMod.procesada eq '1'}"
+                                 update=":growl" ajax="false" style="font-size: 10pt; color: #045491"/>                        
+                <p:commandButton action="/vistas/tropas/Tropas" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
+
+            </h:form>
+            <ui:include src="CreateDetalle.xhtml"/>   
+            <ui:include src="BuscaViajes.xhtml"/> 
+            <ui:include src="PagosCuentaIva.xhtml"/>   
+            <ui:include src="BuscaComisionista.xhtml"/>   
+            
+            </div>
+            </ui:define>
+    </ui:composition>
+
+    </body>
+</html>

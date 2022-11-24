@@ -1,0 +1,400 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://java.sun.com/jsf/composite/componentes">
+    <body>
+        
+    <ui:composition template="./../../Template04.xhtml">
+            <ui:define name="content">
+            <div style="align: center">
+            <h:form id="EditForm">
+                <p:tabView id="tabViewLiq">
+                    <p:tab title="Liquidación de flete">
+                    <p:panelGrid columns="2" rendered="#{liqfletecontroller.registroMod != null}" style="background: white; width: 100%; border-width: thin; border-style: hidden">
+                        
+                        <h:outputText value="Usuario:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="#{liqfletecontroller.obtenerNombreUsuario(liqfletecontroller.registroMod.idUsuario)} " style="font-size: 10pt; color: #045491"/>
+
+                        <p:outputLabel value="Chofer:" for="chofer" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="chofer" value="#{liqfletecontroller.registroMod.chofer.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listachoferes.items}" />
+                            <p:ajax listener="#{liqfletecontroller.cambiaChofer()}" update=":BuscaViajesForm,:BuscaViajesDlg,:BuscaViajesForm:datosViajes,
+                                tabViewLiq:datosViajes,tabViewLiq:datosEfectivos,
+                                tabViewLiq:viajesSimples,tabViewLiq:valorViajesSimples,
+                                tabViewLiq:viajesDobles,tabViewLiq:valorViajesDobles,
+                                tabViewLiq:totalViajes,tabViewLiq:valorViajes,
+                                EditForm:tabViewLiq:efectivos,EditForm:tabViewLiq:gastos,EditForm:tabViewLiq:vueltoCaja,
+                                EditForm:tabViewLiq:cargasSociales,EditForm:tabViewLiq:totalPagar"/>                                                        
+                        </p:selectOneMenu>  
+                        
+                        <p:outputLabel for="fecha" value="Fecha:" style="font-size: 10pt; color: #045491"/>
+                        <p:calendar id="fecha"  pattern="dd/MM/yyyy" required="true" value="#{liqfletecontroller.registroMod.fecMov}" style="font-size: 10pt; color: #045491" showOn="button">
+                            <f:convertDateTime timeZone="#{liqfletecontroller.zona}" pattern="dd/MM/yyyy" />        
+                        </p:calendar>   
+                        
+                        <p:outputLabel value="Km actuales:" for="kmAct" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="kmAct" autocomplete="off" value="#{liqfletecontroller.registroMod.kilometrosActuales}" required="true" 
+                                     style="width: 100%; text-align: right; font-size: 10pt; color: #045491" size="40" maxlength="15" >
+                            <f:convertNumber pattern="#,##0" />
+                        </p:inputText>           
+                        
+                        <p:outputLabel value="Km anteriores:" for="kmAnt" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="kmAnt" autocomplete="off" value="#{liqfletecontroller.registroMod.kilometrosAnteriores}" required="true" 
+                                     style="width: 100%; text-align: right; font-size: 10pt; color: #045491" size="40" maxlength="15" >
+                            <f:convertNumber pattern="#,##0" />
+                        </p:inputText>   
+                        
+                        <p:outputLabel value="Km recorridos:" for="kmRec" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="kmRec" value="#{liqfletecontroller.registroMod.kilometrosRecorridos}" 
+                                     style="float: right; width: 100%; text-align: right; font-size: 10pt; color: #045491" >
+                            <f:convertNumber pattern="#,##0" />
+                        </h:outputText>
+                        
+                        <p:outputLabel value="Viajes simples:" for="viajesSimples" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="viajesSimples" value="#{liqfletecontroller.registroMod.totalViajesSimples}" 
+                                     style="float: right; width: 100%;text-align: right; font-size: 10pt; color: #045491">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText> 
+                        
+                        <h:outputText value="% Viajes simples:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="valorViajesSimples" value="#{liqfletecontroller.registroMod.valorViajesSimples}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                        <p:outputLabel value="Viajes dobles:" for="viajesDobles" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText  id="viajesDobles" value="#{liqfletecontroller.registroMod.totalViajesDobles}"
+                                     style="float: right; width: 100%; text-align: right; font-size: 10pt; color: #045491">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText> 
+                        
+                        <h:outputText value="% Viajes dobles:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="valorViajesDobles" value="#{liqfletecontroller.registroMod.valorViajesDobles}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                        <p:outputLabel value="Total viajes:" for="totalViajes" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="totalViajes" value="#{liqfletecontroller.registroMod.totalViajes}"  
+                                     style="float: right; text-align: right; font-size: 10pt; color: #045491" >
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                        <h:outputText value="% Total viajes:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="valorViajes" value="#{liqfletecontroller.registroMod.valorViajes}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                        <p:outputLabel value="Efectivos:" for="efectivos" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="efectivos" value="#{liqfletecontroller.registroMod.valorEfectivos}" 
+                                     style="float: right; width: 100%; text-align: right; font-size: 10pt; color: #045491" >
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                        <p:outputLabel value="Gastos:" for="gastos" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="gastos" value="#{liqfletecontroller.registroMod.valorGastos}" 
+                                     style="float: right; width: 100%; text-align: right; font-size: 10pt; color: #045491" >
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                        <p:outputLabel value="Vuelto de caja:" for="vueltoCaja" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="vueltoCaja" value="#{liqfletecontroller.registroMod.vueltoCaja}" 
+                                     style="float: right; width: 100%; text-align: right; font-size: 10pt; color: #045491" >
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                        <p:outputLabel value="Cargas sociales:" for="cargasSociales" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="cargasSociales" autocomplete="off" value="#{liqfletecontroller.registroMod.cargasSociales}" required="true" 
+                                     style="width: 100%; text-align: right; font-size: 10pt; color: #045491" size="40" maxlength="15" >
+                            <f:convertNumber pattern="#,##0.00" />
+                            <p:ajax process="@this,viajesSimples,viajesDobles,valorViajesSimples,valorViajesDobles,valorViajes,vueltoCaja" listener="#{liqfletecontroller.calculaValoresLiq()}" event="keyup" update="totalPagar"/>                            
+                        </p:inputText>
+                        
+                        <h:outputText value="Total a pagar:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="totalPagar" value="#{liqfletecontroller.registroMod.totalPagar}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                    </p:panelGrid>
+                    
+                    </p:tab>
+                    
+                    <p:tab title="Efectivos" id="tabEfectivos">
+                        <p:commandButton id="createEfectivo" icon="ui-icon-search"   value="Buscar efectivos"  
+                           actionListener="#{liqfletecontroller.buscaEfectivos()}" update=":BuscaEfectivosForm" oncomplete="PF('BuscaEfectivosDialog').show()"
+                           style="font-size: 10pt; color: #045491" immediate="true" />
+                        <br/>                           
+                        <br/> 
+                        
+                        <p:dataTable id="datosEfectivos" 
+                                   paginatorPosition="top"
+                                   value="#{liqfletecontroller.registroMod.liquidacionEfectivos}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                            
+                        <p:column style="width: 5%; text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Id"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.efectivoFlete.id}" />
+                        </p:column>
+                        
+                        <p:column sortBy="#{item.efectivoFlete.fecha}" style="text-align: left; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText value="#{item.efectivoFlete.fecha}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column style="text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Usuario"/>
+                            </f:facet>
+                            <h:outputText value="#{liqfletecontroller.obtenerNombreUsuario(item.efectivoFlete.idUsuario)} " style="font-size: 10pt; color: #045491"/>                            
+                        </p:column>
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Valor"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.efectivoFlete.valor}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>      
+                            
+                        <p:column  style="text-align: center; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                            </f:facet>
+                            <p:commandButton icon="ui-icon-trash" immediate="true" actionListener="#{liqfletecontroller.eliminaEfectivo(item)}" update="EditForm:tabViewLiq, EditForm:tabViewLiq:datosEfectivos" alt="Eliminar"/>
+                        </p:column>                              
+                            
+                            
+                        </p:dataTable>
+                    </p:tab>
+                    
+                    <p:tab title="Gastos" id="tabGastos">
+                        <p:commandButton id="buscaGastos" icon="ui-icon-search"   value="Buscar gastos"  
+                                         actionListener="#{liqfletecontroller.buscaGastos()}" update=":BuscaGastosForm" oncomplete="PF('BuscaGastosDialog').show()"
+                           style="font-size: 10pt; color: #045491" immediate="true" />
+                        <br/>                           
+                        <br/> 
+                        <p:dataTable id="datosGastos" 
+                                   paginatorPosition="top"
+                                   value="#{liqfletecontroller.registroMod.liquidacionGastos}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                            
+                            <p:column sortBy="#{item.gasto.tipoGasto.nombre}" style="font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Tipo"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.gasto.tipoGasto.nombre}"/>
+                        </p:column>                        
+                        
+                        <p:column sortBy="#{item.gasto.fecMov}" style="font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText value="#{item.gasto.fecMov}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>  
+                        
+                        <p:column style="font-size: 8pt; color: #045491; text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Cantidad"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.gasto.cantidad}">
+                                <f:convertNumber pattern="#,##0" />
+                            </h:outputText>
+                        </p:column>     
+                        
+                        <p:column style="font-size: 8pt; color: #045491; text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Unidad"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.gasto.unidad.nombre}"/>
+                        </p:column>     
+                        
+                            
+                        <p:column style="font-size: 8pt; color: #045491; text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Gravado"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.gasto.valorGravado}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>   
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="No gravado"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.gasto.valorNoGravado}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Iva"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.gasto.valorIva}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>                                          
+
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Total"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.gasto.valorTotal}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>   
+                            
+                        <p:column style="font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Observaciones"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.gasto.observaciones}"/>
+                        </p:column> 
+                            
+                        <p:column  style="text-align: center; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                            </f:facet>
+                            <p:commandButton icon="ui-icon-trash" immediate="true" actionListener="#{liqfletecontroller.eliminaGasto(item)}" update="EditForm:tabViewLiq, EditForm:tabViewLiq:datosGastos" alt="Eliminar"/>
+                        </p:column>       
+                            
+                        </p:dataTable>
+                    </p:tab>
+                    
+                    <p:tab title="Viajes" id="tabViajes">
+                        <p:commandButton id="createViaje" icon="ui-icon-search"   value="Buscar viajes"
+                                         actionListener="#{liqfletecontroller.buscaViajes()}" update=":BuscaViajesForm" oncomplete="PF('BuscaViajesDialog').show()"
+                                             style="font-size: 10pt; color: #045491" immediate="true" />
+                        <br/>                           
+                        <br/> 
+                        
+                        <p:dataTable id="datosViajes" 
+                                   paginatorPosition="top"
+                                   value="#{liqfletecontroller.registroMod.liquidacionViajes}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                            
+                        <p:column style="width: 5%; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Id"/>
+                            </f:facet>
+                                <h:outputText  value="#{item.viaje.id}"/>
+                        </p:column> 
+                            
+                        <p:column sortBy="#{item.viaje.tipoJaula}" style="width: 5%; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Jaula"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.viaje.tipoJaula}"/>
+                        </p:column>
+                            
+                        <p:column sortBy="#{item.nombre}" style="width: 15%; text-align: left; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Cliente"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.viaje.cliente.nombre}"/>
+                        </p:column>                            
+                        
+                        <p:column sortBy="#{item.viaje.fecMov}" style="font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                                <h:outputText value="#{item.viaje.fecMov}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>  
+                            
+                        <p:column style="text-align: left; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Producto"/>
+                            </f:facet>
+                            <h:outputText  value=" #{item.viaje.tipoProducto eq 'A' ? 'Animales': 'Granos'}"/>
+                        </p:column>                               
+                            
+                        <p:column style="text-align: left; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Origen"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.viaje.localidadByIdOrigen.nombre}"/>
+                        </p:column>
+                        
+                        <p:column style="text-align: left; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Destino"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.viaje.localidadByIdDestino.nombre}"/>
+                        </p:column>
+                            
+                        <p:column style="text-align: left; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Unidades"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.viaje.unidadesTransportadas}"/>
+                        </p:column>                            
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Km"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.viaje.distancia}">
+                                <f:convertNumber pattern="#,##0" />
+                            </h:outputText>
+                        </p:column>                              
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Total"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.viaje.valorTotal}">
+                                <f:convertNumber pattern="#,##0" />
+                            </h:outputText>
+                        </p:column>  
+
+                        <p:column  style="text-align: center; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                            </f:facet>
+                            <p:commandButton icon="ui-icon-trash" immediate="true" actionListener="#{liqfletecontroller.eliminaViaje(item)}" update="EditForm:tabViewLiq, EditForm:tabViewLiq:datosViajes" alt="Eliminar"/>
+                        </p:column>                              
+                            
+                        </p:dataTable>
+                    </p:tab>
+                    
+                </p:tabView>
+                <br/>                    
+                <p:commandButton action="#{liqfletecontroller.graba()}" value="#{bundle.Save}" update=":growl" ajax="false" style="font-size: 10pt; color: #045491"/>                        
+                <p:commandButton action="/vistas/liqFletes/LiqFletes" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
+
+            </h:form>
+            <ui:include src="BuscaGastos.xhtml"/> 
+            <ui:include src="BuscaViajes.xhtml"/> 
+            <ui:include src="BuscaEfectivos.xhtml"/> 
+            </div>
+            </ui:define>
+    </ui:composition>
+
+    </body>
+</html>

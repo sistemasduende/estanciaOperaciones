@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://java.sun.com/jsf/composite/componentes">
+
+    <body>
+
+        <ui:composition template="./../../Template04.xhtml">
+            
+            <ui:define name="content">
+                
+                <h:form id="ListaForm">
+                <h:outputText id="Titulo" value="Entregas por fecha" style="font-size: 12pt; color: #045491; font-weight: bold" />
+                <br/>
+                <br/>                    
+                <h:panelGrid columns="5" columnClasses="list-column-right,list-column-left">
+                    <h:outputLabel for="FEC_DESDE" id="FEC_DESDELabel" value="Desde:" style="font-size: 10pt; color: #045491"/>
+                    <p:calendar id="FEC_DESDE" tabindex="10" pattern="dd/MM/yyyy" value="#{reporteentregacontroller.fec_desde}" showOn="button"
+                        style="font-size: 10pt; color: #045491">
+                        <f:convertDateTime timeZone="#{reporteentregacontroller.zona}" pattern="dd/MM/yyyy" />        
+                    </p:calendar>                
+                
+                    <h:outputLabel for="FEC_HASTA" id="FEC_HASTALabel" value="Hasta:" style="font-size: 10pt; color: #045491"/>
+                    <p:calendar id="FEC_HASTA" tabindex="20" pattern="dd/MM/yyyy" value="#{reporteentregacontroller.fec_hasta}" showOn="button"
+                        style="font-size: 10pt; color: #045491">
+                        <f:convertDateTime timeZone="#{reporteentregacontroller.zona}" pattern="dd/MM/yyyy" />        
+                    </p:calendar> 
+                    
+                    <p:commandButton ajax="true" actionListener="#{reporteentregacontroller.buscaListaDatos()}" value="Buscar"  
+                                     update="datos,:growl"
+                                     style="font-size: 10pt; color: #045491"/>
+                </h:panelGrid> 
+                <br/>
+                <p:dataTable id="datos" 
+                                   paginatorPosition="top"
+                                   value="#{reporteentregacontroller.lista}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   paginator="false"
+                                   sortBy="#{item.numeroTropa}"
+                                   style="font-size: 10pt; color: #045491"
+                                   expandableRowGroups="true"
+                                   >
+                    
+                        <f:facet name="header">
+                            <h:outputText value="Entregas" style="font-size: 8pt; color: #045491;text-align: center"/>
+                        </f:facet>
+                    
+                        <p:headerRow>
+                            <p:column colspan="4" style="font-size: 8pt; color: #045491">
+                                <h:outputText value="Tropa: #{item.numeroTropa}" />
+                            </p:column>
+                        </p:headerRow>                       
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: left; width: 40%">
+                            <f:facet name="header">
+                                <h:outputText value="Local"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.nombreComercial}"/>
+                        </p:column>  
+                    
+                        <p:column style="font-size: 8pt; color: #045491;text-align: center; width: 20%">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.fec_ent}">
+                              <f:convertDateTime timeZone="#{reporteentregacontroller.zona}" pattern="dd/MM/yyyy" />          
+                            </h:outputText>    
+                        </p:column>  
+                       
+                        <p:column style="font-size: 8pt; color: #045491;text-align: left; width: 20%">
+                            <f:facet name="header">
+                                <h:outputText value="Categoría"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.categoria}"/>
+                        </p:column>  
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 20%">
+                            <f:facet name="header">
+                                <h:outputText value="Kilos"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.kilos}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>  
+                    
+                        <p:summaryRow>
+                            <p:column colspan="3" style="font-size: 8pt; color: #045491;text-align: right">
+                                <h:outputText value="Total tropa #{item.numeroTropa}:"/>
+                            </p:column>    
+                            <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                                <h:outputText value="#{reporteentregacontroller.lista.stream().filter(comprobante -> item.numeroTropa == comprobante.getNumeroTropa()).map(e->e.kilos).sum()}">
+                                    <f:convertNumber pattern="#,##0.00" />
+                                </h:outputText>    
+                            </p:column>
+                        </p:summaryRow>  
+                    
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="3" style="text-align:right" footerText="Total general:" />
+                                <p:column style="text-align:right">
+                                    <f:facet name="footer">
+                                        <h:outputText  value="#{reporteentregacontroller.lista.stream().map(item->item.kilos).sum()}">
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>                                    
+                                    </f:facet>
+                                </p:column>   
+                            </p:row>
+                        </p:columnGroup>                          
+
+                    </p:dataTable>  
+                    
+                    <br/>
+                    <h:panelGrid columns="5" columnClasses="list-column-left,list-column-left,list-column-left,list-column-left,list-column-left">
+                        <h:outputText style="font-size: 10pt; color: #045491" value="Tipo:"/>  
+                        <p:selectOneMenu id="TIPO_ARCH" tabindex="100" value="#{reporteentregacontroller.tipo_exportacion}" style="font-size: 10pt; color: #045491" >
+                            <f:selectItems  value="#{reporteentregacontroller.tipos}" />
+                        </p:selectOneMenu>
+                        <p:commandButton value="Exportar archivo" ajax="false" style="font-size: 10pt; color: #045491">
+                            <p:dataExporter type="#{reporteentregacontroller.tipo_exportacion}"  target="datos" fileName="Tropas" preProcessor="#{reporteentregacontroller.preProcessPDF}"/>
+                        </p:commandButton>
+                    </h:panelGrid>
+
+                    </h:form>    
+                    
+            </ui:define>
+
+
+        </ui:composition>
+
+    </body>
+</html>

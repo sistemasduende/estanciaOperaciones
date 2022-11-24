@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 8 oct. 2022 10:23:08 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entidades.Persona" table="persona" catalog="estancia" optimistic-lock="version">
+        <comment>Persona</comment>
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="condIva" class="entidades.CondIva" fetch="select">
+            <column name="idCondIva" not-null="true">
+                <comment>Condici&#243;n ante IVA</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="tipoid" class="entidades.Tipoid" fetch="select">
+            <column name="idTipoId">
+                <comment>Tipo de identificaci&#243;n</comment>
+            </column>
+        </many-to-one>
+        <property name="tipo" type="char">
+            <column name="tipo" length="1" not-null="true">
+                <comment>Tipo: Persona natural: P/Empresa: E</comment>
+            </column>
+        </property>
+        <property name="numIdentificacion" type="string">
+            <column name="num_identificacion" length="15" />
+        </property>
+        <property name="apellido" type="string">
+            <column name="apellido" length="50" />
+        </property>
+        <property name="nombre" type="string">
+            <column name="nombre" length="50" />
+        </property>
+        <property name="nombreFantasia" type="string">
+            <column name="nombre_fantasia" length="100" />
+        </property>
+        <property name="razonSocial" type="string">
+            <column name="razon_social" length="100" />
+        </property>
+        <set name="ventas" table="venta" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idCliente">
+                    <comment>Cliente</comment>
+                </column>
+            </key>
+            <one-to-many class="entidades.Venta" />
+        </set>
+        <set name="personaDireccions" table="persona_direccion" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idPersona" not-null="true">
+                    <comment>Id. de la persona</comment>
+                </column>
+            </key>
+            <one-to-many class="entidades.PersonaDireccion" />
+        </set>
+    </class>
+</hibernate-mapping>

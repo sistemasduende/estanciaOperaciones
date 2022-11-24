@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="CreateDlgEfectivo" style="font-size: 10pt; color: #045491" widgetVar="CreateDialogEfectivo" modal="true" resizable="false" appendTo="@(body)" header="Efectivo"
+                  onShow="PF('CreateDialogEfectivo').initPosition()">
+            <h:form id="CreateFormEfectivo">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{balancecontroller.registroModEfectivo != null}">
+
+                        <p:outputLabel for="fecha" value="Fecha:" style="font-size: 10pt; color: #045491"/>
+                        <p:calendar id="fecha"  pattern="dd/MM/yyyy" required="true" value="#{balancecontroller.registroModEfectivo.fecha}" style="font-size: 10pt; color: #045491" showOn="button"
+                                    readonly="#{balancecontroller.noEditable}" >
+                                <f:convertDateTime timeZone="#{balancecontroller.zona}" pattern="dd/MM/yyyy" />        
+                        </p:calendar>  
+                        
+                        <p:outputLabel value="Turno:" for="turno" style="font-size: 10pt; color: #045491" />
+                        <p:selectOneMenu id="turno" value="#{balancecontroller.registroModEfectivo.turno}" 
+                                         required="true" style="width: 100%; font-size: 10pt; color: #045491" disabled="#{balancecontroller.noEditable}">
+                            <f:selectItem itemLabel="Mañana" itemValue="M" />                            
+                            <f:selectItem itemLabel="Tarde" itemValue="T" />
+                        </p:selectOneMenu>                           
+                        
+                        <p:outputLabel value="Valor:" for="valor"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="valor" required="true"  value="#{balancecontroller.registroModEfectivo.valor}" 
+                                     readonly="#{balancecontroller.noEditable}"                                       
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right" 
+                                     autocomplete="off" >
+                        </p:inputNumber>
+                        
+                        <p:outputLabel value="Bolsa N°:" for="obs" style="font-size: 10pt; color: #045491 "/>
+                        <p:inputTextarea id="obs" maxlength="255" rows="5" cols="20" required="true"
+                                         value="#{balancecontroller.registroModEfectivo.referencia}" style="font-size: 10pt; color: #045491 "/>  
+                        
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton ajax="true" actionListener="#{balancecontroller.agregaEfectivo()}" 
+                                     disabled="#{balancecontroller.noEditable}"
+                                     value="#{bundle.Save}" 
+                                     update="display,
+                                     :EditForm:tabViewCab:datosEfectivos,
+                                     :growl" 
+                                     oncomplete="handleSubmit(args,'CreateDialogEfectivo');"
+                                     style="font-size: 10pt; color: #045491" />
+                    <p:commandButton value="#{bundle.Cancel}" onclick="CreateDialogEfectivo.hide()"
+                                     style="font-size: 10pt; color: #045491" immediate="true"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

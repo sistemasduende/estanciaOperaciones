@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="BuscaViajesDlg" width="100%" style="font-size: 10pt; color: #045491" widgetVar="BuscaViajesDialog" modal="true" resizable="true" 
+                  appendTo="@(body)" header="Seleccionar viajes" position="center">
+            <h:form id="BuscaViajesForm">
+                <h:panelGroup id="display" >
+                    <p:dataTable id="datosViajes" 
+                                   paginatorPosition="top"
+                                   paginator="true"
+                                   value="#{liqfletecontroller.listaViajes}" 
+                                   var="item"
+                                   rowKey="#{item.id}"
+                                   rowIndexVar="fila"
+                                   selection="#{liqfletecontroller.listaViajesSeleccionados}"
+                                   style="font-size: 10pt; color: #045491"
+                                   rows="10"
+                                   >
+                        
+                        <f:facet name="header">
+                            Viajes de Chofer: #{liqfletecontroller.nombreChofer}
+                        </f:facet>
+                        <p:column selectionMode="multiple" style="width: 5%;text-align:center"/>                        
+                        
+                        <p:column style="width: 5%; text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Id"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.id}" />
+                        </p:column>
+                    
+                        <p:column sortBy="#{item.tipoJaula}" style="width: 5%; text-align: left; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Jaula"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.tipoJaula}"/>
+                        </p:column>
+                        
+                        <p:column sortBy="#{item.nombre}" style="width: 20%; text-align: left; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Cliente"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.cliente.nombre}"/>
+                        </p:column>
+                        
+                        <p:column sortBy="#{item.fecMov}" style="text-align: left; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fecMov}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        
+                        <p:column style="text-align: left; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Producto"/>
+                            </f:facet>
+                            <h:outputText  value=" #{item.tipoProducto eq 'A' ? 'Animales': 'Granos'}"/>
+                        </p:column>                        
+                            
+                        <p:column style="text-align: left; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Origen"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.localidadByIdOrigen.nombre}"/>
+                        </p:column>
+                        
+                        <p:column style="text-align: left; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Destino"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.localidadByIdDestino.nombre}"/>
+                        </p:column>
+                        
+                        <p:column style="text-align: left; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Unidades"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.unidadesTransportadas}"/>
+                        </p:column>
+                        
+                        <p:column style="text-align: left; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Km"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.distancia}">
+                                <f:convertNumber pattern="#,##0" />
+                            </h:outputText>
+                        </p:column>
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Total"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valorTotal}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>
+                        
+                        </p:dataTable>
+                    
+                    
+                    <br/>
+                    <p:commandButton ajax="true" actionListener="#{liqfletecontroller.agregaViajes()}" value="Seleccionar"  oncomplete="handleSubmit(args, 'BuscaViajesDialog');"
+                                     update="display,:EditForm:tabViewLiq:datosViajes,:EditForm:tabViewLiq:kmRec,
+                                     :EditForm:tabViewLiq:viajesSimples,:EditForm:tabViewLiq:valorViajesSimples,
+                                     :EditForm:tabViewLiq:viajesDobles,:EditForm:tabViewLiq:valorViajesDobles,
+                                     :EditForm:tabViewLiq:totalViajes,:EditForm:tabViewLiq:valorViajes,
+                                     :EditForm:tabViewLiq:efectivos,:EditForm:tabViewLiq:gastos,:EditForm:tabViewLiq:vueltoCaja,
+                                     :EditForm:tabViewLiq:cargasSociales,:EditForm:tabViewLiq:totalPagar,:growl"                                     
+                                     style="font-size: 10pt; color: #045491" />
+                    
+                    <p:commandButton value="#{bundle.Cancel}" onclick="BuscaViajesDialog.hide()"
+                                     style="font-size: 10pt; color: #045491"/>
+
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

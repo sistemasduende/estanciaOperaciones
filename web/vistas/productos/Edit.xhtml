@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="EditDlg" style="font-size: 10pt; color: #045491" widgetVar="EditDialog" modal="true" resizable="false" appendTo="@(body)" header="Editar producto"
+                  onShow="PF('EditDialog').initPosition()">
+            <h:form id="EditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{productocontroller.registroMod != null}">
+                        
+                        <p:outputLabel value="Nombre:" for="nombre" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="nombre" required="true" autocomplete="off" value="#{productocontroller.registroMod.nombre}"  
+                                     style="width: 100%; text-align: left; font-size: 10pt; color: #045491" size="35" maxlength="100" >
+                        </p:inputText>    
+                        
+                        <p:outputLabel value="Descripción:" for="detalle" style="font-size: 10pt; color: #045491"/>                        
+                        <p:inputTextarea id="detalle" maxlength="4000" rows="5" cols="40" 
+                                         value="#{productocontroller.registroMod.detalle}" style="font-size: 10pt; color: #045491 "/>  
+
+                        <p:outputLabel value="Tipo:" for="tipo" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="tipo" value="#{productocontroller.registroMod.tipo}" 
+                                         required="true" style="width: 300px; font-size: 10pt; color: #045491 ">
+                            <f:selectItem itemValue="C" itemLabel="Corte" />
+                            <f:selectItem itemValue="E" itemLabel="Elaborado" />
+                            <f:selectItem itemValue="A" itemLabel="Armado" />
+                        </p:selectOneMenu>  
+
+                        <p:outputLabel value="Rubro:" for="rubro" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="rubro" value="#{productocontroller.registroMod.rubro.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listarubros.items}" />
+                        </p:selectOneMenu>      
+                        
+                        <p:outputLabel value="Unidad:" for="unidad" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="unidad" value="#{productocontroller.registroMod.unidad.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listaunidades.items}" />
+                        </p:selectOneMenu>      
+
+                        <p:outputLabel value="Stock mínimo:" for="stockMinimo" style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="stockMinimo" value="#{productocontroller.registroMod.stockMinimo}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right" decimalPlaces="2" 
+                                     autocomplete="off" >
+                        </p:inputNumber>                        
+                        
+                        <p:outputLabel value="Estado:" for="estado" style="font-size: 10pt; color: #045491" />
+                        <p:selectOneRadio id="estado" required="true" value="#{productocontroller.registroMod.estado}" unselectable="false" style="font-size: 10pt; color: #045491" >
+                            <f:selectItem itemLabel="Activo" itemValue="1" />
+                            <f:selectItem itemLabel="Inactivo" itemValue="0" />
+                        </p:selectOneRadio>
+                        
+                    </p:panelGrid>
+                    <p:commandButton ajax="true" actionListener="#{productocontroller.graba()}" value="#{bundle.Save}" update="display,:ListaForm:datos,:growl" oncomplete="handleSubmit(args,'EditDialog');"
+                                     style="font-size: 10pt; color: #045491"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="EditDialog.hide()"
+                                     style="font-size: 10pt; color: #045491" immediate="true"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

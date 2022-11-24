@@ -1,0 +1,228 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://java.sun.com/jsf/composite/componentes">
+    <body>
+        
+    <ui:composition template="./../../Template04.xhtml">
+            <ui:define name="content">
+                <div style="align-content: center; width: 90%">
+                <h:form id="EditForm">
+                <p:tabView id="tabViewCab">
+                    <p:tab title="Datos del local">
+                    <p:panelGrid columns="2" rendered="#{localcontroller.registroMod != null}">
+                        <p:outputLabel value="Nombre comercial:" for="nombreComercial" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="nombreComercial" value="#{localcontroller.registroMod.nombreComercial}" maxlength="255" style="width: 100%; font-size: 10pt; color: #045491"/>
+
+                        <p:outputLabel value="Encargado:" for="responsable" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="responsable" value="#{localcontroller.registroMod.responsable}" maxlength="100" style="width: 100%; font-size: 10pt; color: #045491"/>
+                        
+                        <p:outputLabel value="Usuario del encargado:" for="usuario" style="font-size: 10pt; color: #045491"/>
+                        <p:selectOneMenu id="usuario" value="#{localcontroller.registroMod.idUsuarioEncargado}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listausuarios.items}" />
+                        </p:selectOneMenu>     
+                        
+                        <p:outputLabel value="Cliente:" for="cliente" style="font-size: 10pt; color: #045491"/>
+                        <p:selectOneMenu id="cliente" value="#{localcontroller.registroMod.cliente.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listaclientes.items}" />
+                        </p:selectOneMenu>     
+                        
+                        <p:outputLabel value="Provincia:" for="provincia" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="provincia" value="#{localcontroller.registroMod.provincia.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listaprovincias.items}" />
+                            <p:ajax listener="#{localcontroller.onChangeProvincia()}" update="localidad" />
+                        </p:selectOneMenu> 
+                        
+                        <p:outputLabel value="Localidad:" for="localidad" style="font-size: 10pt; color: #045491"/>                                                
+                        <p:selectOneMenu id="localidad" value="#{localcontroller.registroMod.localidad.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{localcontroller.localidades}" />
+                        </p:selectOneMenu>                        
+                        
+                        <p:outputLabel value="Dirección:" for="direccion" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="direccion" value="#{localcontroller.registroMod.direccion}" required="true" maxlength="100" size="40" style="font-size: 10pt; color: #045491"/>
+
+                        <p:outputLabel value="Teléfono:" for="telefono" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="telefono" value="#{localcontroller.registroMod.telefono}" required="true" maxlength="100" size="40" style="font-size: 10pt; color: #045491"/>
+                        
+                        <p:outputLabel value="Email:" for="email" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="email" value="#{localcontroller.registroMod.email}" required="true" maxlength="100" size="40" style="font-size: 10pt; color: #045491"/>
+
+                        <p:outputLabel value="Plantilla cobranzas:" for="plantilla" style="font-size: 10pt; color: #045491"/>                        
+                        <p:inputNumber id="plantilla" value="#{localcontroller.registroMod.plantillaCobranzas}" size="10"
+                                       inputStyle="text-align: right" decimalPlaces="0" emptyValue="zero"
+                                     style="font-size: 10pt; color: #045491" maxlength="15">
+                        </p:inputNumber>  
+                        
+                        <p:outputLabel value="CC Venta Carne:" for="ccVentaCarne" style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="ccVentaCarne" value="#{localcontroller.registroMod.ccVentaLocal}" 
+                                     style="width: 100%; text-align: right; font-size: 10pt; color: #045491" size="15" maxlength="10" 
+                                     autocomplete="off" decimalPlaces="0" thousandSeparator="">
+                        </p:inputNumber>                        
+                        
+                        <p:outputLabel value="Estado:" for="estado" style="font-size: 10pt; color: #045491" />
+                        <p:selectOneRadio id="estado" value="#{localcontroller.registroMod.estado}" unselectable="false" style="font-size: 10pt; color: #045491" >
+                            <f:selectItem itemLabel="Activo" itemValue="1" />
+                            <f:selectItem itemLabel="Inactivo" itemValue="0" />
+                        </p:selectOneRadio>
+                        
+                    </p:panelGrid>
+                    
+                    </p:tab>
+                    
+                    <p:tab title="Rubros" id="tabRubros">
+                        <p:commandButton id="createRubro" icon="ui-icon-search"   value="Buscar rubro"
+                                         actionListener="#{localcontroller.buscaRubros()}" update=":BuscaRubrosForm" 
+                                         oncomplete="PF('BuscaRubrosDialog').show()"
+                                         style="font-size: 10pt; color: #045491" immediate="true"/>
+                        <br/>                           
+                        <br/>                       
+                        <p:dataTable id="datosRubros" 
+                                   paginatorPosition="top"
+                                   value="#{localcontroller.registroMod.localRubros}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 8pt; color: #045491"
+                                   reflow="true"
+                                   >
+
+                        <p:column style="width: 90%;text-align: left; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Rubro"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.rubro.nombre}" />
+                        </p:column>
+
+                        <p:column  style="width: 10%;text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                            </f:facet>
+                            <p:commandButton icon="ui-icon-trash" actionListener="#{localcontroller.eliminaRubro(item)}"
+                                             update="EditForm:tabViewCab,EditForm:tabViewCab:datosRubros" alt="Eliminar" 
+                                             immediate="true"/>
+                        </p:column>   
+                   
+                        </p:dataTable>
+                    </p:tab>
+                    
+                    <p:tab title="Empleados del local" id="tabEmpleados">
+                        <p:commandButton id="createEmpleado" icon="ui-icon-search"   value="Buscar empleados"
+                                         actionListener="#{localcontroller.buscaEmpleados()}" update=":BuscaEmpleadosForm" 
+                                         oncomplete="PF('BuscaEmpleadosDialog').show()"
+                                         style="font-size: 10pt; color: #045491" immediate="true"/>
+                        <br/>                           
+                        <br/>                       
+                        <p:dataTable id="datosEmpleados" 
+                                   paginatorPosition="top"
+                                   value="#{localcontroller.registroMod.localEmpleados}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 8pt; color: #045491"
+                                   reflow="true"
+                                   >
+
+                        <p:column style="width: 10%;text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Legajo"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.empleado.legajo}" />
+                        </p:column>
+
+                        <p:column style="width: 60%; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Nombre"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.empleado.apellido} #{item.empleado.nombre}" />
+                        </p:column>
+                            
+                        <p:column style="width: 25%; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Cargo"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.empleado.cargo.nombre}" />
+                        </p:column>
+                            
+                        <p:column  style="width: 5%;text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                            </f:facet>
+                            <p:commandButton icon="ui-icon-trash" actionListener="#{localcontroller.eliminaEmpleado(item)}"
+                                             update="EditForm:tabViewCab,EditForm:tabViewCab:datosEmpleados" alt="Eliminar" 
+                                             immediate="true"/>
+                        </p:column>   
+                   
+                        </p:dataTable>
+                    </p:tab>
+                    
+                    <p:tab title="Listas de precios" id="tabListasPrecios">
+                        <p:dataTable id="datosListasPrecios" 
+                                   paginatorPosition="top"
+                                   paginator="true"
+                                   rows="10"
+                                   value="#{localcontroller.registroMod.listaPreciosLocals}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 8pt; color: #045491"
+                                   reflow="true"
+                                   >
+
+                        <p:column style="width: 10%;text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Id"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.id}" />
+                        </p:column>
+                            
+                        <p:column style="width: 30%; font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Usuario"/>
+                            </f:facet>
+                            <p:commandLink actionListener="#{localcontroller.editaListaPrecios(item)}" style="text-decoration: underline; color: blue"
+                                           update=":EditDlgListaPrecios,:EditFormListaPrecios" oncomplete="PF('EditDialogListaPrecios').show()">
+                                <h:outputText value="#{localcontroller.obtenerNombreUsuario(item.idUsuario)}" />
+                            </p:commandLink>
+                        </p:column>  
+                            
+                        <p:column style="width: 30%; font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha de inicio"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fecIni}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>                             
+
+                        <p:column style="width: 30%; font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha de fin"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fecFin}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>     
+                   
+                        </p:dataTable>
+                    </p:tab>
+                    
+                </p:tabView>
+                    <p:panelGrid columns="2"  columnClasses="list-column-right,list-column-left" style="background: white; width: 85%; border-width: thin; border-style: hidden" >
+                        <p:commandButton action="#{localcontroller.graba()}" value="#{bundle.Save}" update=":growl" ajax="false" style="font-size: 10pt; color: #045491"/>                        
+                        <p:commandButton action="/vistas/locales/Locales" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
+                    </p:panelGrid>
+            </h:form>
+
+            <ui:include src="BuscaEmpleados.xhtml"/>  
+            <ui:include src="BuscaRubros.xhtml"/>  
+            <ui:include src="EditaListaPrecios.xhtml"/>    
+            </div>                        
+            </ui:define>
+        
+
+    </ui:composition>
+
+    </body>
+</html>
+

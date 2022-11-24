@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="CreateDlgRemanente" style="font-size: 10pt; color: #045491" widgetVar="CreateDialogRemanente" modal="true" resizable="false" appendTo="@(body)" header="Remanentes de la semana"
+                  onShow="PF('CreateDialogRemanente').initPosition()">
+            <h:form id="CreateFormRemanente">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{balancecontroller.registroModRemanente != null}">
+
+                        <p:outputLabel value="Producto:" for="producto" style="font-size: 10pt; color: #045491"/>
+                        <p:selectOneMenu id="producto" value="#{balancecontroller.registroModRemanente.producto.id}" 
+                                     required="true" style="font-size: 10pt; color: #045491 "
+                                     disabled="#{balancecontroller.noEditable}"
+                                     filter="true" filterMatchMode="contains">
+                            <f:selectItems value="#{listaproductos.items}"/>
+                            <p:ajax  listener="#{balancecontroller.onSeleccionaProductoRemanente()}" 
+                                        update="unidad,precio,precioTotal"/>   
+                        </p:selectOneMenu>  
+                        
+                        <p:outputLabel value="Unidad:" for="unidad" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="unidad" value="#{balancecontroller.registroModRemanente.unidad.nombre} " style="font-size: 10pt; color: #045491"/>
+                        
+                        <p:outputLabel value="Cantidad:" for="cantidad"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="cantidad" required="true"  value="#{balancecontroller.registroModRemanente.cantidad}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right" 
+                                     autocomplete="off" readonly="#{balancecontroller.noEditable}">
+                            <p:ajax process="@this"
+                                    listener="#{balancecontroller.calculaPrecioTotalRemanente(balancecontroller.registroModRemanente)}" event="keyup" 
+                                    update="precioTotal"/>     
+                        </p:inputNumber>
+                        
+                        <p:outputLabel value="Precio unitario:" for="precio"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="precio" required="true"  value="#{balancecontroller.registroModRemanente.precioUnitario}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right" decimalPlaces="2"
+                                     autocomplete="off" readonly="#{balancecontroller.noEditable}">
+                                <p:ajax process="@this"
+                                    listener="#{balancecontroller.calculaPrecioTotalRemanente(balancecontroller.registroModRemanente)}" event="keyup" 
+                                    update="precioTotal"/>                                   
+                        </p:inputNumber>
+                        
+                        <h:outputText value="Precio total:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="precioTotal" value="#{balancecontroller.registroModRemanente.precioTotal}" style="float: right; text-align: right; font-size: 10pt; color: #045491">
+                            <f:convertNumber pattern="#,##0" />
+                        </h:outputText>  
+                        
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton ajax="true" actionListener="#{balancecontroller.agregaRemanente()}" 
+                                     value="#{bundle.Save}" disabled="#{balancecontroller.noEditable}"
+                                     update="display,
+                                     :EditForm:tabViewCab:datosRemanentes,:EditForm:tabViewCab:valorRemanente,
+                                     :growl" 
+                                     oncomplete="handleSubmit(args,'CreateDialogRemanente');"
+                                     style="font-size: 10pt; color: #045491" />
+                    <p:commandButton value="#{bundle.Cancel}" onclick="CreateDialogRemanente.hide()"
+                                     style="font-size: 10pt; color: #045491" immediate="true"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

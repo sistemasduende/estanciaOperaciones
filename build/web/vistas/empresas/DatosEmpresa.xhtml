@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://java.sun.com/jsf/composite/componentes">
+    
+    <body>
+
+       <ui:composition template="./../../Template04.xhtml">
+
+            <ui:define name="content">
+                <h:form id="ListaForm">
+
+                <p:dataTable id="datos" 
+                                   paginatorPosition="top"
+                                   value="#{empresacontroller.lista}" 
+                                   var="item"
+                                   selectionMode="single" selection="#{empresacontroller.registroSel}"
+                                   rowKey="#{item.id}"
+                                   rowIndexVar="fila"
+                                   paginator="true"
+                                   rows="10"
+                                   paginatorAlwaysVisible="false"
+                                   reflow="true"
+                                   style="font-size: 10pt; color: #045491"
+                                   >
+                    
+                        <f:facet name="header">
+                            <h:outputText value="Datos de la empresa"/>
+                        </f:facet>
+                    
+                        <p:ajax event="rowSelect"   update="editButton"/>
+                        <p:ajax event="rowUnselect" update="editButton"/>                    
+
+                        <p:column style="font-size: 10pt; color: #045491 ">
+                            <f:facet name="header">
+                                <h:outputText value="Id"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.id}" />
+                        </p:column>
+                    
+                        <p:column style="font-size: 10pt; color: #045491 ">
+                            <f:facet name="header">
+                                <h:outputText value="Nombre fantasía"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.nombreFantasia}" />
+                        </p:column>
+                    
+                        <p:column style="font-size: 10pt; color: #045491 ">
+                            <f:facet name="header">
+                                <h:outputText value="Razón social"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.razonSocial}" />
+                        </p:column>
+                        
+                        <p:column style="font-size: 10pt; color: #045491 ">
+                            <f:facet name="header">
+                                <h:outputText value="CUIT"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.cuit}" />
+                        </p:column>
+                    
+                        <p:column style="font-size: 10pt; color: #045491 ">
+                            <f:facet name="header">
+                                <h:outputText value="Dirección"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.direccion}"  />
+                        </p:column>
+                                            
+                        <p:column style="font-size: 10pt; color: #045491 ">
+                            <f:facet name="header">
+                                <h:outputText value="Provincia"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.provincia.nombre}" />
+                        </p:column>
+                        
+                        <p:column style="font-size: 10pt; color: #045491 ">
+                            <f:facet name="header">
+                                <h:outputText value="Tel. Fijo"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.telefonoFijo}" />
+                        </p:column>           
+                        
+                        <p:column style="font-size: 10pt; color: #045491 ">
+                            <f:facet name="header">
+                                <h:outputText value="Tel. Móvil"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.telefonoMovil}" />
+                        </p:column>      
+                        
+                        
+                        <f:facet name="footer">
+                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" disabled="#{empty empresacontroller.registroSel}"
+                                             actionListener="#{empresacontroller.edita()}" update=":EditForm" oncomplete="PF('EditDialog').show()"
+                                             style="font-size: 10pt; color: #045491 "/>
+                        </f:facet>                        
+                        
+                    </p:dataTable>     
+                    </h:form>    
+
+                    <ui:include src="Edit.xhtml"/>  
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

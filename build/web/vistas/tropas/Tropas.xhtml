@@ -1,0 +1,328 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://java.sun.com/jsf/composite/componentes">
+
+    <body>
+
+        <ui:composition template="./../../Template04.xhtml">
+            
+            <ui:define name="content">
+                
+                <h:form id="ListaForm">
+                <h:outputText id="Titulo" value="Tropas por fecha de faena" style="font-size: 12pt; color: #045491; font-weight: bold" />
+                <br/>
+                <br/>                    
+                <h:panelGrid columns="5" columnClasses="list-column-right,list-column-left">
+                    <h:outputLabel for="FEC_DESDE" id="FEC_DESDELabel" value="Desde:" style="font-size: 10pt; color: #045491"/>
+                    <p:calendar id="FEC_DESDE" tabindex="10" pattern="dd/MM/yyyy" value="#{tropacontroller.fec_desde}" showOn="button"
+                        style="font-size: 10pt; color: #045491">
+                        <f:convertDateTime timeZone="#{tropacontroller.zona}" pattern="dd/MM/yyyy" />        
+                    </p:calendar>                
+                
+                    <h:outputLabel for="FEC_HASTA" id="FEC_HASTALabel" value="Hasta:" style="font-size: 10pt; color: #045491"/>
+                    <p:calendar id="FEC_HASTA" tabindex="20" pattern="dd/MM/yyyy" value="#{tropacontroller.fec_hasta}" showOn="button"
+                        style="font-size: 10pt; color: #045491">
+                        <f:convertDateTime timeZone="#{tropacontroller.zona}" pattern="dd/MM/yyyy" />        
+                    </p:calendar> 
+                    
+                    <p:commandButton ajax="true" actionListener="#{tropacontroller.buscaListaDatos()}" value="Buscar"  
+                                     update="datos,:growl"
+                                     style="font-size: 10pt; color: #045491"/>
+                </h:panelGrid> 
+                <br/>
+                <p:dataTable id="datos" 
+                                   paginatorPosition="top"
+                                   value="#{tropacontroller.lista}" 
+                                   var="item"
+                                   selectionMode="single" selection="#{tropacontroller.registroSel}"
+                                   rowKey="#{item.id}"
+                                   rowIndexVar="fila"
+                                   paginator="true"
+                                   rows="10"
+                                   paginatorAlwaysVisible="false"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                    
+                        <f:facet name="header">
+                            <h:outputText value="Tropas"/>
+                        </f:facet>
+                    
+                        <p:ajax event="rowSelect"  update="createButton editButton deleteButton"/>
+                        <p:ajax event="rowUnselect" update="createButton editButton deleteButton"/>                    
+
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Tropa"/>
+                            </f:facet>
+                            <p:commandLink action="#{tropacontroller.onClick(item)}" ajax="false" style="text-decoration: underline; color: blue">
+                                <h:outputText  value="#{item.numeroTropa}"/>
+                            </p:commandLink>
+                        </p:column>                           
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 0%">
+                            <f:facet name="header">
+                                <h:outputText value="Dte"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.dte}"/>
+                        </p:column>     
+                        
+                        <p:column sortBy="#{item.fecIng}" style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText id="oText191" value="#{item.fecIng}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column> 
+                        
+                        <p:column sortBy="#{item.productor.nombre}" style="font-size: 8pt; color: #045491; text-align: left">
+                            <f:facet name="header">
+                                <h:outputText value="Productor"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.productor.nombre}"/>
+                        </p:column>
+                        
+                        <p:column style="font-size: 8pt; color: #045491; width: 5% ">
+                            <f:facet name="header">
+                                <h:outputText value="Tipo"/>
+                            </f:facet>
+                            <h:outputText  value=" #{item.tipo eq 'F' ? 'Faena': 'Invernada'}"/>
+                        </p:column>
+                        
+                        <p:column sortBy="#{item.deposito.nombre}" style="font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Depósito"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.deposito.nombre}"/>
+                        </p:column>
+                        
+                        <p:column sortBy="#{item.comisionista.nombre}" style="font-size: 8pt; color: #045491; width: 0%">
+                            <f:facet name="header">
+                                <h:outputText value="Comisionista"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.comisionista.nombre}"/>
+                        </p:column>
+                        
+                        <p:column style="font-size: 8pt; color: #045491; width: 0%">
+                            <f:facet name="header">
+                                <h:outputText value="Cab. Dte"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.cabezasDte}">
+                                <f:convertNumber pattern="#,##0" />
+                            </h:outputText>
+                        </p:column>                            
+                        
+                        <p:column style="font-size: 8pt; color: #045491; width: 0%">
+                            <f:facet name="header">
+                                <h:outputText value="Cab. vivas"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.cabezasVivas}">
+                                <f:convertNumber pattern="#,##0" />
+                            </h:outputText>
+                        </p:column>                            
+
+                        <p:column style="font-size: 8pt; color: #045491; width: 0%">
+                            <f:facet name="header">
+                                <h:outputText value="Cab. Faenadas"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.cabezasFaenadas}">
+                                <f:convertNumber pattern="#,##0" />
+                            </h:outputText>
+                        </p:column>    
+                        
+                        <p:column style="font-size: 8pt; color: #045491; width: 0%">
+                            <f:facet name="header">
+                                <h:outputText value="Cab. Muertas"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.cabezasMuertas}">
+                                <f:convertNumber pattern="#,##0" />
+                            </h:outputText>
+                        </p:column>                          
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 0%">
+                            <f:facet name="header">
+                                <h:outputText value="Decom."/>
+                            </f:facet>
+                            <h:outputText  value="#{item.decomisos}">
+                                <f:convertNumber pattern="#,##0" />
+                            </h:outputText>
+                        </p:column>                           
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 6%">
+                            <f:facet name="header">
+                                <h:outputText value="Kilos vivos"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.kilosVivos}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>    
+
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 6%">
+                            <f:facet name="header">
+                                <h:outputText value="Kilos faenados"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.kilosFaenados}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column> 
+
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 0%">
+                            <f:facet name="header">
+                                <h:outputText value="Kilos decomisados"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.kilosDecomisados}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column> 
+
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right;width: 0%">
+                            <f:facet name="header">
+                                <h:outputText value="Importe kilos vivos"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.importeKiloVivo}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>                             
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Importe de faena"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.importeFaena}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>                                
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 7%">
+                            <f:facet name="header">
+                                <h:outputText value="Valor ingresos brutos"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valorIngBrutos}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>    
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 0%">
+                            <f:facet name="header">
+                                <h:outputText value="Pago a cuenta de Iva"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.pagoCuentaIva}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>     
+
+                        <p:column style="font-size: 8pt; color: #045491;text-align: left">
+                            <f:facet name="header">
+                                <h:outputText value="Comisionista"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.comisionista.nombre}"/>
+                        </p:column>                               
+
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 0%">
+                            <f:facet name="header">
+                                <h:outputText value="Importe Comisión"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.importeComision}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>                               
+                                                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 0%">
+                            <f:facet name="header">
+                                <h:outputText value="Costo"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.importeCostoTotal}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>                         
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 7%">
+                            <f:facet name="header">
+                                <h:outputText value="Flete"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valorFlete}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column> 
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Costo total"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.importeCostoTotalTropa}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>  
+
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Costo unitario"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.costoUnitario}">
+                                <f:convertNumber pattern="#,##0.0000" />
+                            </h:outputText>
+                        </p:column>  
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Rendimiento"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.rendimiento}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>  
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: center; width: 6%">
+                            <f:facet name="header">
+                                <h:outputText value="Procesada"/>
+                            </f:facet>
+                            <p:selectBooleanCheckbox value="#{item.procesada eq '1' ? 'true' : 'false'}" disabled="true" />
+                        </p:column>
+                        
+                        <f:facet name="footer">
+                            <p:commandButton id="createButton" ajax="false" icon="ui-icon-plus"   value="#{bundle.Create}"
+                                             action="#{tropacontroller.nuevo}" 
+                                             style="font-size: 10pt; color: #045491"/>
+                            <p:commandButton id="editButton" ajax="false" icon="ui-icon-pencil" value="#{bundle.Edit}" disabled="#{empty tropacontroller.registroSel}"
+                                             action="#{tropacontroller.edita}" 
+                                             style="font-size: 10pt; color: #045491"/>
+
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}"
+                                             onclick="PF('cd').show()" disabled="#{empty tropacontroller.registroSel}"
+                                             style="font-size: 10pt; color: #045491"/>
+                            <p:confirmDialog message="Está seguro de eliminar el registro seleccionado?" appendTo="@(body)" 
+                                header="Eliminar registro" severity="alert" widgetVar="cd" style="font-size: 10pt; color: #045491">
+                                <p:commandButton actionListener="#{tropacontroller.elimina()}" 
+                                                 update="datos,:growl" value="Sí" oncomplete="PF('cd').hide()" style="font-size: 10pt; color: #045491"/>
+                                <p:commandButton value="No" onclick="PF('cd').hide();" type="button" style="font-size: 10pt; color: #045491"/>
+                            </p:confirmDialog>
+                        </f:facet>                        
+                        
+                    </p:dataTable>  
+                    
+                    <br/>
+                    <h:panelGrid columns="5" columnClasses="list-column-left,list-column-left,list-column-left,list-column-left,list-column-left">
+                        <h:outputText style="font-size: 10pt; color: #045491" value="Tipo:"/>  
+                        <p:selectOneMenu id="TIPO_ARCH" tabindex="100" value="#{tropacontroller.tipo_exportacion}" style="font-size: 10pt; color: #045491" >
+                            <f:selectItems  value="#{tropacontroller.tipos}" />
+                        </p:selectOneMenu>
+                        <p:commandButton value="Exportar archivo" ajax="false" style="font-size: 10pt; color: #045491">
+                            <p:dataExporter type="#{tropacontroller.tipo_exportacion}"  target="datos" fileName="Tropas" preProcessor="#{tropacontroller.preProcessPDF}"/>
+                        </p:commandButton>
+                    </h:panelGrid>
+
+                    </h:form>    
+                    
+            </ui:define>
+
+
+        </ui:composition>
+
+    </body>
+</html>

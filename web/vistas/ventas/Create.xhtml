@@ -1,0 +1,226 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://java.sun.com/jsf/composite/componentes">
+    <body>
+        
+    <ui:composition template="./../../Template04.xhtml">
+            <ui:define name="content">
+            <div style="align: center">
+            <h:form id="EditForm">
+                <h:outputText id="Titulo" value="Nueva venta" style="font-size: 12pt; color: #045491; font-weight: bold" />
+                <p:tabView id="tabViewVenta">
+                    <p:tab title="Venta">
+                    <p:panelGrid columns="2" rendered="#{ventaestanciacontroller.registroMod != null}" style="background: white; width: 100%; border-width: thin; border-style: hidden">
+                        
+                        <h:outputText value="Usuario:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="#{ventaestanciacontroller.obtenerNombreUsuario(ventaestanciacontroller.registroMod.idUsuario)} " style="font-size: 10pt; color: #045491"/>
+
+                        <p:outputLabel for="fecha" value="Fecha:" style="font-size: 10pt; color: #045491"/>
+                        <p:calendar id="fecha"  pattern="dd/MM/yyyy" required="true" value="#{ventaestanciacontroller.registroMod.fecMov}" style="font-size: 10pt; color: #045491" showOn="button">
+                            <f:convertDateTime timeZone="#{ventaestanciacontroller.zona}" pattern="dd/MM/yyyy" />        
+                        </p:calendar>   
+
+                        <p:outputLabel value="Cliente:" for="nombreCliente" style="font-size: 10pt; color: #045491"/>
+                        <p:panelGrid columns="2" style="background: white; width: 100%; border-width: thin; border-style: hidden">
+                            <h:outputText id="nombreCliente" value="#{ventaestanciacontroller.registroMod.cliente.nombre}" style="font-size: 10pt; color: #045491"/>
+                            <p:commandButton id="createButton" icon="ui-icon-search"  value="Buscar" actionListener="#{ventaestanciacontroller.buscaClientes()}" oncomplete="PF('BuscaClienteDialog').show()"
+                                             style="font-size: 10pt; color: #045491"/>                        
+                        </p:panelGrid>
+                        
+                        <p:outputLabel value="Local:" for="local" style="font-size: 10pt; color: #045491"/>
+                        <p:selectOneMenu id="local" value="#{ventaestanciacontroller.idLocalSel}" 
+                                         required="true" style="font-size: 10pt; color: #045491 " 
+                                         filter="true" filterMatchMode="contains">
+                            <f:selectItems value="#{listalocales.items}"/>
+                            <p:ajax listener="#{ventaestanciacontroller.cambiaLocal()}" update="EditForm:tabViewVenta"/>
+                        </p:selectOneMenu>  
+                        
+                        <p:outputLabel value="Tipo comprobante:" for="tipoComprobante" style="font-size: 10pt; color: #045491"/>
+                        <p:selectOneMenu id="tipoComprobante" value="#{ventaestanciacontroller.registroMod.tipoCompro}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItem itemLabel="Venta" itemValue='V' />
+                            <f:selectItem itemLabel="Factura" itemValue='F' />
+                            <p:ajax process="@all" listener="#{ventaestanciacontroller.calculaValorIva()}" update="porcIVA,valorIVA,subTotal,puntoVenta,comprobante"/>
+                        </p:selectOneMenu>   
+                        
+                        <p:outputLabel value="Punto de venta:" for="puntoVenta" style="font-size: 10pt; color: #045491"/>
+                        <p:inputMask mask="99999" id="puntoVenta" autocomplete="off" value="#{ventaestanciacontroller.registroMod.puntoVenta}" 
+                                     style="width: 100%; text-align: right; font-size: 10pt; color: #045491" 
+                                     size="40" maxlength="15" disabled="#{ventaestanciacontroller.registroMod.tipoCompro eq 'V'}" >
+                        </p:inputMask>           
+                        
+                        <p:outputLabel value="#Comprobante:" for="comprobante" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="comprobante" autocomplete="off" value="#{ventaestanciacontroller.registroMod.numFact}" 
+                                     style="width: 100%; text-align: right; font-size: 10pt; color: #045491" 
+                                     size="40" maxlength="15" disabled="#{ventaestanciacontroller.registroMod.tipoCompro eq 'V'}">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </p:inputText>   
+                        
+                        <p:outputLabel value="SubTotal:" for="subTotal" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="subTotal" value="#{ventaestanciacontroller.registroMod.subtotalSinIva}" 
+                                     style="float: right; width: 100%;text-align: right; font-size: 10pt; color: #045491">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText> 
+                        
+                        <p:outputLabel value="Porc IVA(%):" for="porcIVA" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="porcIVA" value="#{ventaestanciacontroller.registroMod.porcIva}" 
+                                     style="float: right; width: 100%;text-align: right; font-size: 10pt; color: #045491">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>                  
+                        
+                        <p:outputLabel value="Valor IVA:" for="valorIVA" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="valorIVA" value="#{ventaestanciacontroller.registroMod.valorIva}" 
+                                     style="float: right; width: 100%;text-align: right; font-size: 10pt; color: #045491">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText> 
+                        
+                        <p:outputLabel value="Total:" for="total" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="total" value="#{ventaestanciacontroller.registroMod.valorTotal}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                    </p:panelGrid>
+                        
+                    <p:dataTable id="detalleVenta" 
+                                   paginatorPosition="top"
+                                   value="#{ventaestanciacontroller.registroMod.ventaDets}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                            
+                        <p:column style="font-size: 8pt; color: #045491; text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Cantidad"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.cantidad}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>    
+                        
+                        <p:column style="font-size: 8pt; color: #045491; text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Unidad"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.unidad.nombre}"/>
+                        </p:column>     
+                        
+                        <p:column style="font-size: 8pt; color: #045491; text-align: left">
+                            <f:facet name="header">
+                                <h:outputText value="Tropa"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.tropa.numeroTropa}"/>
+                        </p:column>   
+                        
+                        <p:column style="font-size: 8pt; color: #045491; text-align: left">
+                            <f:facet name="header">
+                                <h:outputText value="Producto"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.producto.nombre}"/>
+                        </p:column>   
+                        
+                        <p:column style="width: 15%; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Precio unitario"/>
+                            </f:facet>
+                            <p:inputNumber value="#{item.precioFinal}" 
+                                           decimalPlaces="2"
+                                           inputStyle="text-align: right" 
+                                           size="12"
+                                           style="font-size: 10pt; color: #045491" maxlength="15">
+                                <p:ajax listener="#{ventaestanciacontroller.calculaPrecioTotalProducto(item)}" event="change" 
+                                       update="EditForm:tabViewVenta:detalleVenta,EditForm:tabViewVenta:porcIVA,
+                                               EditForm:tabViewVenta:valorIVA,EditForm:tabViewVenta:subTotal,EditForm:tabViewVenta:total"/>  
+                            </p:inputNumber>        
+                        </p:column>                           
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Total"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valorFinal}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>
+                        
+                        
+                        </p:dataTable>                        
+                        
+                        
+                    
+                    </p:tab>
+                    
+                    <p:tab title="Remitos relacionados" id="tabRemitos">
+                        <p:commandButton id="createRemito" icon="ui-icon-search"   value="Buscar remitos"  
+                                         actionListener="#{ventaestanciacontroller.buscaRemitos()}" update=":BuscaRemitosForm" oncomplete="PF('BuscaRemitosDialog').show()"
+                           style="font-size: 10pt; color: #045491" immediate="true" />
+                        <br/>                           
+                        <br/> 
+                        
+                        <p:dataTable id="datosRemitos" 
+                                   paginatorPosition="top"
+                                   value="#{ventaestanciacontroller.registroMod.ventaRemitos}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                            
+                        <p:column style="width: 5%; text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Id"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.remitoVenta.id}" />
+                        </p:column>
+                            
+                        <p:column style="width: 30%; text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Usuario"/>
+                            </f:facet>
+                            <h:outputText value="#{ventaestanciacontroller.obtenerNombreUsuario(item.remitoVenta.idUsuario)} " style="font-size: 10pt; color: #045491"/>                            
+                        </p:column>
+                        
+                        <p:column sortBy="#{item.remitoVenta.fecMov}" style="width: 15%; text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                                <h:outputText value="#{item.remitoVenta.fecMov}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>
+                            
+                        <p:column style="text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Observaciones"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.remitoVenta.observaciones}" />
+                        </p:column>
+
+                        <p:column  style="width: 10%; text-align: center; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                            </f:facet>
+                            <p:commandButton icon="ui-icon-trash" immediate="true" actionListener="#{ventaestanciacontroller.eliminaRemito(item)}" update="EditForm:tabViewVenta, EditForm:tabViewVenta:datosRemitos" alt="Eliminar"/>
+                        </p:column>                              
+                            
+                        </p:dataTable>
+                    </p:tab>
+                    
+                </p:tabView>
+                <br/>                    
+                <p:commandButton action="#{ventaestanciacontroller.graba()}" value="#{bundle.Save}" update=":growl" ajax="false" style="font-size: 10pt; color: #045491"/>                        
+                <p:commandButton action="/vistas/ventas/Ventas" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
+
+            </h:form>
+            <ui:include src="BuscaRemitos.xhtml"/> 
+            <ui:include src="BuscaCliente.xhtml"/> 
+            </div>
+            </ui:define>
+    </ui:composition>
+
+    </body>
+</html>

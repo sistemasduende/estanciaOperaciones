@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="CreateDlg" style="font-size: 10pt; color: #045491" widgetVar="CreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CrearProductor}"
+                  onShow="PF('CreateDialog').initPosition()">
+            <h:form id="CreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{productorcontroller.registroMod != null}">
+                        <p:outputLabel value="#{bundle.NombreProductor}" for="nombre" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="nombre" value="#{productorcontroller.registroMod.nombre}" required="true" size="40" style="font-size: 10pt; color: #045491"/>
+                        <p:outputLabel value="Cond. Iva:" for="condIva" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="condIva" value="#{productorcontroller.registroMod.condIva.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listacondicionesiva.items}" />
+                        </p:selectOneMenu>                        
+                        <p:outputLabel value="Tipo Id." for="tipoId" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="tipoId" value="#{productorcontroller.registroMod.tipoid.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listatiposid.items}" />
+                        </p:selectOneMenu>                        
+                        <p:outputLabel value="Identificación" for="numId" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="numId" value="#{productorcontroller.registroMod.numId}" maxlength="20" required="true" style="font-size: 10pt; color: #045491"/>
+                        <p:outputLabel value="Provincia:" for="provincia" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="provincia" value="#{productorcontroller.registroMod.provincia.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listaprovincias.items}" />
+                            <p:ajax listener="#{productorcontroller.onChangeProvincia()}" update="localidad" />
+                        </p:selectOneMenu>     
+                        <p:outputLabel value="Localidad:" for="localidad" style="font-size: 10pt; color: #045491"/>                                                
+                        <p:selectOneMenu id="localidad" value="#{productorcontroller.registroMod.localidad.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{productorcontroller.localidades}" />
+                        </p:selectOneMenu>                        
+                        <p:outputLabel value="Dirección:" for="direccion" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="direccion" value="#{productorcontroller.registroMod.direccion}" required="true" size="40" style="font-size: 10pt; color: #045491"/>
+
+                        <p:outputLabel value="Teléfono:" for="telefono" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="telefono" value="#{productorcontroller.registroMod.telefono}" required="true" size="40" style="font-size: 10pt; color: #045491"/>
+                        
+                        <p:outputLabel value="Email:" for="email" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="email" value="#{productorcontroller.registroMod.email}" required="true" size="40" style="font-size: 10pt; color: #045491"/>
+                        
+                        <p:outputLabel value="CC Costo de tropa:" for="ccCostoTropa" style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="ccCostoTropa" value="#{productorcontroller.registroMod.ccCostoTropa}" 
+                                     style="width: 100%; text-align: right; font-size: 10pt; color: #045491" size="15" maxlength="10" 
+                                     autocomplete="off" decimalPlaces="0" thousandSeparator="">
+                        </p:inputNumber>
+                        
+                        <p:outputLabel value="Estado:" for="estado" style="font-size: 10pt; color: #045491" />
+                        <p:selectOneRadio id="estado" value="#{productorcontroller.registroMod.estado}" unselectable="false" style="font-size: 10pt; color: #045491" >
+                            <f:selectItem itemLabel="Activo" itemValue="1" />
+                            <f:selectItem itemLabel="Inactivo" itemValue="0" />
+                        </p:selectOneRadio>
+                    </p:panelGrid>
+                    <p:commandButton ajax="true" actionListener="#{productorcontroller.graba()}" value="#{bundle.Save}" update="display,:ListaForm:datos,:growl" oncomplete="handleSubmit(args,'CreateDialog');" 
+                                     style="font-size: 10pt; color: #045491"/>
+                    <p:commandButton  value="#{bundle.Cancel}" onclick="CreateDialog.hide()"
+                                     style="font-size: 10pt; color: #045491" immediate="true"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

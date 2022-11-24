@@ -1,0 +1,132 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://java.sun.com/jsf/composite/componentes">
+    <body>
+
+        
+    <ui:composition template="./../../Template04.xhtml">
+            <ui:define name="content">
+            <div style="align-content: center; width: 90%">
+            <h:form id="EditForm">
+                <p:tabView id="tabViewCliente">
+                    <p:tab title="Datos del cliente">
+                    <p:panelGrid columns="2" rendered="#{clientecontroller.registroMod != null}" style="background: white; width: 100%; border-width: thin; border-style: hidden">
+                        <p:outputLabel value="#{bundle.NombreCliente}" for="nombre" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="nombre" value="#{clientecontroller.registroMod.nombre}" required="true" size="40" style="font-size: 10pt; color: #045491"/>
+                        <p:outputLabel value="Cond. Iva:" for="condIva" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="condIva" value="#{clientecontroller.registroMod.condIva.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listacondicionesiva.items}" />
+                        </p:selectOneMenu>                        
+                        <p:outputLabel value="Tipo Id." for="tipoId" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="tipoId" value="#{clientecontroller.registroMod.tipoid.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listatiposid.items}" />
+                        </p:selectOneMenu>                        
+                        <p:outputLabel value="Identificación" for="numId" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="numId" value="#{clientecontroller.registroMod.numId}" maxlength="20" style="font-size: 10pt; color: #045491"/>
+                        <p:outputLabel value="Provincia:" for="provincia" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="provincia" value="#{clientecontroller.registroMod.provincia.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listaprovincias.items}" />
+                            <p:ajax listener="#{clientecontroller.onChangeProvincia()}" update="localidad" />
+                        </p:selectOneMenu>     
+                        <p:outputLabel value="Localidad:" for="localidad" style="font-size: 10pt; color: #045491"/>                                                
+                        <p:selectOneMenu id="localidad" value="#{clientecontroller.registroMod.localidad.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{clientecontroller.localidades}" />
+                        </p:selectOneMenu>                        
+                        <p:outputLabel value="Dirección:" for="direccion" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="direccion" value="#{clientecontroller.registroMod.direccion}" size="40" style="font-size: 10pt; color: #045491"/>
+
+                        <p:outputLabel value="Teléfono:" for="telefono" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="telefono" value="#{clientecontroller.registroMod.telefono}" size="40" style="font-size: 10pt; color: #045491"/>
+                        
+                        <p:outputLabel value="Email:" for="email" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="email" value="#{clientecontroller.registroMod.email}" size="40" style="font-size: 10pt; color: #045491"/>
+                        
+                        <p:outputLabel value="CostoxTonelada:" for="costoTn"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="costoTn" value="#{clientecontroller.registroMod.costoxTon}" style="text-align: right; font-size: 10pt; color: #045491" size="40" maxlength="15">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </p:inputText>
+                        
+                        <p:outputLabel value="Iva Fletes:" for="ivaFlete"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="ivaFlete" value="#{clientecontroller.registroMod.porcIvaFlete}" style="text-align: right; font-size: 10pt; color: #045491" size="40" maxlength="15">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </p:inputText>
+                        
+                        <p:outputLabel value="Estado:" for="estado" style="font-size: 10pt; color: #045491" />
+                        <p:selectOneRadio id="estado" value="#{clientecontroller.registroMod.estado}" unselectable="false" style="font-size: 10pt; color: #045491" >
+                            <f:selectItem itemLabel="Activo" itemValue="1" />
+                            <f:selectItem itemLabel="Inactivo" itemValue="0" />
+                        </p:selectOneRadio>
+                    </p:panelGrid>
+                    
+                    </p:tab>
+                    <p:tab title="Costos fletes x KM" id="tabCostosKm">
+                        <p:commandButton id="createButtonCA" icon="ui-icon-plus"   value="#{bundle.Create}"
+                                         actionListener="#{clientecontroller.nuevoCA()}" update=":CreateFormCA" oncomplete="PF('CreateDialogCA').show()"
+                                             style="font-size: 10pt; color: #045491"/>
+                        <br/>                        
+                        <p:dataTable id="datosCostoKm" 
+                                   paginatorPosition="top"
+                                   value="#{clientecontroller.registroMod.costoFleteAnimaleses}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                            
+                        <p:column style="font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Tipo Jaula"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.tipoJaula}" />
+                        </p:column>
+                    
+                        <p:column sortBy="#{item.costoxKm}" style="text-align: right; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Costo x Km"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.costoxKm}"/>
+                        </p:column>
+                            
+                        <p:column sortBy="#{item.kmArranque}" style="text-align: right; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Km de arranque"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.kmArranque}"/>
+                        </p:column>
+                            
+                        <p:column sortBy="#{item.costoArranque}" style="text-align: right; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Arranque"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.costoArranque}"/>
+                        </p:column>
+                            
+                        <p:column sortBy="#{item.costoSeguro}" style="text-align: right; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Seguro"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.costoSeguro}"/>
+                        </p:column>
+                        </p:dataTable>
+                    </p:tab>
+                </p:tabView>
+                    <p:panelGrid columns="2"  columnClasses="list-column-right,list-column-left" style="background: white; width: 85%; border-width: thin; border-style: hidden" >
+                        <p:commandButton action="#{clientecontroller.graba()}" value="#{bundle.Save}" update=":growl" ajax="false" style="font-size: 10pt; color: #045491"/>                        
+                        <p:commandButton action="/vistas/clientes/Clientes" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
+                    </p:panelGrid>
+            </h:form>
+            <ui:include src="CreateCostoAnimales.xhtml"/>      
+            </div>
+                
+            </ui:define>
+    </ui:composition>
+
+    </body>
+</html>

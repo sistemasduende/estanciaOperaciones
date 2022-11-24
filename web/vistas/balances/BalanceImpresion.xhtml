@@ -1,0 +1,763 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://java.sun.com/jsf/composite/componentes">
+    <body>
+    <ui:composition template="./../../Template04.xhtml">
+            <ui:define name="content">
+            <div style="align: center">
+            <h:form id="EditForm">
+                    <h:outputText id="Titulo" value="Balances" style="font-size: 12pt; color: #045491; font-weight: bold" />
+                
+                    <p:panelGrid columns="4"  rendered="#{balancecontroller.registroMod != null}" style="background: white; width: 100%; border-width: thin; border-style: hidden">
+                        
+                        <h:outputText value="Usuario:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="usuario" value="#{balancecontroller.obtenerNombreUsuario(balancecontroller.registroMod.idUsuario)} " style="font-size: 10pt; color: #045491"/>
+
+                        <p:outputLabel value="Local:" for="local" style="font-size: 10pt; color: #045491"/>                        
+                        <h:outputText id="local" value="#{balancecontroller.registroMod.localCarniceria.nombreComercial}" style="font-size: 10pt; color: #045491"/>
+
+                        <p:outputLabel for="fecha_ini" value="Fecha de inicio:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="fecha_ini" value="#{balancecontroller.registroMod.fecIni}" style="font-size: 10pt; color: #045491">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+
+                        <p:outputLabel for="fecha_fin" value="Fecha de fin:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="fecha_fin" value="#{balancecontroller.registroMod.fecFin}" style="font-size: 10pt; color: #045491">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                        
+                        <p:outputLabel for="fecha" value="Fecha carga:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="fecha" value="#{balancecontroller.registroMod.fecCarga}" style="font-size: 10pt; color: #045491">
+                            <f:convertDateTime timeZone="#{balancecontroller.zona}" pattern="dd/MM/yyyy HH:mm" />        
+                        </h:outputText>   
+                        
+                        <p:outputLabel value="Estado:" for="estado" style="font-size: 10pt; color: #045491" />
+                        <h:outputText id="estado" value="#{balancecontroller.registroMod.estado=='P' ? 'Pendiente' : ( balancecontroller.registroMod.estado=='F' ? 'Finalizado' : 'Aprobado') }" style="font-size: 10pt; color: #045491"/>                        
+                        
+                        <h:outputText value="Ventas:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="valorCobrado" value="#{balancecontroller.registroMod.valorCobrado}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>                        
+                        
+                        <h:outputText value="Efectivo caja:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="valorEfectivo" value="#{balancecontroller.registroMod.valorEfectivoCaja}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+
+                        <h:outputText value="Por cobrar:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="valorPorCobrar" value="#{balancecontroller.registroMod.valorPorCobrar}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                        <h:outputText value="Gastos:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="valorGastos" value="#{balancecontroller.registroMod.valorGastos}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                        <h:outputText value="Remanente:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="valorRemanente" value="#{balancecontroller.registroMod.valorRemanente}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+
+                        
+                        
+                    </p:panelGrid>
+                        
+                    <br/>                           
+                    <p:dataTable id="datosInvIni" 
+                                   paginator="false"
+                                   value="#{balancecontroller.listaInvIni}" 
+                                   var="item"
+                                   rowKey="#{item.id}"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   sortBy="#{item.producto.tipo}"
+                                   >
+                        
+                        <f:facet name="header">
+                            <h:outputText value="Inventario inicial" style="font-size: 8pt; color: #045491;text-align: center"/>
+                        </f:facet>                           
+                        
+                        <p:column  headerText="Tipo:" groupRow="true" style="width: 30%; font-size: 12pt;font-weight: bold; color: #045491; text-align: left">
+                            <h:outputText value="#{item.producto.tipo =='A' ? 'Armado' : (item.producto.tipo=='C' ? 'Corte' : 'Elaborado' )}:   
+                                          &lt;br/&gt;   
+                                          #{balancecontroller.getSumaInvIniTipoProducto(item.producto.tipo)}"  escape="false"/>
+                        </p:column>                 
+                        
+                        <p:column style="width: 60%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Producto"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.producto.nombre}" />
+                        </p:column>
+                        
+                        <p:column style="width: 20%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Unidad"/>
+                            </f:facet>
+                            <h:outputText value="#{item.unidad.nombre}" />
+                        </p:column>                        
+                            
+                        <p:column style="width: 20%; font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Cantidad"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.cantidad}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column> 
+                        
+                    </p:dataTable>                        
+                        
+                    <br/>                           
+                    <p:dataTable id="datosIngresos" 
+                                   paginator="false"
+                                   value="#{balancecontroller.listaIngresos}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   sortBy="#{item.producto.rubro.nombre}"
+                                   expandableRowGroups="true"
+                                   >
+                            
+                        <f:facet name="header">
+                            <h:outputText value="Mercadería recibida" style="font-size: 8pt; color: #045491;text-align: center"/>
+                        </f:facet>   
+                            
+                        <p:headerRow>
+                            <p:column colspan="4" style="font-size: 8pt; color: #045491">
+                                <h:outputText value="#{item.producto.rubro.nombre}" />
+                            </p:column>
+                        </p:headerRow> 
+                        
+                        <p:column style="width: 40%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Producto"/>
+                            </f:facet>
+                                <h:outputText  value="#{item.producto.nombre}" />
+                        </p:column>
+                        
+                        <p:column style="width: 20%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Unidad"/>
+                            </f:facet>
+                            <h:outputText value="#{item.unidad.nombre}" />
+                        </p:column>                        
+                            
+                        <p:column style="width: 15%; font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Cantidad"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.cantidad}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>    
+                            
+                        <p:column style="width: 15%; font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Precio"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.precioUnitario}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>   
+                        
+                        <p:summaryRow>
+                            <p:column colspan="2" style="font-size: 8pt; color: #045491;text-align: right">
+                                 <h:outputText value="Totales #{item.producto.rubro.nombre}:"/>
+                            </p:column>    
+                            <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                                <h:outputText value="#{balancecontroller.getSumaCantidadIngresosRubro(item.producto.rubro.id)}">
+                                    <f:convertNumber pattern="#,##0.00" />
+                                </h:outputText>    
+                            </p:column>
+                            <p:column style="text-align:right"/>
+                        </p:summaryRow>                          
+                        
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="2" style="text-align:right" footerText="Totales:" />
+                                <p:column colspan="1" style="text-align:right">
+                                    <f:facet name="footer">
+                                        <h:outputText  value="#{balancecontroller.registroMod.balanceIngresos.stream().map(item->item.cantidad).sum()}">
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>                                    
+                                    </f:facet>
+                                </p:column>   
+                            </p:row>
+                        </p:columnGroup>                            
+                    </p:dataTable>    
+                    
+                    <br/>                           
+                    <p:dataTable id="datosCobranzas" 
+                                   paginator="false"
+                                   value="#{balancecontroller.registroMod.balanceCobranzas}" 
+                                   var="item"
+                                   rowKey="#{item.id}"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                            
+                        <f:facet name="header">
+                            <h:outputText value="Ventas" style="font-size: 8pt; color: #045491;text-align: center"/>
+                        </f:facet>   
+                        
+                        <p:column style="width: 10%; font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Día"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fecha}" >
+                                <f:convertDateTime pattern="EEE" />
+                            </h:outputText>
+                        </p:column> 
+                        
+                        <p:column style="width: 15%; font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fecha}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>  
+                        
+                        <p:column style="width: 15%; font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Turno"/>
+                            </f:facet>
+                            <h:outputText value="#{item.turno=='M' ? 'Mañana' : 'Tarde'}" />
+                        </p:column>   
+                            
+                        <p:column style="width: 25%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Forma de pago"/>
+                            </f:facet>
+                            <h:outputText  value="#{balancecontroller.obtenerFormaPago(item.idFormaPago)}" />
+                        </p:column>
+                            
+                        <p:column style="width: 25%; font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Valor"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valor}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>    
+                            
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="4" style="text-align:right" footerText="Totales:" />
+                                <p:column colspan="1" style="text-align:right">
+                                    <f:facet name="footer">
+                                        <h:outputText  value="#{balancecontroller.registroMod.balanceCobranzas.stream().map(item->item.valor).sum()}">
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>                                    
+                                    </f:facet>
+                                </p:column>   
+                            </p:row>
+                        </p:columnGroup>    
+                        
+                    </p:dataTable>
+                    
+                    <br/>    
+                    <p:dataTable id="datosRemanentes" 
+                                   paginator="false"
+                                   value="#{balancecontroller.listaRemanente}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 12pt; color: #045491"
+                                   sortBy="#{item.producto.rubro.nombre}"
+                                   editMode="cell"
+                                   expandableRowGroups="true"
+                                   >
+                        <f:facet name="header">
+                            <h:outputText value="Remanentes de la semana" style="font-size: 8pt; color: #045491;text-align: center"/>
+                        </f:facet>   
+                        
+                        <p:headerRow>
+                            <p:column colspan="5" style="font-size: 12pt; color: #045491">
+                                <h:outputText value="#{item.producto.rubro.nombre}" />
+                            </p:column>
+                        </p:headerRow> 
+                        
+                        <p:column style="width: 20%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Producto"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.producto.nombre}" />
+                        </p:column>
+                        
+                        <p:column style="width: 15%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Unidad"/>
+                            </f:facet>
+                            <h:outputText value="#{item.unidad.nombre}" />
+                        </p:column>                        
+                            
+                        <p:column style="width: 10%; font-size: 8pt; color: #045491; text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Cantidad"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.cantidad}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>                          
+
+                        
+                        <p:column style="width: 15%; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Precio unitario"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.precioUnitario}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>  
+                        </p:column>   
+
+                        
+                        <p:column id="columnaPrecioTotal" style="width: 20%; font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Precio total"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.precioTotal}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column> 
+                        
+                        <p:summaryRow>
+                            <p:column colspan="2" style="font-size: 12pt; color: #045491;text-align: right">
+                                 <h:outputText value="Totales #{item.producto.rubro.nombre}:"/>
+                            </p:column>    
+                            <p:column style="font-size: 12pt; color: #045491;text-align: center">
+                                <h:outputText value="#{balancecontroller.getSumaCantidadRemanentesRubro(item.producto.rubro.id)}">
+                                    <f:convertNumber pattern="#,##0.00" />
+                                </h:outputText>    
+                            </p:column>
+                            <p:column style="text-align:right"/>
+                            <p:column style="font-size: 12pt; color: #045491;text-align: right">
+                                <h:outputText value="#{balancecontroller.getSumaPrecioTotalRemanentesRubro(item.producto.rubro.id)}">
+                                    <f:convertNumber pattern="#,##0.00" />
+                                </h:outputText>    
+                            </p:column>
+                        </p:summaryRow>                            
+                        
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="2" style="font-size: 12pt; color: #045491;text-align: right" footerText="Totales:" />
+                                <p:column colspan="1" style="font-size: 12pt; color: #045491;text-align: center">
+                                    <f:facet name="footer">
+                                        <h:outputText  value="#{balancecontroller.registroMod.balanceRemanentes.stream().map(item->item.cantidad).sum()}">
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>                                   
+                                    </f:facet>
+                                </p:column>       
+                                <p:column colspan="1" style="text-align:right" footerText="" />
+                                <p:column colspan="1" style="font-size: 12pt; color: #045491;text-align: right">
+                                    <f:facet name="footer">
+                                        <h:outputText  value="#{balancecontroller.registroMod.balanceRemanentes.stream().map(item->item.precioTotal).sum()}">
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>                                    
+                                    </f:facet>
+                                </p:column>   
+                            </p:row>
+                        </p:columnGroup>                                
+                            
+                    </p:dataTable>   
+                    
+                    <br/>    
+                    
+                    <p:dataTable id="datosGastosExtras" 
+                                   paginatorPosition="top"
+                                   value="#{balancecontroller.registroMod.balanceGastoExtras}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                            
+                        <f:facet name="header">
+                            <h:outputText value="Comidas/Preparados/Compras a otros locales" style="font-size: 8pt; color: #045491;text-align: center"/>
+                        </f:facet>  
+                            
+                        <p:column style="width: 10%; font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Día"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fecha}" >
+                                <f:convertDateTime pattern="EEE" />
+                            </h:outputText>
+                        </p:column>  
+                            
+                        <p:column style="width: 10%; font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText id="oText191" value="#{item.fecha}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>                             
+                            
+                        <p:column style="width: 20%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Tipo de gasto"/>
+                            </f:facet>
+                            <h:outputText id="GastoNombre"  value="#{item.tipoGasto.nombre}" />
+                        </p:column>
+                            
+                        <p:column style="width: 20%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Proveedor"/>
+                            </f:facet>
+                            <h:outputText value="#{item.proveedor.nombre}" />
+                        </p:column>
+
+                        <p:column style="width: 20%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Observaciones"/>
+                            </f:facet>
+                            <h:outputText value="#{item.observaciones}" />
+                        </p:column>                            
+                        
+                        <p:column style="width: 10%; font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Valor"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valor}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>    
+                            
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="5" style="text-align:right" footerText="Totales:" />
+                                <p:column colspan="1" style="text-align:right">
+                                    <f:facet name="footer">
+                                        <h:outputText  value="#{balancecontroller.registroMod.balanceGastoExtras.stream().map(item->item.valor).sum()}">
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>                                    
+                                    </f:facet>
+                                </p:column>   
+                            </p:row>
+                        </p:columnGroup>                             
+
+                        </p:dataTable>
+                    
+                    <br/> 
+                    
+                    <p:dataTable id="datosGastosVarios" 
+                                   paginatorPosition="top"
+                                   value="#{balancecontroller.registroMod.balanceGastoVarios}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                            
+                        <f:facet name="header">
+                            <h:outputText value="Gastos varios" style="font-size: 8pt; color: #045491;text-align: center"/>
+                        </f:facet>   
+                            
+                        <p:column style="width: 10%; font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Día"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fecha}" >
+                                <f:convertDateTime pattern="EEE" />
+                            </h:outputText>
+                        </p:column>    
+                            
+                        <p:column style="width: 10%; font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fecha}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>                             
+                            
+                        <p:column style="width: 20%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Tipo de gasto"/>
+                            </f:facet>
+                            <h:outputText id="GastoNombre"  value="#{item.tipoGasto.nombre}" />
+                        </p:column>
+                            
+                        <p:column style="width: 20%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Proveedor"/>
+                            </f:facet>
+                            <h:outputText value="#{item.proveedor.nombre}" />
+                        </p:column>
+
+                        <p:column style="width: 20%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Observaciones"/>
+                            </f:facet>
+                            <h:outputText value="#{item.observaciones}" />
+                        </p:column>                            
+                        
+                        <p:column style="width: 10%; font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Valor"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valor}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>    
+                            
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="5" style="text-align:right" footerText="Totales:" />
+                                <p:column colspan="1" style="text-align:right">
+                                    <f:facet name="footer">
+                                        <h:outputText  value="#{balancecontroller.registroMod.balanceGastoVarios.stream().map(item->item.valor).sum()}">
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>                                    
+                                    </f:facet>
+                                </p:column>   
+                            </p:row>
+                        </p:columnGroup>                                   
+                            
+                        </p:dataTable>
+                        
+                        <br/> 
+                        
+                        <p:dataTable id="datosGastosPersonal" 
+                                   paginatorPosition="top"
+                                   value="#{balancecontroller.registroMod.balanceGastoPersonals}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   editMode="cell"
+                                   >
+                            
+                        <f:facet name="header">
+                            <h:outputText value="Gastos de personal" style="font-size: 8pt; color: #045491;text-align: center"/>
+                        </f:facet>   
+                           
+                        <p:column style="width: 5%; font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Día"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fecha}" >
+                                <f:convertDateTime pattern="EEE" />
+                            </h:outputText>
+                        </p:column>                                
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fecha}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>                             
+                            
+                        <p:column style="width: 20%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Empleado"/>
+                            </f:facet>
+                            <h:outputText value="#{item.empleado.nombre} #{item.empleado.apellido}" />
+                        </p:column>                            
+                            
+                        <p:column style="width: 15%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Tipo de gasto"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.tipoGasto.nombre}" />
+                            
+                        </p:column>
+                            
+                        <p:column style="width: 15%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Observaciones"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.observaciones}" />
+                        </p:column>                            
+                        
+                        <p:column style="font-size: 8pt; color: #045491; text-align:right">
+                            <f:facet name="header">
+                                <h:outputText value="Valor"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valor}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText> 
+                        </p:column>                              
+                            
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="5" style="text-align:right" footerText="Totales:" />
+                                <p:column colspan="1" style="text-align:right">
+                                    <f:facet name="footer">
+                                        <h:outputText  value="#{balancecontroller.registroMod.balanceGastoPersonals.stream().map(item->item.valor).sum()}">
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>                                    
+                                    </f:facet>
+                                </p:column>   
+                            </p:row>
+                        </p:columnGroup>                                
+                            
+                        </p:dataTable>
+                    
+                    <br/> 
+                    <p:dataTable id="datosVentasCobrar" 
+                                   paginatorPosition="top"
+                                   value="#{balancecontroller.registroMod.balancePorCobrars}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                            
+                        <f:facet name="header">
+                            <h:outputText value="Fiados" style="font-size: 8pt; color: #045491;text-align: center"/>
+                        </f:facet>  
+                            
+                        <p:column style="width: 10%; font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Día"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fecha}" >
+                                <f:convertDateTime pattern="EEE" />
+                            </h:outputText>
+                        </p:column> 
+                            
+                        <p:column style="width: 10%; font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fecha}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>   
+                            
+                        <p:column style="width: 25%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Cliente"/>
+                            </f:facet>
+                            <h:outputText value="#{item.cliente.nombre}" />
+                        </p:column>
+
+                        <p:column style="width: 25%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Observaciones"/>
+                            </f:facet>
+                            <h:outputText value="#{item.observaciones}" />
+                        </p:column>                            
+                        
+                        <p:column style="width: 20%; font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Valor"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valor}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>    
+                            
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="4" style="text-align:right" footerText="Totales:" />
+                                <p:column colspan="1" style="text-align:right">
+                                    <f:facet name="footer">
+                                        <h:outputText  value="#{balancecontroller.registroMod.balancePorCobrars.stream().map(item->item.valor).sum()}">
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>                                    
+                                    </f:facet>
+                                </p:column>   
+                            </p:row>
+                        </p:columnGroup>                             
+
+                        </p:dataTable>
+                    
+                    <br/> 
+                        
+                    <p:dataTable id="datosDiferencias" 
+                                   paginatorPosition="top"
+                                   value="#{balancecontroller.registroMod.balanceDifPesadas}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                            
+                        <f:facet name="header">
+                            <h:outputText value="Diferencias de pesadas/Diferencias de precios/Descuentos" style="font-size: 8pt; color: #045491;text-align: center"/>
+                        </f:facet>   
+                            
+                        <p:column style="width: 15%; font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Día"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fecha}" >
+                                <f:convertDateTime pattern="EEE" />
+                            </h:outputText>
+                        </p:column>   
+                            
+                        <p:column style="width: 15%; font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText id="oText191" value="#{item.fecha}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>   
+                            
+                        <p:column style="width: 10%; font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Turno"/>
+                            </f:facet>
+                            <h:outputText value="#{item.turno=='M' ? 'Mañana' : 'Tarde'}" />
+                        </p:column>  
+                            
+                        <p:column style="width: 30%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Cliente"/>
+                            </f:facet>
+                            <h:outputText value="#{item.cliente.nombre}" />
+                        </p:column>
+
+                        <p:column style="width: 20%; font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Valor"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valor}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>    
+                            
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="4" style="text-align:right" footerText="Totales:" />
+                                <p:column colspan="1" style="text-align:right">
+                                    <f:facet name="footer">
+                                        <h:outputText  value="#{balancecontroller.registroMod.balanceDifPesadas.stream().map(item->item.valor).sum()}">
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>                                    
+                                    </f:facet>
+                                </p:column>   
+                            </p:row>
+                        </p:columnGroup>                             
+
+                        </p:dataTable>
+                    
+                    
+                <br/>                    
+                <p:commandButton action="/vistas/balances/Edit" value="Regresar" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
+
+            </h:form>
+            
+            </div>
+            </ui:define>
+    </ui:composition>
+
+    </body>
+</html>

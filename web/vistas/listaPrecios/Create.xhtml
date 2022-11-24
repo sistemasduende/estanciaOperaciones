@@ -1,0 +1,127 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://java.sun.com/jsf/composite/componentes">
+    <body>
+    <ui:composition template="./../../Template04.xhtml">
+            <ui:define name="content">
+            <div style="align: center">
+            <h:form id="EditForm">
+                    <p:panelGrid columns="4"  rendered="#{listapreciocontroller.registroMod != null}" style="background: white; width: 100%; border-width: thin; border-style: hidden">
+                        
+                        <p:outputLabel for="fecha" value="Fecha carga:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="fecha" value="#{listapreciocontroller.registroMod.fecCarga}" style="font-size: 10pt; color: #045491">
+                            <f:convertDateTime timeZone="#{listapreciocontroller.zona}" pattern="dd/MM/yyyy HH:mm" />        
+                        </h:outputText>   
+                        
+                        <h:outputText value="Usuario:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="usuario" value="#{listapreciocontroller.obtenerNombreUsuario(listapreciocontroller.registroMod.idUsuario)} " style="font-size: 10pt; color: #045491"/>
+
+                        <p:outputLabel for="fecha_ini" value="Fecha de inicio:" style="font-size: 10pt; color: #045491"/>
+                        <p:calendar id="fecha_ini"  pattern="dd/MM/yyyy" required="true" value="#{listapreciocontroller.registroMod.fecIni}" style="font-size: 10pt; color: #045491" showOn="button"
+                                    disabled="#{listapreciocontroller.noEditable or listapreciocontroller.fechasNoEditables}" >
+                                <f:convertDateTime timeZone="#{listapreciocontroller.zona}" pattern="dd/MM/yyyy" />        
+                        </p:calendar>   
+
+                        <p:outputLabel for="fecha_fin" value="Fecha de fin:" style="font-size: 10pt; color: #045491"/>
+                        <p:calendar id="fecha_fin"  pattern="dd/MM/yyyy" required="true" value="#{listapreciocontroller.registroMod.fecFin}" style="font-size: 10pt; color: #045491" showOn="button"
+                                    disabled="#{listapreciocontroller.noEditable or listapreciocontroller.fechasNoEditables}" >
+                                <f:convertDateTime timeZone="#{listapreciocontroller.zona}" pattern="dd/MM/yyyy" />        
+                        </p:calendar> 
+
+                    </p:panelGrid>
+                        
+                <p:panelGrid columns="4"  rendered="#{listapreciocontroller.registroMod != null}" style="background: white; width: 100%; border-width: thin; border-style: hidden">
+                    <p:commandButton icon="ui-icon-plus"   value="Nuevo producto" disabled="#{listapreciocontroller.noEditable}" 
+                                 actionListener="#{listapreciocontroller.nuevoProducto()}" update=":CreateFormProducto" oncomplete="PF('CreateDialogProducto').show()"
+                           style="font-size: 10pt; color: #045491" />  
+                
+                    <p:outputLabel for="porcAumento" value="Porc. de aumento (%):" style="font-size: 10pt; color: #045491"/>
+                    <p:inputNumber id="porcAumento" minValue="1" maxValue="100" value="#{listapreciocontroller.porcAumento}" size="8" maxlength="3" 
+                                   style="font-size: 10pt; color: #045491" inputStyle="text-align: right" decimalPlaces="2" />
+                    
+                    <p:commandButton value="Aplicar %"  actionListener="#{listapreciocontroller.aplicaPorcentaje()}" update=":growl,datosProductos" style="font-size: 10pt; color: #045491"/>
+                </p:panelGrid>    
+                                    
+                    
+                    <p:dataTable id="datosProductos" 
+                                   paginator="false"
+                                   value="#{listapreciocontroller.listaPreciosDet}" 
+                                   var="item"
+                                   rowIndexVar="fila"
+                                   style="font-size: 12pt; color: #045491"
+                                   sortBy="#{item.producto.rubro.nombre}"
+                                   editMode="cell"
+                                   expandableRowGroups="true"
+                                   >
+                        <f:facet name="header">
+                            <h:outputText value="Lista de precios" style="font-size: 8pt; color: #045491;text-align: center"/>
+                        </f:facet>   
+                        
+                        <p:headerRow>
+                            <p:column colspan="3" style="font-size: 12pt; color: #045491">
+                                <h:outputText value="#{item.producto.rubro.nombre}" />
+                            </p:column>
+                        </p:headerRow> 
+                        
+                        <p:column style="width: 60%;font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Producto"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.producto.nombre}" />
+                        </p:column>
+                        
+                        <p:column style="width: 30%; font-size: 8pt; color: #045491; text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Precio"/>
+                            </f:facet>
+                            <p:inputNumber value="#{item.precio}" 
+                                           readonly="#{listapreciocontroller.noEditable}"
+                                           decimalPlaces="2"
+                                           inputStyle="text-align: right" 
+                                           style="width: 100%; font-size: 10pt; color: #045491" maxlength="15">
+                            </p:inputNumber>        
+                        </p:column>                          
+
+                        
+                        <p:column  style="width: 10%; text-align: center; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                            </f:facet>
+                            <p:commandButton icon="ui-icon-trash" immediate="true" actionListener="#{listapreciocontroller.eliminaProducto(item)}" 
+                                             update="EditForm:datosProductos"
+                                             disabled="#{listapreciocontroller.noEditable}"
+                                             alt="Eliminar"/>
+                        </p:column> 
+                                                 
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="2" style="font-size: 12pt; color: #045491;text-align: right" footerText="Totales:" />
+                                <p:column style="font-size: 12pt; color: #045491;text-align: center">
+                                    <f:facet name="footer">
+                                        <h:outputText  value="#{listapreciocontroller.registroMod.listaPreciosDets.stream().map(item->item.id).count()}">
+                                            <f:convertNumber pattern="#,###" />
+                                        </h:outputText>                                   
+                                    </f:facet>
+                                </p:column>       
+                            </p:row>
+                        </p:columnGroup>                                
+                            
+                    </p:dataTable>   
+                        
+                        
+                <br/>                    
+                <p:commandButton actionListener="#{listapreciocontroller.graba()}" value="#{bundle.Save}" update=":growl" ajax="false" style="font-size: 10pt; color: #045491"/>                        
+                <p:commandButton action="/vistas/listaPrecios/ListasPrecios" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
+
+            </h:form>
+           
+            <ui:include src="CreateProducto.xhtml"/>                   
+                
+            </div>
+            </ui:define>
+    </ui:composition>
+
+    </body>
+</html>

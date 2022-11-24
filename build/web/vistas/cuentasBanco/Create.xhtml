@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="CreateDlg" style="font-size: 10pt; color: #045491" widgetVar="CreateDialog" modal="true" resizable="false" appendTo="@(body)" header="Crear Cuenta de Banco"
+                  onShow="PF('CreateDialog').initPosition()">
+            <h:form id="CreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{cuentabancocontroller.registroMod != null}">
+
+                        <p:outputLabel value="Banco:" for="banco" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="banco" value="#{cuentabancocontroller.registroMod.banco.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listabancos.items}" />
+                        </p:selectOneMenu>     
+                        
+                        <p:outputLabel value="Tipo:" for="tipoCuenta" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="tipoCuenta" value="#{cuentabancocontroller.registroMod.tipoCuenta}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItem itemLabel="Ahorro" itemValue="A" />
+                            <f:selectItem itemLabel="Corriente" itemValue="C" />
+                        </p:selectOneMenu>                        
+                        
+                        <p:outputLabel value="Número de cuenta:" for="numeroCta" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="numeroCta" value="#{cuentabancocontroller.registroMod.numeroCuenta}" required="true" size="40" style="font-size: 10pt; color: #045491"/>
+                        
+                        <p:outputLabel value="Moneda:" for="moneda" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="moneda" value="#{cuentabancocontroller.registroMod.moneda.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listamonedas.items}" />
+                        </p:selectOneMenu>                             
+
+                        <p:outputLabel value="Estado:" for="estado" style="font-size: 10pt; color: #045491" />
+                        <p:selectOneRadio id="estado" value="#{cuentabancocontroller.registroMod.estado}" unselectable="false" style="font-size: 10pt; color: #045491" >
+                            <f:selectItem itemLabel="Activo" itemValue="1" />
+                            <f:selectItem itemLabel="Inactivo" itemValue="0" />
+                        </p:selectOneRadio>
+                        
+                    </p:panelGrid>
+                    <p:commandButton ajax="true" actionListener="#{cuentabancocontroller.graba()}" value="#{bundle.Save}" update="display,:ListaForm:datos,:growl" oncomplete="handleSubmit(args,'CreateDialog');" 
+                                     style="font-size: 10pt; color: #045491"/>
+                    <p:commandButton  value="#{bundle.Cancel}" onclick="CreateDialog.hide()"
+                                     style="font-size: 10pt; color: #045491" immediate="true"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

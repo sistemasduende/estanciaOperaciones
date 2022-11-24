@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://java.sun.com/jsf/composite/componentes">
+
+    <body>
+        <ui:composition template="./../../Template04.xhtml">
+            <ui:define name="content">
+                <h:form id="ListaForm">
+                    
+                <p:outputLabel value="Tipo:" for="tipo" style="font-size: 10pt; color: #045491"/>                        
+                <p:selectOneMenu id="tipo" value="#{tropacontroller.tipoBusqStock}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                                <f:selectItem itemLabel="Todas" itemValue="T"  />
+                                <f:selectItem itemLabel="Con stock disponible" itemValue="D"  />
+                </p:selectOneMenu> 
+
+                <p:commandButton ajax="true" actionListener="#{tropacontroller.buscaStockTropas()}" value="Buscar"  
+                                     update="datos,:growl"
+                                     style="font-size: 10pt; color: #045491"/>
+                
+                <br/>
+                <br/>
+                <p:dataTable id="datos" 
+                                   paginatorPosition="top"
+                                   value="#{tropacontroller.listaTropasStock}" 
+                                   var="item"
+                                   selectionMode="single" selection="#{tropacontroller.registroStockSel}"
+                                   rowKey="#{item.id}"
+                                   rowIndexVar="fila"
+                                   paginator="true"
+                                   rows="10"
+                                   paginatorAlwaysVisible="false"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                    
+                        <f:facet name="header">
+                            <h:outputText value="Stock"/>
+                        </f:facet>
+                    
+                        <p:column style="font-size: 8pt; color: #045491;text-align: left">
+                            <f:facet name="header">
+                                <h:outputText value="Tropa"/>
+                            </f:facet>
+                            <p:commandLink action="#{tropacontroller.onClickStock(item)}" ajax="false" style="text-decoration: underline; color: blue">
+                                <h:outputText  value="#{item.numeroTropa}"/>
+                            </p:commandLink>
+                        </p:column>      
+                    
+                        <p:column style="font-size: 8pt; color: #045491;text-align: left">
+                            <f:facet name="header">
+                                <h:outputText value="Tipo"/>
+                            </f:facet>
+                            <h:outputText  value=" #{item.tipo eq 'F' ? 'Faena': 'Invernada'}"/>
+                        </p:column>                    
+                        
+                        <p:column sortBy="#{item.fec_ing}" style="font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText id="oText191" value="#{item.fec_ing}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column> 
+                        
+                        <p:column sortBy="#{item.productor}" style="font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Productor"/>
+                            </f:facet>
+                        <h:outputText  value="#{item.productor}"/>
+                        </p:column>
+                        
+                        <p:column sortBy="#{item.deposito}" style="font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Depósito"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.deposito}"/>
+                        </p:column>
+                    
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Kilos totales"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.totalKilos}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>   
+
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Kilos entregados"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.entregado}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>  
+                    
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Kilos disponibles"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.disponible}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>   
+                    
+
+                    </p:dataTable>  
+                    
+                    <br/>
+                    <h:panelGrid columns="5" columnClasses="list-column-left,list-column-left,list-column-left,list-column-left,list-column-left">
+                        <h:outputText style="font-size: 10pt; color: #045491" value="Tipo:"/>  
+                        <p:selectOneMenu id="TIPO_ARCH" tabindex="100" value="#{tropacontroller.tipo_exportacion}" style="font-size: 10pt; color: #045491" >
+                            <f:selectItems  value="#{tropacontroller.tipos}" />
+                        </p:selectOneMenu>
+                        <p:commandButton value="Exportar archivo" ajax="false" style="font-size: 10pt; color: #045491">
+                            <p:dataExporter type="#{tropacontroller.tipo_exportacion}"  target="datos" fileName="Tropas" preProcessor="#{tropacontroller.preProcessPDF}"/>
+                        </p:commandButton>
+                    </h:panelGrid>
+
+                    </h:form>    
+                    
+            </ui:define>
+
+
+        </ui:composition>
+
+    </body>
+</html>

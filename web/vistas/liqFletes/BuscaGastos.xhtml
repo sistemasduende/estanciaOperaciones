@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="BuscaGastosDlg" width="100%" style="font-size: 10pt; color: #045491" widgetVar="BuscaGastosDialog" modal="true" resizable="true" 
+                  appendTo="@(body)" header="Seleccionar gastos" position="center">
+            <h:form id="BuscaGastosForm">
+                <h:panelGroup id="display" >
+                    <p:dataTable id="datosGastos" 
+                                   paginatorPosition="top"
+                                   paginator="true"
+                                   value="#{liqfletecontroller.listaGastos}" 
+                                   var="item"
+                                   rowKey="#{item.id}"
+                                   rowIndexVar="fila"
+                                   selection="#{liqfletecontroller.listaGastosSeleccionados}"
+                                   style="font-size: 10pt; color: #045491"
+                                   rows="10"
+                                   >
+                        
+                        <f:facet name="header">
+                            Gastos
+                        </f:facet>
+                        <p:column selectionMode="multiple" style="width: 5%;text-align:center"/>                        
+                        
+                        <p:column style="width: 5%; text-align: center; font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Id"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.id}" />
+                        </p:column>
+                        
+                        <p:column style="font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Usuario"/>
+                            </f:facet>
+                            <h:outputText  value="#{liqfletecontroller.obtenerNombreUsuario(item.idUsuario)}"/>
+                        </p:column>                        
+                        
+                        <p:column sortBy="#{item.tipoGasto.nombre}" style="font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Tipo"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.tipoGasto.nombre}"/>
+                        </p:column>                        
+                        
+                        <p:column sortBy="#{item.fecMov}" style="font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fecMov}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>  
+                        
+                        <p:column style="font-size: 8pt; color: #045491; text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Cantidad"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.cantidad}">
+                                <f:convertNumber pattern="#,##0" />
+                            </h:outputText>
+                        </p:column>     
+                        
+                        <p:column style="font-size: 8pt; color: #045491; text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Unidad"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.unidad.nombre}"/>
+                        </p:column>     
+                        
+                            
+                        <p:column style="font-size: 8pt; color: #045491; text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Gravado"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valorGravado}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>   
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="No gravado"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valorNoGravado}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Iva"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valorIva}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>                                          
+
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Total"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valorTotal}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>   
+                            
+                        <p:column style="font-size: 8pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Observaciones"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.observaciones}"/>
+                        </p:column> 
+                        
+                        </p:dataTable>
+                    
+                    <br/>
+                    <p:commandButton ajax="true" actionListener="#{liqfletecontroller.agregaGastos()}" value="Seleccionar"  oncomplete="handleSubmit(args, 'BuscaGastosDialog');"
+                                     update="display,:EditForm:tabViewLiq:datosGastos,:EditForm:tabViewLiq:gastos,:EditForm:tabViewLiq:vueltoCaja,
+                                     :EditForm:tabViewLiq:cargasSociales,:EditForm:tabViewLiq:totalPagar,:growl"                                     
+                                     style="font-size: 10pt; color: #045491"/>
+                    
+                    <p:commandButton value="#{bundle.Cancel}" onclick="BuscaGastosDialog.hide()"
+                                     style="font-size: 10pt; color: #045491"/>
+
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

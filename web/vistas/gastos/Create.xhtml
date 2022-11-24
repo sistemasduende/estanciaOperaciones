@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="CreateDlg" style="font-size: 10pt; color: #045491" widgetVar="CreateDialog" modal="true" resizable="false" appendTo="@(body)" header="Ingresar gasto"
+                  onShow="PF('CreateDialog').initPosition()">
+            <h:form id="CreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{gastocontroller.registroMod != null}">
+
+                        <h:outputText value="Usuario:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="#{gastocontroller.obtenerNombreUsuario(gastocontroller.registroMod.idUsuario)} " style="font-size: 10pt; color: #045491"/>
+                        
+                        <p:outputLabel value="Tipo de gasto:" for="tipoGasto" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="tipoGasto" value="#{gastocontroller.registroMod.tipoGasto.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listatiposgasto.items}" />
+                        </p:selectOneMenu>      
+                        
+                        <p:outputLabel for="fecha" value="Fecha:" style="font-size: 10pt; color: #045491"/>
+                        <p:calendar id="fecha"  pattern="dd/MM/yyyy" required="true" value="#{gastocontroller.registroMod.fecMov}" style="font-size: 10pt; color: #045491" showOn="button">
+                            <f:convertDateTime timeZone="#{gastocontroller.zona}" pattern="dd/MM/yyyy" />        
+                        </p:calendar>    
+                        
+                        <p:outputLabel value="Cantidad:" for="cantidad" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="cantidad" required="true" autocomplete="off" value="#{gastocontroller.registroMod.cantidad}"  
+                                     style="width: 100%; text-align: right; font-size: 10pt; color: #045491" size="35" maxlength="15" >
+                            <f:convertNumber pattern="#,##0" />
+                            <f:validateLongRange minimum="1"/>
+                        </p:inputText>      
+                        
+                        <p:outputLabel value="Unidad:" for="unidad" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="unidad" value="#{gastocontroller.registroMod.unidad.id}" 
+                                         required="true" style="font-size: 10pt; color: #045491 ">
+                            <f:selectItems value="#{listaunidades.items}" />
+                        </p:selectOneMenu>      
+
+                        <p:outputLabel value="Valor gravado:" for="valorGravado" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="valorGravado" required="true" autocomplete="off" value="#{gastocontroller.registroMod.valorGravado}"  
+                                     style="width: 100%; text-align: right; font-size: 10pt; color: #045491"  maxlength="15" >
+                            <f:convertNumber pattern="#,##0.00" />
+                            <p:ajax process="@all" listener="#{gastocontroller.calculaValoresGasto()}" event="keyup" update="valorIva,valorTotal"/>
+                        </p:inputText>      
+                        
+                        <p:outputLabel value="Valor no gravado:" for="valorNoGravado" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="valorNoGravado" required="true" autocomplete="off" value="#{gastocontroller.registroMod.valorNoGravado}"  
+                                     style="width: 100%; text-align: right; font-size: 10pt; color: #045491" size="35" maxlength="15" >
+                            <f:convertNumber pattern="#,##0.00" />
+                            <p:ajax process="@all" listener="#{gastocontroller.calculaValoresGasto()}" event="keyup" update="valorTotal"/>
+                        </p:inputText>      
+                        
+                        <p:outputLabel value="Iva(%):" for="porcIva" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="porcIva" autocomplete="off" value="#{gastocontroller.registroMod.porcIva}"  
+                                     style="width: 100%; text-align: right; font-size: 10pt; color: #045491" size="35" maxlength="15" >
+                            <f:convertNumber pattern="#,##0.00" />
+                            <p:ajax process="@all" listener="#{gastocontroller.calculaValoresGasto()}" event="keyup" update="valorIva,valorTotal"/>
+                        </p:inputText> 
+                        
+                        <p:outputLabel value="Valor Iva:" for="valorIva" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="valorIva" value="#{gastocontroller.registroMod.valorIva}" style="float: right; text-align: right; font-size: 10pt; color: #045491">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+                        
+                        <p:outputLabel value="Total:" for="valorTotal" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="valorTotal" value="#{gastocontroller.registroMod.valorTotal}" style="float: right; text-align: right; font-size: 10pt; color: #045491">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>
+
+                        <p:outputLabel value="Observaciones" for="observaciones" style="font-size: 10pt; color: #045491"/>                        
+                        <p:inputTextarea id="observaciones" maxlength="4000" rows="5" cols="40" 
+                                         value="#{gastocontroller.registroMod.observaciones}" style="font-size: 10pt; color: #045491 "/>  
+                        
+                    </p:panelGrid>
+                    <p:commandButton ajax="true" actionListener="#{gastocontroller.graba()}" value="#{bundle.Save}" update="display,:ListaForm:datos,:growl" oncomplete="handleSubmit(args,'CreateDialog');"
+                                     style="font-size: 10pt; color: #045491"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="CreateDialog.hide()"
+                                     style="font-size: 10pt; color: #045491" immediate="true"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

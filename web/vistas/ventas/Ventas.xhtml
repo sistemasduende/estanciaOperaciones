@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://java.sun.com/jsf/composite/componentes">
+
+    <body>
+
+        <ui:composition template="./../../Template04.xhtml">
+            
+            <ui:define name="content">
+                
+                <h:form id="ListaForm">
+                    
+                <h:outputText id="Titulo" value="Ventas por fecha" style="font-size: 12pt; color: #045491; font-weight: bold" />
+                <br/>
+                <br/>                    
+                <h:panelGrid columns="5" columnClasses="list-column-right,list-column-left">
+                    <h:outputLabel for="FEC_DESDE" id="FEC_DESDELabel" value="Desde:" style="font-size: 10pt; color: #045491"/>
+                    <p:calendar id="FEC_DESDE" tabindex="10" pattern="dd/MM/yyyy" value="#{ventaestanciacontroller.fec_desde}" showOn="button"
+                        style="font-size: 10pt; color: #045491">
+                        <f:convertDateTime timeZone="#{ventaestanciacontroller.zona}" pattern="dd/MM/yyyy" />        
+                    </p:calendar>                
+                
+                    <h:outputLabel for="FEC_HASTA" id="FEC_HASTALabel" value="Hasta:" style="font-size: 10pt; color: #045491"/>
+                    <p:calendar id="FEC_HASTA" tabindex="20" pattern="dd/MM/yyyy" value="#{ventaestanciacontroller.fec_hasta}" showOn="button"
+                        style="font-size: 10pt; color: #045491">
+                        <f:convertDateTime timeZone="#{ventaestanciacontroller.zona}" pattern="dd/MM/yyyy" />        
+                    </p:calendar> 
+                    
+                    <p:commandButton ajax="true" actionListener="#{ventaestanciacontroller.buscaListaDatos()}" value="Buscar"  
+                                     update="datos,:growl"
+                                     style="font-size: 10pt; color: #045491"/>
+                </h:panelGrid> 
+                <br/>
+                <p:dataTable id="datos" 
+                                   paginatorPosition="top"
+                                   value="#{ventaestanciacontroller.lista}" 
+                                   var="item"
+                                   selectionMode="single" selection="#{ventaestanciacontroller.registroSel}"
+                                   rowKey="#{item.id}"
+                                   rowIndexVar="fila"
+                                   paginator="true"
+                                   rows="10"
+                                   paginatorAlwaysVisible="false"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                    
+                        <f:facet name="header">
+                            <h:outputText value="Ventas"/>
+                        </f:facet>
+                    
+                        <p:ajax event="rowSelect"  update="createButton editButton"/>
+                        <p:ajax event="rowUnselect" update="createButton editButton"/>                    
+
+                        <p:column style="width: 5%; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Id"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.id}" />
+                        </p:column>
+                    
+                        <p:column sortBy="#{item.fecMov}" style="font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText id="oText191" value="#{item.fecMov}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column> 
+                        
+                        <p:column sortBy="#{item.cliente.nombre}" style="width: 35%; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Cliente"/>
+                            </f:facet>
+                            <p:commandLink action="#{ventaestanciacontroller.onClick(item)}" ajax="false" style="text-decoration: underline; color: blue">
+                                <h:outputText  value="#{item.cliente.nombre}"/>
+                            </p:commandLink>
+                        </p:column>
+                        
+                        <p:column style="width: 15%; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Comprobante"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.puntoVenta} #{item.numFact}"/>
+                        </p:column>                          
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Valor total"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valorTotal}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>
+                        
+                        <f:facet name="footer">
+                            <p:commandButton id="createButton" ajax="false" icon="ui-icon-plus"   value="#{bundle.Create}"
+                                             action="#{ventaestanciacontroller.nuevo}" 
+                                             style="font-size: 10pt; color: #045491"/>
+                            <p:commandButton id="editButton" ajax="false" icon="ui-icon-pencil" value="#{bundle.Edit}" disabled="#{empty ventaestanciacontroller.registroSel}"
+                                             action="#{ventaestanciacontroller.edita}" 
+                                             style="font-size: 10pt; color: #045491"/>
+
+                        </f:facet>                        
+                        
+                    </p:dataTable>   
+                    <br/>
+                    <h:panelGrid columns="5" columnClasses="list-column-left,list-column-left,list-column-left,list-column-left,list-column-left">
+                        <h:outputText style="font-size: 10pt; color: #045491" value="Tipo:"/>  
+                        <p:selectOneMenu id="TIPO_ARCH" tabindex="100" value="#{ventaestanciacontroller.tipo_exportacion}" style="font-size: 10pt; color: #045491" >
+                            <f:selectItems  value="#{ventaestanciacontroller.tipos}" />
+                        </p:selectOneMenu>
+                        <p:commandButton value="Exportar archivo" ajax="false" style="font-size: 10pt; color: #045491">
+                            <p:dataExporter type="#{ventaestanciacontroller.tipo_exportacion}" target="datos" fileName="LiqFletes" preProcessor="#{ventaestanciacontroller.preProcessPDF}"/>
+                        </p:commandButton>
+                    </h:panelGrid>                     
+                    
+                    </h:form>    
+                    
+            </ui:define>
+
+
+        </ui:composition>
+
+    </body>
+</html>

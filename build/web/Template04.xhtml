@@ -1,0 +1,300 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://java.sun.com/jsf/composite/componentes">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="./css/default.css"/>
+        <h:outputStylesheet name="./css/cssLayout.css"/>
+        
+    <meta charset="=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+    <title>DuendeWeb | Powered by Estancia El Duende</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="./../../assets/css/home.css"/>
+
+    <!-- Font Awesome JS -->
+    <script src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" href="./../../assets/images/fav.jpg" sizes="192x192" />
+    <link rel="apple-touch-icon-precomposed" href="./../../images/fav.jpg" />
+    <meta name="msapplication-TileImage" content="./../../images/fav.jpg" />
+
+    <meta name="keywords" content="Bizmobile, Intelligo, InfoIdeas, Software de Gestión en Santiago del Estero, Comercial, Sueldos, Hotelería"/>
+        
+    </h:head>
+
+    <h:body>
+        <h:outputScript name="js/progress.js" target="head" />
+        <h:outputScript name="js/jsfcrud.js" target="head" />
+        <p:ajaxStatus onstart="on_start()" oncomplete="on_complete()" /> 
+        <p:growl id="growl" life="3000" /> 
+       
+        <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+
+            <h:form>            
+            <ul class="list-unstyled components">
+                <img src="./../../assets/images/user.png" alt="InfoIdeas" style="width:30%;height:auto;margin-left:auto;margin-right:auto;display:block;padding-bottom: 10px;"/>
+                <p class="text-center">
+                    <h:outputText value="#{login.nombreUsuario}" style="text-align: left;color: white; font-size: 12pt" /><br/>
+                    <h:outputText value="#{login.nombreUsuarioCompleto}" style="text-align: left;color: white; font-size: 12pt" />                    
+                    <span class="badge badge-success">Online</span> <!-- STATUS --><br/>
+                    <kbd class="text-center"><h:outputText value="#{login.nombreEmpresa}" style="text-align: center; color: white; font-size: 12pt" /> </kbd> <!-- EMPRESA--><br/>
+                    <kbd class="text-center"><h:outputText value="#{login.nombrePais}" style="text-align: center; color: white; font-size: 12pt" /> </kbd> <!-- PAIS-->
+                </p>
+               
+                <li>
+                    <p:link outcome="/Principal" value="Inicio" />
+                </li>                
+                
+                <li>
+                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Configuración</a>
+                    <ul class="collapse list-unstyled" id="pageSubmenu">
+                        <li>
+                            <p:link outcome="/vistas/empresas/DatosEmpresa" value="Datos Empresa" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/unidadesNegocio/UnidadesNegocio" value="Unidades de negocio" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/provincias/Provincias" value="Provincias" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/localidades/Localidades" value="Localidades" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/condicionIva/CondicionesIva" value="CondicionesIva" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/tiposId/TiposId" value="TiposId" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/categorias/Categorias" value="Categorias" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/cargos/Cargos" value="Cargos" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/tiposGasto/TiposGasto" value="Tipos de gasto" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/unidadesNegocio/UnidadesNegocioGastos" value="Gastos por unidad de negocio" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/choferes/Choferes" value="Choferes" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/vehiculosFlete/VehiculosFlete" value="Vehículos flete" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/unidades/Unidades" value="Unidades" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/rubros/Rubros" value="Rubros" />
+                        </li>                        
+                        <li>
+                            <p:link outcome="/vistas/productos/Productos" value="Productos" />
+                        </li>                        
+                    </ul>
+                </li>
+                
+                                <li>
+                    <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Administración</a>
+                    <ul class="collapse list-unstyled" id="pageSubmenu2">
+                        <li>
+                            <p:link outcome="/vistas/bancos/Bancos" value="Bancos" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/cuentasBanco/CuentasBanco" value="Cuentas de banco" />
+                        </li>                        
+                        <li>
+                            <p:link outcome="/vistas/depositos/Depositos" value="Depositos" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/productores/Productores" value="Productores" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/comisionistas/Comisionistas" value="Intermediarios" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/proveedores/Proveedores" value="Proveedores" />
+                        </li>                        
+                        <li>
+                            <p:link outcome="/vistas/clientes/Clientes" value="Clientes" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/empleados/Empleados" value="Empleados" />
+                        </li>                            
+                        <li>
+                            <p:link outcome="/vistas/locales/Locales" value="Locales" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/tropas/Tropas" value="Tropas" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/tropas/TropasStock" value="Stock" />
+                        </li>        
+                        <li>
+                            <p:link outcome="/vistas/entregas/Entregas" value="Entregas" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/remitos/Remitos" value="Remitos de venta" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/ventas/Ventas" value="Ventas" />
+                        </li>
+                         <li>
+                            <p:link outcome="/vistas/balances/Balances" value="Balances" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/listaPrecios/ListasPrecios" value="Listas de precios" />
+                        </li>
+
+                    </ul>
+                </li>
+                
+                <li>
+                    <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Fletes</a>
+                    <ul class="collapse list-unstyled" id="pageSubmenu3">
+                        <li>
+                            <p:link outcome="/vistas/viajes/Viajes" value="Viajes" />
+                        </li>     
+                        <li>
+                            <p:link outcome="/vistas/gastos/Gastos" value="Gastos" />
+                        </li>  
+                        <li>
+                            <p:link outcome="/vistas/efectivosFletero/EfectivosFletero" value="Efectivos" />
+                        </li>
+                        <li>
+                            <p:link outcome="/vistas/liqFletes/LiqFletes" value="Liquidaciones" />
+                        </li>
+
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reportes</a>
+                    <ul class="collapse list-unstyled" id="pageSubmenu4">
+                        <li>
+                            <p:link outcome="/vistas/entregas/ReporteEntregas" value="Entregas por local" />
+                        </li>  
+                    </ul>
+                </li>
+                
+                <li>
+                    <p:link value="Acerca de" />
+                </li>
+                <li>
+                    <a href="#">Contacto</a>
+                </li>
+            </ul>
+
+            <ul class="list-unstyled Ope" > <!-- Operaciones de cierrer-->
+                    <li>
+                    <p:commandButton value="Cerrar sesión" actionListener="#{login.cerrarSesion()}" style="width: 200px; text-align: center" />
+                </li>
+            </ul>
+            
+            </h:form>
+            
+            
+        </nav>
+
+        <!-- Main content -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="navbar-btn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+                    <!-- Menu Superior-->
+                    <h:form>            
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item active">
+                               <p:link outcome="/Principal" value="Inicio" />
+                               &nbsp;&nbsp;
+                            </li>    
+                            <li class="nav-item active">
+                               <p:link outcome="/vistas/viajes/Viajes" value="Viajes" />
+                               &nbsp;&nbsp;
+                            </li>
+                            <li class="nav-item active">
+                               <p:link outcome="/vistas/liqFletes/LiqFletes" value="Liquidaciones" />
+                               &nbsp;&nbsp;
+                            </li>
+                            <li class="nav-item active">
+                               <p:link outcome="/vistas/tropas/Tropas" value="Tropas" />
+                               &nbsp;&nbsp;
+                            </li>
+                            <li class="nav-item">
+                                <p:link value="Contacto" />
+                                &nbsp;&nbsp;
+                            </li>
+                        </ul>
+                    </div>
+                    </h:form>    
+                </div>
+            </nav>
+            
+          <!-- Contenedor de vistas faces-->
+          
+          <div id="content" class="center_content">
+                   <div class="container-fluid">
+                    <ui:insert name="content">
+                        
+                    </ui:insert>
+
+                  </div>
+          </div>
+          
+          
+           
+        </div>
+    </div>
+
+    <!-- Bootstrap librerias-->
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <!-- Uso la librería jQuery de primefaces -->
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+   
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+                $(this).toggleClass('active');
+            });
+        });
+    </script>
+        
+                
+        
+        
+
+    </h:body>
+
+</html>

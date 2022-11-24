@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://java.sun.com/jsf/composite/componentes">
+    <body>
+        <ui:composition template="./../../Template04.xhtml">
+            
+            <ui:define name="content">
+                
+                <h:form id="ListaForm">
+                <p:commandButton ajax="true" actionListener="#{efectivofleterocontroller.buscaListaDatos()}" value="Buscar"  
+                                     update="datos,:growl"
+                                     style="font-size: 10pt; color: #045491"/>
+                
+                <br/>
+                <br/>
+                <p:dataTable id="datos" 
+                                   paginatorPosition="top"
+                                   value="#{efectivofleterocontroller.lista}" 
+                                   var="item"
+                                   selectionMode="single" selection="#{efectivofleterocontroller.registroSel}"
+                                   rowKey="#{item.id}"
+                                   rowIndexVar="fila"
+                                   paginator="true"
+                                   rows="10"
+                                   paginatorAlwaysVisible="false"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                    
+                        <f:facet name="header">
+                            <h:outputText value="Efectivos de fletes"/>
+                        </f:facet>
+                    
+                        <p:ajax event="rowSelect"   update="createButton editButton deleteButton"/>
+                        <p:ajax event="rowUnselect" update="createButton editButton deleteButton"/>                    
+
+                        <p:column  sortBy="#{item.id}" style="font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Id"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.id}" />
+                        </p:column>
+                        
+                        <p:column sortBy="#{efectivofleterocontroller.obtenerNombreUsuario(item.idUsuario)}" style="font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Usuario"/>
+                            </f:facet>
+                            <h:outputText  value="#{efectivofleterocontroller.obtenerNombreUsuario(item.idUsuario)}"/>
+                        </p:column>                        
+                        
+                        <p:column sortBy="#{item.fecha}" style="font-size: 8pt; color: #045491;text-align: center">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText id="oText191" value="#{item.fecha}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>                           
+                    
+                        <p:column sortBy="#{item.chofer.nombre}" style="font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Chofer"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.chofer.nombre}"/>
+                        </p:column>
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Valor"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.valor}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>
+                        
+                        <f:facet name="footer">
+                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}"
+                                             actionListener="#{efectivofleterocontroller.nuevo}" update=":CreateForm" oncomplete="PF('CreateDialog').show()"
+                                             style="font-size: 10pt; color: #045491"/>
+                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" disabled="#{empty efectivofleterocontroller.registroSel}"
+                                             actionListener="#{efectivofleterocontroller.edita}" update=":EditForm" oncomplete="PF('EditDialog').show()"
+                                             style="font-size: 10pt; color: #045491"/>
+
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}"
+                                             onclick="PF('cd').show()" disabled="#{empty efectivofleterocontroller.registroSel}"
+                                             style="font-size: 10pt; color: #045491"/>
+                            <p:confirmDialog message="Está seguro de eliminar el registro seleccionado?" appendTo="@(body)"
+                                header="Eliminar registro" severity="alert" widgetVar="cd" style="font-size: 10pt; color: #045491">
+                                <p:commandButton actionListener="#{efectivofleterocontroller.elimina()}" 
+                                                 update="datos,:growl" value="Sí" oncomplete="PF('cd').hide()" style="font-size: 10pt; color: #045491"/>
+                                <p:commandButton value="No" onclick="PF('cd').hide();" type="button" style="font-size: 10pt; color: #045491"/>
+                             </p:confirmDialog>
+                        </f:facet>                        
+                        
+                    </p:dataTable>   
+                    
+                    <br/>
+                    <h:panelGrid columns="5" columnClasses="list-column-left,list-column-left,list-column-left,list-column-left,list-column-left">
+                        <h:outputText style="font-size: 10pt; color: #045491" value="Tipo:"/>  
+                        <p:selectOneMenu id="TIPO_ARCH" tabindex="100" value="#{liqfletecontroller.tipo_exportacion}" style="font-size: 10pt; color: #045491" >
+                            <f:selectItems  value="#{liqfletecontroller.tipos}" />
+                        </p:selectOneMenu>
+                        <p:commandButton value="Exportar archivo" ajax="false" style="font-size: 10pt; color: #045491">
+                            <p:dataExporter type="#{liqfletecontroller.tipo_exportacion}" target="datos" fileName="Efectivos" preProcessor="#{liqfletecontroller.preProcessPDF}"/>
+                        </p:commandButton>
+                    </h:panelGrid>          
+                    
+                    </h:form>    
+                    <ui:include src="Create.xhtml"/>  
+                    <ui:include src="Edit.xhtml"/>  
+               
+            </ui:define>
+
+
+        </ui:composition>
+
+    </body>
+</html>

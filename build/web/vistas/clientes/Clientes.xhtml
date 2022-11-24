@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://java.sun.com/jsf/composite/componentes">
+
+    <body>
+
+        <ui:composition template="./../../Template04.xhtml">
+            <ui:define name="content">
+                <h:form id="ListaForm">
+                <p:commandButton ajax="true" actionListener="#{clientecontroller.buscaListaDatos()}" value="Buscar"  
+                                     update="datos,:growl"
+                                     style="font-size: 10pt; color: #045491"/>
+                
+                <br/>
+                <br/>    
+                <p:dataTable id="datos" 
+                                   paginatorPosition="top"
+                                   value="#{clientecontroller.lista}" 
+                                   var="item"
+                                   selectionMode="single" selection="#{clientecontroller.registroSel}"
+                                   rowKey="#{item.id}"
+                                   rowIndexVar="fila"
+                                   paginator="true"
+                                   rows="10"
+                                   paginatorAlwaysVisible="false"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                    
+                        <f:facet name="header">
+                            <h:outputText value="Clientes"/>
+                        </f:facet>
+                    
+                        <p:ajax event="rowSelect"  update="createButton editButton deleteButton"/>
+                        <p:ajax event="rowUnselect" update="createButton editButton deleteButton"/>                    
+
+                        <p:column style="font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Id"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.id}" />
+                        </p:column>
+                    
+                        <p:column sortBy="#{item.nombre}" style="font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Nombre"/>
+                            </f:facet>
+                            
+                            <p:commandLink action="#{clientecontroller.onClick(item)}" ajax="false" style="text-decoration: underline; color: blue">
+                                <h:outputText  value="#{item.nombre}"/>
+                            </p:commandLink>
+                            
+                        </p:column>
+                        
+                        <p:column sortBy="#{item.numId}" style="font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Identificación"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.numId}"/>
+                        </p:column>
+                        
+                        <p:column sortBy="#{item.provincia.nombre}" style="font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Provincia"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.provincia.nombre}"/>
+                        </p:column>
+                        
+                        <p:column sortBy="#{item.localidad.nombre}" style="font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Localidad"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.localidad.nombre}"/>
+                        </p:column>
+                        
+                        <p:column style="font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Dirección"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.direccion}"/>
+                        </p:column>
+                        
+                        <p:column style="font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Teléfono"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.telefono}"/>
+                        </p:column>
+                        
+                        <f:facet name="footer">
+                            <p:commandButton id="createButton" ajax="false" icon="ui-icon-plus"   value="#{bundle.Create}"
+                                             action="#{clientecontroller.nuevo}" 
+                                             style="font-size: 10pt; color: #045491"/>
+                            <p:commandButton id="editButton" ajax="false" icon="ui-icon-pencil" value="#{bundle.Edit}" disabled="#{empty clientecontroller.registroSel}"
+                                             action="#{clientecontroller.edita}" 
+                                             style="font-size: 10pt; color: #045491"/>
+
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}"
+                                             onclick="PF('cd').show()" disabled="#{empty clientecontroller.registroSel}"
+                                             style="font-size: 10pt; color: #045491"/>
+                            <p:confirmDialog message="Está seguro de eliminar el registro seleccionado?" appendTo="@(body)"
+                                header="Eliminar registro" severity="alert" widgetVar="cd" style="font-size: 10pt; color: #045491">
+                                <p:commandButton actionListener="#{clientecontroller.elimina()}" 
+                                                 update="datos,:growl" value="Sí" oncomplete="PF('cd').hide()" style="font-size: 10pt; color: #045491"/>
+                                <p:commandButton value="No" onclick="PF('cd').hide();" type="button" style="font-size: 10pt; color: #045491"/>
+                            </p:confirmDialog>
+                        </f:facet>                        
+                        
+                    </p:dataTable>     
+                    
+                    <br/>
+                    <h:panelGrid columns="5" columnClasses="list-column-left,list-column-left,list-column-left,list-column-left,list-column-left">
+                        <h:outputText style="font-size: 10pt; color: #045491" value="Tipo:"/>  
+                        <p:selectOneMenu id="TIPO_ARCH" tabindex="100" value="#{tropacontroller.tipo_exportacion}" style="font-size: 10pt; color: #045491" >
+                            <f:selectItems  value="#{tropacontroller.tipos}" />
+                        </p:selectOneMenu>
+                        <p:commandButton value="Exportar archivo" ajax="false" style="font-size: 10pt; color: #045491">
+                            <p:dataExporter type="#{tropacontroller.tipo_exportacion}" target="datos" fileName="Clientes" preProcessor="#{tropacontroller.preProcessPDF}"/>
+                        </p:commandButton>
+                    </h:panelGrid>
+                    </h:form>    
+                    
+            </ui:define>
+
+
+        </ui:composition>
+
+    </body>
+</html>

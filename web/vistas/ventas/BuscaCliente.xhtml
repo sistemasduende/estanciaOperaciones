@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="BuscaClienteDlg" width="100%" style="font-size: 10pt; color: #045491" widgetVar="BuscaClienteDialog" modal="true" resizable="true" 
+                  appendTo="@(body)" header="Buscar cliente" position="center" onShow="PF('BuscaClienteDialog').initPosition()">
+            <h:form id="BuscaClienteForm">
+                <h:panelGroup id="display" >
+ 
+                <p:panelGrid columns="2" style="background: white;border-width: thin; border-style: hidden">
+                    <p:inputText size="40" value="#{ventaestanciacontroller.nombreCliente}" style="font-size: 10pt; color: #045491 "/>  
+                    <p:commandButton ajax="true" actionListener="#{ventaestanciacontroller.buscaClientes()}" value="Buscar" update="datosClientes" 
+                                     style="font-size: 10pt; color: #045491"/>
+                </p:panelGrid>
+                    
+                    <p:dataTable id="datosClientes" 
+                                   value="#{ventaestanciacontroller.listaClientes}" 
+                                   var="item"
+                                   paginator="true"
+                                   paginatorPosition="top"    
+                                   rowKey="#{item.id}"
+                                   rowIndexVar="fila"
+                                   selectionMode="single" 
+                                   selection="#{ventaestanciacontroller.clienteSel}"
+                                   style="font-size: 10pt; color: #045491"
+                                   rows="10"
+                                   >
+                            
+                        <p:column style="width: 10%; text-align: center; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Código"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.id}" />
+                        </p:column>
+                    
+                        <p:column sortBy="#{item.nombre}" style="width: 45%; text-align: left; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Nombre del cliente"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.nombre}"/>
+                        </p:column>
+                            
+                        <p:column style="width: 45%; text-align: left; font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Dirección"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.direccion}"/>
+                        </p:column>
+                            
+                        </p:dataTable>
+                    
+                    
+                    <br/>
+                    <p:commandButton ajax="true" actionListener="#{ventaestanciacontroller.seleccionaCliente()}" value="Seleccionar" update=":EditForm:tabViewVenta:nombreCliente" oncomplete="handleSubmit(args, 'BuscaClienteDialog');"
+                                     style="font-size: 10pt; color: #045491"/>
+                    
+                    <p:commandButton value="#{bundle.Cancel}" onclick="BuscaClienteDialog.hide()"
+                                     style="font-size: 10pt; color: #045491"/>
+
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>
