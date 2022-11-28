@@ -33,12 +33,15 @@ public class Conector {
       {
           case "administracion":
               ls_data_source="jdbc/administracion";
+                              
               break;
           case "estancia":
-              ls_data_source="jdbc/estancia";
+              ls_data_source="jdbc/estancia"; 
+                              
               break;
           case "contabilidad":
               ls_data_source="jdbc/contabilidad";
+                              
               break;
               
           default: 
