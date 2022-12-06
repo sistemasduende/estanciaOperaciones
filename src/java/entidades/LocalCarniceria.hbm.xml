@@ -54,6 +54,11 @@
                 <comment>Horario tarde</comment>
             </column>
         </property>
+        <property name="orden" type="int">
+            <column name="orden" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
         <property name="estado" type="char">
             <column name="estado" length="1" not-null="true">
                 <comment>Estado: Activo: 1 /Inactivo: 0</comment>

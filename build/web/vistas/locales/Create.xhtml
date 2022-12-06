@@ -52,7 +52,7 @@
                         
                         <p:outputLabel value="Email:" for="email" style="font-size: 10pt; color: #045491"/>
                         <p:inputText id="email" value="#{localcontroller.registroMod.email}" required="true" maxlength="100" size="40" style="font-size: 10pt; color: #045491"/>
-
+                        
                         <p:outputLabel value="Plantilla cobranzas:" for="plantilla" style="font-size: 10pt; color: #045491"/>                        
                         <p:inputNumber id="plantilla" value="#{localcontroller.registroMod.plantillaCobranzas}" size="10"
                                        inputStyle="text-align: right" decimalPlaces="0" emptyValue="zero"
@@ -71,6 +71,8 @@
                             <f:selectItem itemLabel="Inactivo" itemValue="0" />
                         </p:selectOneRadio>
                         
+                        <p:outputLabel value="Orden:" for="orden" style="font-size: 10pt; color: #045491" />
+                        <p:inputText id="orden" value="#{localcontroller.registroMod.orden}" required="true" maxlength="10" size="40" style="font-size: 10pt; color: #045491"/>
                     </p:panelGrid>
                     
                     </p:tab>

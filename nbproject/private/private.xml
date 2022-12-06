@@ -3,10 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/LogIn.xhtml</file>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/reportes/ReporteEntregaController.java</file>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/vistas/entregas/ReporteEntregas.xhtml</file>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/seguridad/LogIn.java</file>
+            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/vistas/tropas/TropasPorNumero.xhtml</file>
+            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/vistas/tropas/Tropas.xhtml</file>
+            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/Template04.xhtml</file>
         </group>
     </open-files>
 </project-private>

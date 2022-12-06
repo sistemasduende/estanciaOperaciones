@@ -194,7 +194,7 @@ public class LocalController extends BeanBase implements Serializable {
         try{
             session=HibernateUtil.getSessionFactory().openSession();
             org.hibernate.Transaction tx=session.beginTransaction();
-            Query q=session.createQuery("from LocalCarniceria a");
+            Query q=session.createQuery("from LocalCarniceria a order by orden");
             this.lista=(List<LocalCarniceria>) q.list();
             session.getTransaction().commit();
         }
@@ -221,6 +221,7 @@ public class LocalController extends BeanBase implements Serializable {
         this.registroMod.setEmail(null);
         this.registroMod.getProvincia().setId(0);
         this.registroMod.getLocalidad().setId(0);
+        this.registroMod.setOrden(0);
         this.registroMod.setEstado('1');
         localidades.clear();
         return "/vistas/locales/Create";
