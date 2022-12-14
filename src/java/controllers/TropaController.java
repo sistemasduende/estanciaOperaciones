@@ -131,7 +131,7 @@ public class TropaController extends BeanBase implements Serializable {
     public void setNumTropa(String numTropa) {
         this.numTropa = numTropa;
     }
-    
+
     public Tropa getRegistroSel() {
         return registroSel;
     }
@@ -353,7 +353,7 @@ public class TropaController extends BeanBase implements Serializable {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             org.hibernate.Transaction tx = session.beginTransaction();
-            Query q = session.createQuery("from Tropa a where fecIng >= :fec_desde and fecIng <= :fec_hasta");
+            Query q = session.createQuery("from Tropa a where fecIng >= :fec_desde and fecIng <= :fec_hasta order by fecha_ing desc");
             q.setParameter("fec_desde", lda_fecha_desde);
             q.setParameter("fec_hasta", lda_fecha_hasta);
             this.lista = (List<Tropa>) q.list();
@@ -492,28 +492,60 @@ public class TropaController extends BeanBase implements Serializable {
         }
     }
 
-    public void obtenerTropaPorNumero() {
+    /*public String setearTropa() {
         FacesMessage msg;
         if (numTropa != null) {
-            Session session = null;
-            try {
-                session = HibernateUtil.getSessionFactory().openSession();
-                session.beginTransaction();
-                String sql = "From Tropa T where T.numeroTropa = '" + numTropa + "'";
-                this.registroSel = (Tropa) session.createQuery(sql).uniqueResult();
-                session.getTransaction().commit();
-                if(registroSel == null){
+            if (numTropa.equals("")) {
+                msg = new FacesMessage("Debe ingresar un número de tropa valido!");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } else {
+                registroSel = obtenerTropaPorNumero();
+                if (registroSel == null) {
                     msg = new FacesMessage("No existe ese número de tropa!");
                     FacesContext.getCurrentInstance().addMessage(null, msg);
+                } else {
+                    return edita();
                 }
-            } catch (HibernateException e) {
-                session.getTransaction().rollback();
-                msg = new FacesMessage("Error: " + e.getCause().getMessage());
-                FacesContext.getCurrentInstance().addMessage(null, msg);
-            } finally {
-                session.close();
-            }    
+            }
+        } 
+        return null;
+    }*/
+    public String setearTropa() {
+        if (numTropa == null) {
+                return null;
         }
+        FacesMessage msg;
+        if (numTropa.equals("")) {
+                msg = new FacesMessage("Debe ingresar un número de tropa valido!");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                return null;
+        }
+        registroSel = obtenerTropaPorNumero();
+        if (registroSel == null) {
+                msg = new FacesMessage("No existe ese número de tropa!");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                return null;
+        }
+        return edita();
+    }
+    public Tropa obtenerTropaPorNumero() {
+        FacesMessage msg;
+        Session session = null;
+        Tropa tropa = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            session.beginTransaction();
+            String sql = "From Tropa T where T.numeroTropa = '" + numTropa + "'";
+            tropa = (Tropa) session.createQuery(sql).uniqueResult();
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            session.getTransaction().rollback();
+            msg = new FacesMessage("Error: " + e.getCause().getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } finally {
+            session.close();
+        }
+        return tropa;
     }
 
     //Obtiene los detalles del registro que se hace clic

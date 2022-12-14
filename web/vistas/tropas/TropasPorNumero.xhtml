@@ -22,7 +22,7 @@
                         
                         <p:outputLabel value="Número de tropa: " style="font-size: 12pt; color: #045491; font-weight: bold;" />
                         <p:inputText id="numTropa" value="#{tropacontroller.numTropa}"/>
-                        <p:commandButton type="submit" ajax="false" action="#{tropacontroller.edita()}" actionListener="#{tropacontroller.obtenerTropaPorNumero()}" value="Buscar"
+                        <p:commandButton type="submit" ajax="false" action="#{tropacontroller.setearTropa()}"  value="Buscar"
                                          update=":growl" style="font-size: 10pt; color: #045491"> 
                         </p:commandButton>    
                         
