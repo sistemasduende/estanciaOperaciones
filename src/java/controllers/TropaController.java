@@ -93,6 +93,7 @@ public class TropaController extends BeanBase implements Serializable {
     Tropa registroSel;
     Tropa registroMod;
     TropaDet registroModDetalle;
+    private String origen="";
     private String numTropa = "";
     private String modo = "";
     private String tipoBusqStock = "T";
@@ -132,6 +133,14 @@ public class TropaController extends BeanBase implements Serializable {
         this.numTropa = numTropa;
     }
 
+    public String getOrigen() {
+        return origen;
+    }
+
+    public void setOrigen(String origen) {
+        this.origen = origen;
+    }
+    
     public Tropa getRegistroSel() {
         return registroSel;
     }
@@ -353,7 +362,7 @@ public class TropaController extends BeanBase implements Serializable {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             org.hibernate.Transaction tx = session.beginTransaction();
-            Query q = session.createQuery("from Tropa a where fecIng >= :fec_desde and fecIng <= :fec_hasta order by fecha_ing desc");
+            Query q = session.createQuery("from Tropa a where fecIng >= :fec_desde and fecIng <= :fec_hasta order by a.fecIng desc");
             q.setParameter("fec_desde", lda_fecha_desde);
             q.setParameter("fec_hasta", lda_fecha_hasta);
             this.lista = (List<Tropa>) q.list();
@@ -445,7 +454,8 @@ public class TropaController extends BeanBase implements Serializable {
     }
 
     //Obtiene los detalles del registro seleccionado
-    public String edita() {
+    public String edita(String origen) {
+        this.origen = origen;
         FacesMessage msg;
         if (registroSel != null) {
             Session session = null;
@@ -492,24 +502,6 @@ public class TropaController extends BeanBase implements Serializable {
         }
     }
 
-    /*public String setearTropa() {
-        FacesMessage msg;
-        if (numTropa != null) {
-            if (numTropa.equals("")) {
-                msg = new FacesMessage("Debe ingresar un número de tropa valido!");
-                FacesContext.getCurrentInstance().addMessage(null, msg);
-            } else {
-                registroSel = obtenerTropaPorNumero();
-                if (registroSel == null) {
-                    msg = new FacesMessage("No existe ese número de tropa!");
-                    FacesContext.getCurrentInstance().addMessage(null, msg);
-                } else {
-                    return edita();
-                }
-            }
-        } 
-        return null;
-    }*/
     public String setearTropa() {
         if (numTropa == null) {
                 return null;
@@ -526,7 +518,7 @@ public class TropaController extends BeanBase implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, msg);
                 return null;
         }
-        return edita();
+        return edita("/vistas/tropas/TropasPorNumero");
     }
     public Tropa obtenerTropaPorNumero() {
         FacesMessage msg;
@@ -550,6 +542,7 @@ public class TropaController extends BeanBase implements Serializable {
 
     //Obtiene los detalles del registro que se hace clic
     public String onClick(Tropa p) throws Exception {
+        this.origen = "/vistas/tropas/Tropas";
         FacesMessage msg;
         registroSel = p;
         if (registroSel != null) {
@@ -927,7 +920,6 @@ public class TropaController extends BeanBase implements Serializable {
 
     public String graba() {
         FacesMessage msg;
-
         //Valido permiso para la transacción        
         try {
             if (!validaPermiso(getUsuarioConectado().getNombreUsuario(), ResourceBundle.getBundle("general/Permisos").getString("ModificarTropa"))) {
@@ -1065,7 +1057,10 @@ public class TropaController extends BeanBase implements Serializable {
         }
 
         estadoActual = registroMod.getProcesada(); //Actualizo el estado actual
-        buscaListaDatos();
+        if(!this.origen.equals("/vistas/tropas/TropasPorNumero")){
+            buscaListaDatos();
+        }
+        
 
         //Grabo la auditoría de la transacción
         try {
@@ -1077,7 +1072,7 @@ public class TropaController extends BeanBase implements Serializable {
 
         msg = new FacesMessage("Actualización exitosa!");
         FacesContext.getCurrentInstance().addMessage(null, msg);
-        return "Tropas";
+        return this.origen;
     }
 
     //Calcula medias reces
