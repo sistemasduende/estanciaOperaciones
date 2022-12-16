@@ -9,7 +9,7 @@
     <h:body>
         <ui:composition template="./../../Template04.xhtml">
             <ui:define name="content">
-                <h:form>
+                <h:form>    
                 <h:outputText id="Titulo" value="Entregas por fecha" style="font-size: 12pt; color: #045491; font-weight: bold" />
                 <br/>
                 <br/>                    
@@ -52,7 +52,7 @@
                                 </f:facet>
 
                                 <p:headerRow>
-                                    <p:column colspan="4" style="font-size: 8pt; color: #045491">
+                                    <p:column colspan="5" style="font-size: 8pt; color: #045491">
                                         <h:outputText value="Tropa: #{item.numeroTropa}" />
                                     </p:column>
                                 </p:headerRow>                       
@@ -78,8 +78,14 @@
                                         <h:outputText value="Categoría"/>
                                     </f:facet>
                                     <h:outputText  value="#{item.categoria}"/>
-                                </p:column>  
-
+                                </p:column>
+                                <p:column style="font-size: 8pt; color: #045491;text-align: left; width: 20%">  
+                                    <f:facet name="header">
+                                        <h:outputText value="Tipo"/>
+                                    </f:facet>
+                                <h:outputText value="#{item.tipo eq 'Z'  ? 'Garrón':  ( item.tipo eq 'PI' ? 'Pierna' : 'Delantero')}"/>
+                                </p:column>
+                                
                                 <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 20%">
                                     <f:facet name="header">
                                         <h:outputText value="Kilos"/>
@@ -90,7 +96,7 @@
                                 </p:column>  
 
                                 <p:summaryRow>
-                                    <p:column colspan="3" style="font-size: 8pt; color: #045491;text-align: right">
+                                    <p:column colspan="5" style="font-size: 8pt; color: #045491;text-align: right">
                                         <h:outputText value="Total tropa #{item.numeroTropa}:"/>
                                     </p:column>    
                                     <p:column style="font-size: 8pt; color: #045491;text-align: right">
@@ -102,7 +108,7 @@
 
                                 <p:columnGroup type="footer">
                                     <p:row>
-                                        <p:column colspan="3" style="text-align:right" footerText="Total general:" />
+                                        <p:column colspan="4" style="text-align:right" footerText="Total general:" />
                                         <p:column style="text-align:right">
                                             <f:facet name="footer">
                                                 <h:outputText  value="#{reporteentregacontroller.lista.stream().map(item->item.kilos).sum()}">
@@ -155,7 +161,7 @@
                                 </f:facet>
 
                                 <p:headerRow>
-                                    <p:column colspan="4" style="font-size: 8pt; color: #045491">
+                                    <p:column colspan="5" style="font-size: 8pt; color: #045491">
                                         <h:outputText value="Local: #{item.nombreComercial}" />
                                     </p:column>
                                 </p:headerRow>                       
@@ -181,8 +187,15 @@
                                         <h:outputText value="Categoría"/>
                                     </f:facet>
                                     <h:outputText  value="#{item.categoria}"/>
-                                </p:column>  
-
+                                </p:column>
+                                
+                                <p:column style="font-size: 8pt; color: #045491;text-align: left; width: 20%">
+                                    <f:facet name="header">
+                                        <h:outputText value="Tipo"/>
+                                    </f:facet>
+                                    <h:outputText  value="#{item.tipo eq 'Z'  ? 'Garrón':  ( item.tipo eq 'PI' ? 'Pierna' : 'Delantero')}"/>
+                                </p:column>
+                                
                                 <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 20%">
                                     <f:facet name="header">
                                         <h:outputText value="Kilos"/>
@@ -193,7 +206,7 @@
                                 </p:column>  
 
                                 <p:summaryRow>
-                                    <p:column colspan="3" style="font-size: 8pt; color: #045491;text-align: right">
+                                    <p:column colspan="4" style="font-size: 8pt; color: #045491;text-align: right">
                                         <h:outputText value="Total local #{item.nombreComercial}:"/>
                                     </p:column>    
                                     <p:column style="font-size: 8pt; color: #045491;text-align: right">
@@ -205,7 +218,7 @@
 
                                 <p:columnGroup type="footer">
                                     <p:row>
-                                        <p:column colspan="3" style="text-align:right" footerText="Total general:" />
+                                        <p:column colspan="4" style="text-align:right" footerText="Total general:" />
                                         <p:column style="text-align:right">
                                             <f:facet name="footer">
                                                 <h:outputText  value="#{reporteentregacontroller.lista.stream().map(item->item.kilos).sum()}">
@@ -232,7 +245,7 @@
                         </h:form> 
                     </p:tab>
                 </p:tabView>
-                </h:form>
+                </h:form>      
             </ui:define>
         </ui:composition>
     </h:body>

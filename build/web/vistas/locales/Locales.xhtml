@@ -48,7 +48,7 @@
                             </f:facet>
                             <h:outputText  value="#{item.nombreComercial}"/>
                         </p:column>
-                        
+
                         <p:column sortBy="#{item.cliente.nombre}" style="font-size: 10pt; color: #045491">
                             <f:facet name="header">
                                 <h:outputText value="Cliente"/>
@@ -83,6 +83,13 @@
                             </f:facet>
                             <h:outputText  value="#{item.telefono}"/>
                         </p:column>
+                        
+                        <p:column sortBy="#{item.orden}" style="font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Orden"/>
+                            </f:facet>
+                            <h:outputText value="#{item.orden}"/>
+                        </p:column>                      
                         
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}"

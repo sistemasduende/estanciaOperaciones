@@ -268,6 +268,7 @@ public class VentaEstanciaController extends BeanBase{
                 session.beginTransaction();
                 this.registroMod =(VentaEstancia) session.get(VentaEstancia.class,registroSel.getId());
                 Hibernate.initialize(this.registroMod.getVentaEstanciaDets());
+                this.registroMod.getVentaEstanciaDets().stream().forEach(x->x.getUnidad().getNombre());
                 Hibernate.initialize(this.registroMod.getVentaEstanciaRemitos());
                 session.getTransaction().commit();
             }

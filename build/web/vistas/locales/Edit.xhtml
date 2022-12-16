@@ -71,7 +71,9 @@
                             <f:selectItem itemLabel="Activo" itemValue="1" />
                             <f:selectItem itemLabel="Inactivo" itemValue="0" />
                         </p:selectOneRadio>
-                        
+                       
+                        <p:outputLabel value="Orden:" for="orden" style="font-size: 10pt; color: #045491" />
+                        <p:inputText id="orden" value="#{localcontroller.registroMod.orden}" required="true" maxlength="10" size="40" style="font-size: 10pt; color: #045491"/>
                     </p:panelGrid>
                     
                     </p:tab>
