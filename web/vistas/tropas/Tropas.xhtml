@@ -42,7 +42,7 @@
                                    selectionMode="single" selection="#{tropacontroller.registroSel}"
                                    rowKey="#{item.id}"
                                    rowIndexVar="fila"
-                                   paginator="true"
+                                   paginator="true"                                   
                                    rows="10"
                                    paginatorAlwaysVisible="false"
                                    style="font-size: 10pt; color: #045491"
@@ -72,7 +72,7 @@
                             <h:outputText  value="#{item.dte}"/>
                         </p:column>     
                         
-                        <p:column sortBy="#{item.fecIng}" style="font-size: 8pt; color: #045491;text-align: right">
+                        <p:column sortBy="#{item.fecIng}"  style="font-size: 8pt; color: #045491;text-align: right">
                             <f:facet name="header">
                                 <h:outputText value="Fecha"/>
                             </f:facet>
@@ -290,7 +290,7 @@
                                              action="#{tropacontroller.nuevo}" 
                                              style="font-size: 10pt; color: #045491"/>
                             <p:commandButton id="editButton" ajax="false" icon="ui-icon-pencil" value="#{bundle.Edit}" disabled="#{empty tropacontroller.registroSel}"
-                                             action="#{tropacontroller.edita}" 
+                                             action="#{tropacontroller.edita('/vistas/tropas/Tropas')}" 
                                              style="font-size: 10pt; color: #045491"/>
 
                             <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}"

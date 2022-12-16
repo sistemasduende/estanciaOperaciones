@@ -17,19 +17,23 @@ public class ReporteEntregaItem {
     String nombreComercial;
     Date fec_ent;
     String categoria;
+    String tipo;
     double kilos;
 
     public ReporteEntregaItem() {
     }
 
-    public ReporteEntregaItem(String numeroTropa, int idLocal, String nombreComercial,Date fec_ent,String categoria,double kilos) {
-        this.numeroTropa=numeroTropa;
-        this.idLocal=idLocal;
-        this.nombreComercial=nombreComercial;
-        this.fec_ent=fec_ent;
-        this.categoria=categoria;
-        this.kilos=kilos;
+    public ReporteEntregaItem(String numeroTropa, int idLocal, String nombreComercial, Date fec_ent, String categoria, String tipo, double kilos) {
+        this.numeroTropa = numeroTropa;
+        this.idLocal = idLocal;
+        this.nombreComercial = nombreComercial;
+        this.fec_ent = fec_ent;
+        this.categoria = categoria;
+        this.tipo = tipo;
+        this.kilos = kilos;
     }
+
+    
 
     public String getNumeroTropa() {
         return numeroTropa;
@@ -71,6 +75,14 @@ public class ReporteEntregaItem {
         this.categoria = categoria;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+    
     public double getKilos() {
         return kilos;
     }

@@ -23,6 +23,7 @@ public class LocalCarniceria  implements java.io.Serializable {
      private String email;
      private String horarioMa;
      private String horarioTa;
+     private int orden;
      private char estado;
      private Integer plantillaCobranzas;
      private String ccVentaLocal;
@@ -38,15 +39,16 @@ public class LocalCarniceria  implements java.io.Serializable {
     }
 
 	
-    public LocalCarniceria(Cliente cliente, Localidad localidad, Provincia provincia, String nombreComercial, String direccion, char estado) {
+    public LocalCarniceria(Cliente cliente, Localidad localidad, Provincia provincia, String nombreComercial, String direccion, int orden,char estado) {
         this.cliente = cliente;
         this.localidad = localidad;
         this.provincia = provincia;
         this.nombreComercial = nombreComercial;
         this.direccion = direccion;
+        this.orden = orden;
         this.estado = estado;
     }
-    public LocalCarniceria(Cliente cliente, Localidad localidad, Provincia provincia, String nombreComercial, Integer idUsuarioEncargado, String responsable, String direccion, String telefono, String email, String horarioMa, String horarioTa, char estado, Integer plantillaCobranzas, String ccVentaLocal, Set<RemitoVenta> remitoVentas, Set<LocalRubro> localRubros, Set<ListaPreciosLocal> listaPreciosLocals, Set<LocalEmpleado> localEmpleados, Set<Balance> balances, Set<Entrega> entregas, Set<Venta> ventas) {
+    public LocalCarniceria(Cliente cliente, Localidad localidad, Provincia provincia, String nombreComercial, Integer idUsuarioEncargado, String responsable, String direccion, String telefono, String email, String horarioMa, String horarioTa, int orden, char estado, Integer plantillaCobranzas, String ccVentaLocal, Set<RemitoVenta> remitoVentas, Set<LocalRubro> localRubros, Set<ListaPreciosLocal> listaPreciosLocals, Set<LocalEmpleado> localEmpleados, Set<Balance> balances, Set<Entrega> entregas, Set<Venta> ventas) {
        this.cliente = cliente;
        this.localidad = localidad;
        this.provincia = provincia;
@@ -58,6 +60,7 @@ public class LocalCarniceria  implements java.io.Serializable {
        this.email = email;
        this.horarioMa = horarioMa;
        this.horarioTa = horarioTa;
+       this.orden = orden;
        this.estado = estado;
        this.plantillaCobranzas = plantillaCobranzas;
        this.ccVentaLocal = ccVentaLocal;
@@ -154,6 +157,17 @@ public class LocalCarniceria  implements java.io.Serializable {
     public void setHorarioTa(String horarioTa) {
         this.horarioTa = horarioTa;
     }
+
+    public int getOrden() {
+        return orden;
+    }
+
+    public void setOrden(int orden) {
+        this.orden = orden;
+    }
+    
+    
+    
     public char getEstado() {
         return this.estado;
     }
