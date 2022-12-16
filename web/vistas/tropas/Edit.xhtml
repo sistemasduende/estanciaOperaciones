@@ -623,7 +623,7 @@
                 <br/>                    
                 <p:commandButton action="#{tropacontroller.graba()}" value="#{bundle.Save}" disabled="#{tropacontroller.registroMod.procesada eq '1'}"
                                  update=":growl" ajax="false" style="font-size: 10pt; color: #045491"/>                        
-                <p:commandButton action="#{tropacontroller.origen.toString()}" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
+                <p:commandButton action="#{tropacontroller.cancelar()}" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
 
             </h:form>
             <ui:include src="CreateDetalle.xhtml"/>   

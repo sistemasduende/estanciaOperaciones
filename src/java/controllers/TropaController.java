@@ -452,7 +452,10 @@ public class TropaController extends BeanBase implements Serializable {
         return "/vistas/tropas/Create";
 
     }
-
+    public String cancelar(){
+        this.registroSel = null;
+        return this.origen;
+    }
     //Obtiene los detalles del registro seleccionado
     public String edita(String origen) {
         this.origen = origen;
