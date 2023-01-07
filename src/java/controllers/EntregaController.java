@@ -5,16 +5,30 @@
  */
 package controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import entidades.Entrega;
 import entidades.Entrega;
 import entidades.EntregaDet;
+import general.AsientoRealizado;
 import general.BeanBase;
+import general.EntregaAnulada;
+import general.EntregaRealizada;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -23,6 +37,8 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.primefaces.PrimeFaces;
+import sun.net.www.protocol.http.HttpURLConnection;
 
 /**
  *
@@ -42,6 +58,7 @@ public class EntregaController extends BeanBase{
     private List<EntregaDet> listaEntregaDet= new ArrayList<EntregaDet>();
     private List <EntregaDet> listaFiltradaDet=null;    
     private String modo="";
+    private String observacionAnulacion = "";
     private double totalKilos;
     
     public EntregaController() {
@@ -86,6 +103,14 @@ public class EntregaController extends BeanBase{
 
     public void setModo(String modo) {
         this.modo = modo;
+    }
+
+    public String getObservacionAnulacion() {
+        return observacionAnulacion;
+    }
+
+    public void setObservacionAnulacion(String observacionAnulacion) {
+        this.observacionAnulacion = observacionAnulacion;
     }
 
     public List<Entrega> getListaFiltrada() {
@@ -224,6 +249,116 @@ public class EntregaController extends BeanBase{
         }
         else
             return null;
+    }
+    public EntregaRealizada anulaEntrega() {
+ 
+        FacesMessage msg;
+        //Valido permiso para la transacción        
+        try {
+            if (!validaPermiso(getUsuarioConectado().getNombreUsuario(), ResourceBundle.getBundle("general/Permisos").getString("AnularEntrega"))) {
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Transacción no autorizada", "Entregas");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                return null;
+            }
+            
+        } catch (UnsupportedEncodingException ex) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getLocalizedMessage(), "Entregas");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return null;
+        };
+
+        
+        EntregaAnulada entregaAnular = new EntregaAnulada();
+        EntregaRealizada entregaRealizada = new EntregaRealizada();
+
+        
+        BufferedReader br = null;
+            String resultadoJSon = "";
+            String resultado = "";
+
+            String uri = String.format(getURI_BACKEND() + "/entregas/realizarAnulacionEntrega");
+            URL url;
+
+            entregaAnular.setIdEntrega(registroMod.getId());
+            entregaAnular.setIdUsuario(getUsuarioConectado().getIdUsuario());
+            entregaAnular.setObservacion(this.getObservacionAnulacion());
+
+            this.setObservacionAnulacion("");
+            
+            try {
+                
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
+                String JSONString = gson.toJson(entregaAnular);
+                url = new URL(uri);
+                HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
+                httpConnection.setReadTimeout(15000);
+                httpConnection.setConnectTimeout(15000);
+                httpConnection.setRequestMethod("POST");
+                httpConnection.setRequestProperty("Content-Type", "application/json;  charset=utf-8");
+                httpConnection.setRequestProperty("Accept", "application/json");
+                httpConnection.setInstanceFollowRedirects(true);
+                httpConnection.setDoOutput(true);
+                httpConnection.connect();
+
+                DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());
+                wr.writeBytes(JSONString);
+                wr.flush();
+                wr.close();
+
+                int responseCode = httpConnection.getResponseCode();
+                System.out.println("ResponseCode=" + responseCode);
+                if (responseCode == java.net.HttpURLConnection.HTTP_OK) {
+                    br = new BufferedReader(new InputStreamReader(httpConnection.getInputStream(), "UTF-8"));
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        sb.append(line).append("\n");
+                    }
+                    br.close();
+                    resultadoJSon = sb.toString();
+                } else {
+                    resultadoJSon = null;
+                }
+
+                resultado = "Ok";
+
+                gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
+                entregaRealizada = gson.fromJson(resultadoJSon, EntregaRealizada.class);
+                System.out.println("Resultado Ws:" + resultadoJSon);
+
+            } catch (UnsupportedEncodingException e) {
+                System.out.println(resultadoJSon);
+                entregaRealizada.setIdEntrega(0);
+                entregaRealizada.setResultado("Error");
+            } catch (IOException e) {
+                System.out.println(resultadoJSon);
+                entregaRealizada.setIdEntrega(0);
+                entregaRealizada.setResultado("Error");
+            } finally {
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                        System.out.println(resultadoJSon);
+                    }
+                }
+                System.out.println("Resultado Ws:" + resultadoJSon);
+            }
+            //Grabo la auditoría de la transacción
+
+            try {
+                grabaAuditoria(getUsuarioConectado().getIdUsuario(), ResourceBundle.getBundle("general/Permisos").getString("AnularEntrega"),
+                        "Entrega Nro: " + entregaRealizada.getIdEntrega(), "Módulo de entregas", obtieneNombreEquipo());
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(TropaController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            msg = new FacesMessage("Anulación exitosa!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+
+        edita();
+        buscaListaDatos();
+        return entregaRealizada;
     }
     
     public void calculaSumaKilos() {

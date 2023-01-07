@@ -73,7 +73,7 @@ public class ReporteEntregaController extends BeanBase{
         FacesMessage msg;
         CallableStatement s=null;
         ResultSet r=null;
-        String ls_numTropa,ls_nombreComercial,ls_categoria, ls_tipo;
+        String ls_numTropa,ls_nombreComercial,ls_categoria,  ls_tipoMov, ls_tipo;
         Date lda_fec_ent;
         int li_idLocal;
         double ld_kilos;
@@ -130,7 +130,7 @@ public class ReporteEntregaController extends BeanBase{
                    ld_kilos=r.getDouble("kilos");
                    
                    ReporteEntregaItem registro= new ReporteEntregaItem(ls_numTropa,li_idLocal,ls_nombreComercial,  
-                           lda_fec_ent,ls_categoria, ls_tipo,ld_kilos);
+                           lda_fec_ent, ls_categoria, ls_tipo,ld_kilos);
                    resultados.add(registro);
                }
                s.close();

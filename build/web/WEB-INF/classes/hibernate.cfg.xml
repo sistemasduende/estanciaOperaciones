@@ -41,19 +41,10 @@ Contributor(s):
 -->
 <hibernate-configuration>
   <session-factory>
-    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-    <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/estancia?zeroDateTimeBehavior=convertToNull&amp;serverTimezone=America/Buenos_Aires&amp;useSSL=FALSE</property>
-    <property name="hibernate.connection.username">dba</property>
-    <property name="hibernate.connection.password">Admin*Duende*2022</property>
-    <property name="hibernate.current_session_context_class">thread</property>
-    <property name="hibernate.show_sql">true</property>
-    <property name="hibernate.connection.characterEncoding">utf8</property>
-    <property name="connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
-    <property name="hibernate.c3p0.min_size">5</property>
-    <property name="hibernate.c3p0.max_size">20</property>
-    <property name="hibernate.c3p0.acquire_increment">5</property>
-    <property name="hibernate.c3p0.timeout">1800</property>
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.connection.datasource">jdbc/estancia</property>
+        <property name="hibernate.current_session_context_class">thread</property>
     <mapping resource="entidades/TropaViaje.hbm.xml"/>
     <mapping resource="entidades/Repartidor.hbm.xml"/>
     <mapping resource="entidades/LiquidacionFlete.hbm.xml"/>
