@@ -344,21 +344,31 @@ public class EntregaController extends BeanBase{
                 }
                 System.out.println("Resultado Ws:" + resultadoJSon);
             }
-            //Grabo la auditoría de la transacción
-
-            try {
+            
+            if (entregaRealizada.getIdEntrega()==0){
+               msg = new FacesMessage("Error al anular la entrega: " + entregaRealizada.getResultado());
+               FacesContext.getCurrentInstance().addMessage(null, msg);
+               return null;
+            }
+            else{
+                //Grabo la auditoría de la transacción
+                try {
                 grabaAuditoria(getUsuarioConectado().getIdUsuario(), ResourceBundle.getBundle("general/Permisos").getString("AnularEntrega"),
                         "Entrega Nro: " + entregaRealizada.getIdEntrega(), "Módulo de entregas", obtieneNombreEquipo());
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(TropaController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(TropaController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                msg = new FacesMessage("Anulación exitosa!");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+
+                edita();
+                buscaListaDatos();
+                return entregaRealizada;
+                
             }
-
-            msg = new FacesMessage("Anulación exitosa!");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-
-        edita();
-        buscaListaDatos();
-        return entregaRealizada;
+            
+            
     }
     
     public void calculaSumaKilos() {

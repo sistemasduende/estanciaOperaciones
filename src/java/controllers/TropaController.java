@@ -348,7 +348,6 @@ public class TropaController extends BeanBase implements Serializable {
         fecha_desde.set(Calendar.SECOND, 0);
         fecha_desde.set(Calendar.MILLISECOND, 0);
         java.util.Date lda_fecha_desde = new java.sql.Date(fecha_desde.getTimeInMillis());
-
         java.util.Calendar fecha_hasta = java.util.Calendar.getInstance();
         fecha_hasta.setTimeZone(TimeZone.getTimeZone("America/Buenos_Aires"));
         fecha_hasta.setTime(fec_hasta);
@@ -357,7 +356,6 @@ public class TropaController extends BeanBase implements Serializable {
         fecha_hasta.set(Calendar.SECOND, 59);
         fecha_hasta.set(Calendar.MILLISECOND, 0);
         java.util.Date lda_fecha_hasta = new java.sql.Date(fecha_hasta.getTimeInMillis());
-
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();

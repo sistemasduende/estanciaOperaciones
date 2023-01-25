@@ -6,6 +6,7 @@
 package reportes;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  *
@@ -90,7 +91,10 @@ public class ReporteEntregaItem {
     public void setKilos(double kilos) {
         this.kilos = kilos;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "ReporteEntregaItem{" + "numeroTropa=" + numeroTropa + ", idLocal=" + idLocal + ", nombreComercial=" + nombreComercial + ", fec_ent=" + fec_ent + ", categoria=" + categoria + ", tipo=" + tipo + ", kilos=" + kilos + '}';
+    }
     
 }
