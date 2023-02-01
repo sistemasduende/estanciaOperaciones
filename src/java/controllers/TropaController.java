@@ -75,10 +75,13 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.primefaces.PrimeFaces;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
+import org.primefaces.util.Constants;
 import seguridad.LogIn;
 
 /**
@@ -617,7 +620,7 @@ public class TropaController extends BeanBase implements Serializable {
             Iterator i = this.getRegistroMod().getInventarioTropas().iterator();
             while (i.hasNext()) {
                 InventarioTropa g = (InventarioTropa) i.next();
-                listaGarronesStock.add(g);
+                listaGarronesStock.add(g);              
             }
 
             //Guardo el deposito seleccionado

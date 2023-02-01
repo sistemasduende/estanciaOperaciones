@@ -8,9 +8,7 @@ package controllers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import entidades.Entrega;
-import entidades.Entrega;
 import entidades.EntregaDet;
-import general.AsientoRealizado;
 import general.BeanBase;
 import general.EntregaAnulada;
 import general.EntregaRealizada;
@@ -23,7 +21,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
@@ -37,7 +34,6 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.primefaces.PrimeFaces;
 import sun.net.www.protocol.http.HttpURLConnection;
 
 /**

@@ -73,8 +73,9 @@
                                    rows="20"
                                    paginator="true"
                                    sortBy="#{item.tropaDetGarron.numGarron}"
+                                   multiViewState="true"
                                    >
-                            
+   
                         <p:column style="width: 10%; font-size: 8pt; color: #045491; text-align: right;
                                   background-color: #{item.estado eq 'D' ? 'lightgreen': ( item.estado eq 'E' ? 'white' : 'orange' )}"
                                   sortBy="#{item.estado}">
