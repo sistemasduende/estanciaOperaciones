@@ -37,12 +37,12 @@
                                    paginatorAlwaysVisible="false"
                                    style="font-size: 10pt; color: #045491"
                                    reflow="true"
+                                   multiViewState="true"
                                    >
                     
                         <f:facet name="header">
                             <h:outputText value="Stock"/>
-                        </f:facet>
-                    
+                        </f:facet> 
                         <p:column style="font-size: 8pt; color: #045491;text-align: left">
                             <f:facet name="header">
                                 <h:outputText value="Tropa"/>
@@ -56,7 +56,7 @@
                             <f:facet name="header">
                                 <h:outputText value="Tipo"/>
                             </f:facet>
-                            <h:outputText  value=" #{item.tipo eq 'F' ? 'Faena': 'Invernada'}"/>
+                            <h:outputText  value="#{item.tipo eq 'F' ? 'Faena':(item.tipo eq 'T' ? 'Terceros': 'Invernada')}"/>
                         </p:column>                    
                         
                         <p:column sortBy="#{item.fec_ing}" style="font-size: 8pt; color: #045491">

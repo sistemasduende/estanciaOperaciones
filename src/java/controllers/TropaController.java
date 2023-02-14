@@ -75,10 +75,13 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.primefaces.PrimeFaces;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
+import org.primefaces.util.Constants;
 import seguridad.LogIn;
 
 /**
@@ -348,7 +351,6 @@ public class TropaController extends BeanBase implements Serializable {
         fecha_desde.set(Calendar.SECOND, 0);
         fecha_desde.set(Calendar.MILLISECOND, 0);
         java.util.Date lda_fecha_desde = new java.sql.Date(fecha_desde.getTimeInMillis());
-
         java.util.Calendar fecha_hasta = java.util.Calendar.getInstance();
         fecha_hasta.setTimeZone(TimeZone.getTimeZone("America/Buenos_Aires"));
         fecha_hasta.setTime(fec_hasta);
@@ -357,7 +359,6 @@ public class TropaController extends BeanBase implements Serializable {
         fecha_hasta.set(Calendar.SECOND, 59);
         fecha_hasta.set(Calendar.MILLISECOND, 0);
         java.util.Date lda_fecha_hasta = new java.sql.Date(fecha_hasta.getTimeInMillis());
-
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -619,7 +620,7 @@ public class TropaController extends BeanBase implements Serializable {
             Iterator i = this.getRegistroMod().getInventarioTropas().iterator();
             while (i.hasNext()) {
                 InventarioTropa g = (InventarioTropa) i.next();
-                listaGarronesStock.add(g);
+                listaGarronesStock.add(g);              
             }
 
             //Guardo el deposito seleccionado
@@ -995,8 +996,7 @@ public class TropaController extends BeanBase implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, msg);
                 return null;
             }
-        }
-
+        } 
         //Valido detalle de pagos a cuenta de iva
         if (!validaTotalPagosCuentaIva()) {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Pagos a cuenta de Iva no coinciden con la tropa", "Tropas");

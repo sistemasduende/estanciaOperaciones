@@ -21,6 +21,7 @@ public class Entrega  implements java.io.Serializable {
      private Integer idUsuarioRecibe;
      private Date fecRec;
      private char estado;
+     private char tipoMov;
      private BigDecimal totalKilos;
      private BigDecimal valorFlete;
      private String observaciones;
@@ -30,16 +31,17 @@ public class Entrega  implements java.io.Serializable {
     }
 
 	
-    public Entrega(LocalCarniceria localCarniceria, Date fecCarga, int idUsuarioEntrega, Date fecEnt, char estado, BigDecimal totalKilos, BigDecimal valorFlete) {
+    public Entrega(LocalCarniceria localCarniceria, Date fecCarga, int idUsuarioEntrega, Date fecEnt, char estado, char tipoMov, BigDecimal totalKilos, BigDecimal valorFlete) {
         this.localCarniceria = localCarniceria;
         this.fecCarga = fecCarga;
         this.idUsuarioEntrega = idUsuarioEntrega;
         this.fecEnt = fecEnt;
         this.estado = estado;
+        this.tipoMov = tipoMov;
         this.totalKilos = totalKilos;
         this.valorFlete = valorFlete;
     }
-    public Entrega(LocalCarniceria localCarniceria, Date fecCarga, int idUsuarioEntrega, Date fecEnt, Integer idUsuarioRecibe, Date fecRec, char estado, BigDecimal totalKilos, BigDecimal valorFlete, String observaciones, Set<EntregaDet> entregaDets) {
+    public Entrega(LocalCarniceria localCarniceria, Date fecCarga, int idUsuarioEntrega, Date fecEnt, Integer idUsuarioRecibe, Date fecRec, char estado, char tipoMov,BigDecimal totalKilos, BigDecimal valorFlete, String observaciones, Set<EntregaDet> entregaDets) {
        this.localCarniceria = localCarniceria;
        this.fecCarga = fecCarga;
        this.idUsuarioEntrega = idUsuarioEntrega;
@@ -47,6 +49,7 @@ public class Entrega  implements java.io.Serializable {
        this.idUsuarioRecibe = idUsuarioRecibe;
        this.fecRec = fecRec;
        this.estado = estado;
+       this.tipoMov = tipoMov;
        this.totalKilos = totalKilos;
        this.valorFlete = valorFlete;
        this.observaciones = observaciones;
@@ -109,6 +112,15 @@ public class Entrega  implements java.io.Serializable {
     public void setEstado(char estado) {
         this.estado = estado;
     }
+
+    public char getTipoMov() {
+        return tipoMov;
+    }
+
+    public void setTipoMov(char tipoMov) {
+        this.tipoMov = tipoMov;
+    }
+    
     public BigDecimal getTotalKilos() {
         return this.totalKilos;
     }

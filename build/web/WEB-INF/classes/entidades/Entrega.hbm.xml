@@ -41,7 +41,12 @@
         </property>
         <property name="estado" type="char">
             <column name="estado" length="1" not-null="true">
-                <comment>Estado de la entrega: Pendiente: P /Aprobado : A/Rechazado : R</comment>
+                <comment>Estado de la entrega: Pendiente: P /Aprobado : A/Rechazado : R /Anulado: N</comment>
+            </column>
+        </property>
+                <property name="tipoMov" type="char">
+            <column name="tipoMov" length="1" not-null="true">
+                <comment>Entrega: E/Anulación: A</comment>
             </column>
         </property>
         <property name="totalKilos" type="big_decimal">
