@@ -996,8 +996,7 @@ public class TropaController extends BeanBase implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, msg);
                 return null;
             }
-        }
-
+        } 
         //Valido detalle de pagos a cuenta de iva
         if (!validaTotalPagosCuentaIva()) {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Pagos a cuenta de Iva no coinciden con la tropa", "Tropas");

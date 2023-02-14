@@ -37,6 +37,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 /**
  *
@@ -267,9 +268,12 @@ public class VentaEstanciaController extends BeanBase{
                 session=HibernateUtil.getSessionFactory().openSession();
                 session.beginTransaction();
                 this.registroMod =(VentaEstancia) session.get(VentaEstancia.class,registroSel.getId());
-                Hibernate.initialize(this.registroMod.getVentaEstanciaDets());
-                this.registroMod.getVentaEstanciaDets().stream().forEach(x->x.getUnidad().getNombre());
-                Hibernate.initialize(this.registroMod.getVentaEstanciaRemitos());
+                //Hibernate.initialize(this.registroMod.getVentaEstanciaDets());
+                //linea agregada por diego
+                //this.registroMod.getVentaEstanciaDets().stream().forEach(x->x.getUnidad().getNombre());
+                //Hibernate.initialize(this.registroMod.getVentaEstanciaRemitos());
+                //linea agregada por diego
+                //this.registroMod.getVentaEstanciaRemitos().stream().forEach(x->x.getRemitoVenta().getIdUsuario());
                 session.getTransaction().commit();
             }
             catch (HibernateException e){
@@ -301,8 +305,12 @@ public class VentaEstanciaController extends BeanBase{
                 session=HibernateUtil.getSessionFactory().openSession();
                 session.beginTransaction();
                 this.registroMod =(VentaEstancia) session.get(VentaEstancia.class,registroSel.getId());
-                Hibernate.initialize(this.registroMod.getVentaEstanciaDets());
-                Hibernate.initialize(this.registroMod.getVentaEstanciaRemitos());
+                //Hibernate.initialize(this.registroMod.getVentaEstanciaDets());
+                //linea agregada por diego
+                //this.registroMod.getVentaEstanciaDets().stream().forEach(x->x.getUnidad().getNombre());
+                //Hibernate.initialize(this.registroMod.getVentaEstanciaRemitos());
+                //linea agregada por diego
+                //this.registroMod.getVentaEstanciaRemitos().stream().forEach(x->x.getRemitoVenta().getIdUsuario());
                 session.getTransaction().commit();
             }
             catch (HibernateException e){
@@ -336,6 +344,8 @@ public class VentaEstanciaController extends BeanBase{
             listaRemitos=(List<RemitoVenta>) q.list();
             for (RemitoVenta remito: listaRemitos){
                 Hibernate.initialize(remito.getRemitoVentaDets());
+                //linea agregada por diego
+                //remito.getRemitoVentaDets().stream().forEach(x->x.getUnidad().getNombre());
             }
             session.getTransaction().commit();
         }
@@ -539,10 +549,12 @@ public class VentaEstanciaController extends BeanBase{
         registroMod.setLocalCarniceria(local);
         
         Session session=HibernateUtil.getSessionFactory().openSession();
+        
+        
         try{
-            session.beginTransaction();
+            Transaction tx = session.beginTransaction();
             //Cambio el estado de los remitos relacionados
-            for (VentaEstanciaRemito rv : registroMod.getVentaEstanciaRemitos()){
+            for (VentaEstanciaRemito rv : registroMod.getVentaEstanciaRemitos()){   
                 RemitoVenta remito= rv.getRemitoVenta();
                 remito.setEstado('1');
                 session.saveOrUpdate(remito);
@@ -572,14 +584,16 @@ public class VentaEstanciaController extends BeanBase{
                     }
                 }
             }
-            
-            session.getTransaction().commit();
+            if (!tx.wasCommitted()){
+                tx.commit();
+            }
             msg = new FacesMessage("Actualización exitosa!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return "Ventas";
         }
         catch (HibernateException e){
             session.getTransaction().rollback();
+            e.printStackTrace();
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage("mensajes", new FacesMessage(FacesMessage.SEVERITY_INFO,"",e.getMessage()));
             return null;
@@ -701,7 +715,6 @@ public class VentaEstanciaController extends BeanBase{
         Empresa empresa=cargaEmpresa();
         
         for (VentaEstanciaDet det : registroMod.getVentaEstanciaDets()){
-            
             Asiento asiento= new Asiento();
             asiento.setIdEmpresa(1);        
             asiento.setNumPlantilla(0);  //No tiene plantilla relacionada

@@ -21,6 +21,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -110,8 +111,13 @@ public class ProductorController extends BeanBase implements Serializable {
         Session session=null;
         try{session=HibernateUtil.getSessionFactory().openSession();
             org.hibernate.Transaction tx=session.beginTransaction();
-            Query q=session.createQuery("from Productor a");
+            Query q=session.createQuery("from Productor a"); 
+            
             this.lista=(List<Productor>) q.list();
+            lista.stream().forEach((t) -> {
+                t.getCondIva().getNombre();
+                t.getCondIva().getId();
+            });
             session.getTransaction().commit();
         }
         catch (HibernateException e){
@@ -225,7 +231,6 @@ public class ProductorController extends BeanBase implements Serializable {
         FacesMessage msg;
         Session session=null;
         Productor u=this.getRegistroMod();
-        
         try{
             session=HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
