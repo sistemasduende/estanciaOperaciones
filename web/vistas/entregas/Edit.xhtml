@@ -111,9 +111,22 @@
                 
                 <br/>                    
                 <p:commandButton action="/vistas/entregas/Entregas" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
-
+                <p:commandButton id="anulButton" ajax="true" icon="ui-icon-alert" value="#{bundle.Anular}" disabled="#{entregacontroller.registroMod.estado eq 'N' ? true : entregacontroller.registroMod.tipoMov eq 'A' ?  true : false}" 
+                                             onclick="PF('dialogoAnulacion').show()" 
+                                     style="font-size: 10pt; color: #045491"/>
             </h:form>
-                
+        <h:form id="formAnular" style="font-size: 10pt; color: #045491">
+            <p:dialog id="dlgAnular" header="Anular entrega" widgetVar="dialogoAnulacion" resizable="false" showEffect="fade" hideEffect="explode" modal="false">
+                <p:outputLabel value="¿Está seguro de anular esta entrega?"/>
+                <p:panelGrid columns="2" style="margin: 0 auto;">                                
+                    <p:outputLabel value="Observación:"/>
+                    <p:inputText value="#{entregacontroller.observacionAnulacion}"/>
+                </p:panelGrid>
+                <br/>
+                <p:commandButton  value="Si, Anular" actionListener="#{entregacontroller.anulaEntrega()}" update="EditForm,:growl" oncomplete="PF('dialogoAnulacion').hide();" />
+                <p:commandButton  value="Cancelar" onclick="PF('dialogoAnulacion').hide();"/>
+            </p:dialog>
+        </h:form>  
             </div>
             </ui:define>
     </ui:composition>

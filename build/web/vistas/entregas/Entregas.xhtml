@@ -49,6 +49,7 @@
                                    paginatorAlwaysVisible="false"
                                    style="font-size: 10pt; color: #045491"
                                    reflow="true"
+                                   multiViewState="true"
                                    >
                     
                         <f:facet name="header">
@@ -64,7 +65,12 @@
                             </f:facet>
                             <h:outputText  value="#{item.id}"/>
                         </p:column>                           
-                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: left; width: 20%">  
+                                <f:facet name="header">
+                                    <h:outputText value="Tipo"/>
+                                </f:facet>
+                                <h:outputText value="#{item.tipoMov eq 'E'  ? 'Entrega':  'Anulación'}"/>
+                        </p:column>
                         <p:column sortBy="#{item.fecEnt}" style="font-size: 8pt; color: #045491;text-align: right; width: 10%">
                             <f:facet name="header">
                                 <h:outputText value="Fecha"/>
@@ -116,10 +122,9 @@
                         <f:facet name="footer">
                             <p:commandButton id="editButton" ajax="false" icon="ui-icon-pencil" value="#{bundle.Edit}" disabled="#{empty entregacontroller.registroSel}"
                                              action="#{entregacontroller.edita}" 
-                                             style="font-size: 10pt; color: #045491"/>
-
+                                             style="font-size: 10pt; color: #045491"/>               
                         </f:facet>                        
-                        
+
                     </p:dataTable>  
                     
                     <br/>
@@ -134,7 +139,7 @@
                     </h:panelGrid>
 
                     </h:form>    
-                    
+
             </ui:define>
 
 

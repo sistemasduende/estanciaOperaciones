@@ -13,6 +13,13 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -73,7 +80,7 @@ public class ReporteEntregaController extends BeanBase{
         FacesMessage msg;
         CallableStatement s=null;
         ResultSet r=null;
-        String ls_numTropa,ls_nombreComercial,ls_categoria, ls_tipo;
+        String ls_numTropa,ls_nombreComercial,ls_categoria,  ls_tipoMov, ls_tipo;
         Date lda_fec_ent;
         int li_idLocal;
         double ld_kilos;
@@ -99,8 +106,9 @@ public class ReporteEntregaController extends BeanBase{
         fecha_desde.set(Calendar.MINUTE, 0);
         fecha_desde.set(Calendar.SECOND, 0);
         fecha_desde.set(Calendar.MILLISECOND, 0);
-        java.util.Date lda_fecha_desde = new java.sql.Date(fecha_desde.getTimeInMillis());
-
+        java.sql.Date lda_fecha_desde =  new java.sql.Date(fecha_desde.getTimeInMillis());
+   
+  
         java.util.Calendar fecha_hasta = java.util.Calendar.getInstance();
         fecha_hasta.setTimeZone(TimeZone.getTimeZone("America/Buenos_Aires"));
         fecha_hasta.setTime(fec_hasta);
@@ -108,16 +116,15 @@ public class ReporteEntregaController extends BeanBase{
         fecha_hasta.set(Calendar.MINUTE, 59);
         fecha_hasta.set(Calendar.SECOND, 59);
         fecha_hasta.set(Calendar.MILLISECOND, 0);
-        java.util.Date lda_fecha_hasta = new java.sql.Date(fecha_hasta.getTimeInMillis());        
-
+        java.sql.Date lda_fecha_hasta = new java.sql.Date(fecha_hasta.getTimeInMillis());
         try {
                //Conectamos a la base
                Conector conector = new Conector();  
                conexion = conector.connect("estancia");
 
                s=conexion.prepareCall("{call sp_rep_entrega_tropas_local ( ? , ? )}");
-               s.setDate(1, (java.sql.Date) lda_fecha_desde);
-               s.setDate(2, (java.sql.Date) lda_fecha_hasta);
+               s.setDate(1, lda_fecha_desde);
+               s.setString(2, lda_fecha_hasta.toString()+ " 23:59:59");
                
                r=s.executeQuery();
                while (r.next()){
@@ -130,8 +137,9 @@ public class ReporteEntregaController extends BeanBase{
                    ld_kilos=r.getDouble("kilos");
                    
                    ReporteEntregaItem registro= new ReporteEntregaItem(ls_numTropa,li_idLocal,ls_nombreComercial,  
-                           lda_fec_ent,ls_categoria, ls_tipo,ld_kilos);
+                           lda_fec_ent, ls_categoria, ls_tipo,ld_kilos);
                    resultados.add(registro);
+                   System.out.println(registro.toString());
                }
                s.close();
                this.setLista(resultados);
