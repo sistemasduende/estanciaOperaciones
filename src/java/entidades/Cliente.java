@@ -13,10 +13,10 @@ public class Cliente  implements java.io.Serializable {
 
 
      private Integer id;
-     private CondIva condIva;
-     private Localidad localidad;
-     private Provincia provincia;
-     private Tipoid tipoid;
+     private CondIva condIva = new CondIva();
+     private Localidad localidad = new Localidad();
+     private Provincia provincia = new Provincia();
+     private Tipoid tipoid = new Tipoid();
      private String numId;
      private String nombre;
      private String direccion;

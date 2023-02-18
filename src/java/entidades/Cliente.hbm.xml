@@ -17,7 +17,7 @@
         <many-to-one name="localidad" class="entidades.Localidad" fetch="select">
             <column name="idLocalidad" />
         </many-to-one>
-        <many-to-one name="provincia" class="entidades.Provincia" fetch="select">
+        <many-to-one name="provincia" class="entidades.Provincia"  fetch="select">
             <column name="idProvincia" />
         </many-to-one>
         <many-to-one name="tipoid" class="entidades.Tipoid" fetch="select">

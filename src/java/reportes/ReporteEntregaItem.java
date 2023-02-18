@@ -17,6 +17,7 @@ public class ReporteEntregaItem {
     int idLocal;
     String nombreComercial;
     Date fec_ent;
+    char tipoMov;
     String categoria;
     String tipo;
     double kilos;
@@ -24,17 +25,16 @@ public class ReporteEntregaItem {
     public ReporteEntregaItem() {
     }
 
-    public ReporteEntregaItem(String numeroTropa, int idLocal, String nombreComercial, Date fec_ent, String categoria, String tipo, double kilos) {
+    public ReporteEntregaItem(String numeroTropa, int idLocal, String nombreComercial, Date fec_ent, char tipoMov, String categoria, String tipo, double kilos) {
         this.numeroTropa = numeroTropa;
         this.idLocal = idLocal;
         this.nombreComercial = nombreComercial;
         this.fec_ent = fec_ent;
+        this.tipoMov = tipoMov;
         this.categoria = categoria;
         this.tipo = tipo;
         this.kilos = kilos;
     }
-
-    
 
     public String getNumeroTropa() {
         return numeroTropa;
@@ -68,6 +68,14 @@ public class ReporteEntregaItem {
         this.fec_ent = fec_ent;
     }
 
+    public char getTipoMov() {
+        return tipoMov;
+    }
+
+    public void setTipoMov(char tipoMov) {
+        this.tipoMov = tipoMov;
+    }
+    
     public String getCategoria() {
         return categoria;
     }
@@ -94,7 +102,6 @@ public class ReporteEntregaItem {
 
     @Override
     public String toString() {
-        return "ReporteEntregaItem{" + "numeroTropa=" + numeroTropa + ", idLocal=" + idLocal + ", nombreComercial=" + nombreComercial + ", fec_ent=" + fec_ent + ", categoria=" + categoria + ", tipo=" + tipo + ", kilos=" + kilos + '}';
+        return "ReporteEntregaItem{" + "numeroTropa=" + numeroTropa + ", idLocal=" + idLocal + ", nombreComercial=" + nombreComercial + ", fec_ent=" + fec_ent + ", tipoMov=" + tipoMov + ", categoria=" + categoria + ", tipo=" + tipo + ", kilos=" + kilos + '}';
     }
-    
 }
