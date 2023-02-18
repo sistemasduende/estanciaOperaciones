@@ -43,7 +43,7 @@
             </key>
             <one-to-many class="entidades.Productor" />
         </set>
-        <set name="clientes" table="cliente" inverse="true" lazy="true" fetch="select">
+        <set name="clientes" table="cliente" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="idProvincia" />
             </key>
