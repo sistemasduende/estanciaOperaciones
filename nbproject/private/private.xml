@@ -3,8 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/controllers/TropaController.java</file>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/entidades/Tropa.java</file>
+            <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/entidades/Provincia.hbm.xml</file>
+            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/vistas/clientes/Create.xhtml</file>
+            <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/entidades/Cliente.hbm.xml</file>
+            <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/entidades/Localidad.hbm.xml</file>
+            <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/controllers/ClienteController.java</file>
+            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/vistas/clientes/Clientes.xhtml</file>
+            <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/entidades/Cliente.java</file>
+            <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/general/ListaProvincias.java</file>
         </group>
     </open-files>
 </project-private>
