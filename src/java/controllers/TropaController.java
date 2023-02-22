@@ -120,7 +120,8 @@ public class TropaController extends BeanBase implements Serializable {
     private String nombreComisionista;
     private List<Comisionista> listaComisionistas = new ArrayList<Comisionista>();
     private Comisionista comisionistaSel;
-
+    private String tipoTropa;
+    
     //Stock
     TropaStock registroStockSel;
 
@@ -328,6 +329,14 @@ public class TropaController extends BeanBase implements Serializable {
         this.comisionistaSel = comisionistaSel;
     }
 
+    public String getTipoTropa() {
+        return tipoTropa;
+    }
+
+    public void setTipoTropa(String tipoTropa) {
+        this.tipoTropa = tipoTropa;
+    }
+   
     //Obtiene lista de todos las tropas
     public void buscaListaDatos() {
         FacesMessage msg;
@@ -342,7 +351,12 @@ public class TropaController extends BeanBase implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-
+        
+        if (tipoTropa==null){
+            msg = new FacesMessage("Debe ingresar el tipo de tropa para la búsqueda");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
         java.util.Calendar fecha_desde = java.util.Calendar.getInstance();
         fecha_desde.setTimeZone(TimeZone.getTimeZone("America/Buenos_Aires"));
         fecha_desde.setTime(fec_desde);
@@ -363,10 +377,19 @@ public class TropaController extends BeanBase implements Serializable {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             org.hibernate.Transaction tx = session.beginTransaction();
-            Query q = session.createQuery("from Tropa a where fecIng >= :fec_desde and fecIng <= :fec_hasta order by a.fecIng desc");
-            q.setParameter("fec_desde", lda_fecha_desde);
-            q.setParameter("fec_hasta", lda_fecha_hasta);
-            this.lista = (List<Tropa>) q.list();
+            if(tipoTropa.charAt(0)=='F'){
+                Query q = session.createQuery("from Tropa a where fecIng >= :fec_desde and fecIng <= :fec_hasta and tipo in ('F', 'T') order by a.fecIng desc");
+                q.setParameter("fec_desde", lda_fecha_desde);
+                q.setParameter("fec_hasta", lda_fecha_hasta);
+                q.setParameter("fec_hasta", lda_fecha_hasta);
+                this.lista = (List<Tropa>) q.list();
+            }else{
+                Query q = session.createQuery("from Tropa a where fecIng >= :fec_desde and fecIng <= :fec_hasta and tipo = 'I' order by a.fecIng desc");
+                q.setParameter("fec_desde", lda_fecha_desde);
+                q.setParameter("fec_hasta", lda_fecha_hasta);
+                this.lista = (List<Tropa>) q.list();
+            }
+                
             session.getTransaction().commit();
         } catch (HibernateException e) {
             session.getTransaction().rollback();
@@ -634,7 +657,19 @@ public class TropaController extends BeanBase implements Serializable {
 
     public void onClickPagoCIva() {
     }
-
+    
+    public void onChangeTipoTropa(){
+        try{
+            if(this.lista!=null){
+            buscaListaDatos();
+            }
+        }catch(Exception e){
+            FacesMessage msg;
+            msg = new FacesMessage("Error: " + e.getCause().getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+    
     //Elimina registro seleccionado
     public void elimina() {
         FacesContext context = FacesContext.getCurrentInstance();
@@ -1185,7 +1220,43 @@ public class TropaController extends BeanBase implements Serializable {
         registroModDetalle.setImporteCostoTotal(new BigDecimal(ld_costo_total));
         return;
     }
+    public void calculaValoresTropaTerceros() {
+        
+        double ld_kilos_faenados = 0;
+        double ld_precio_kilo_faenado = 0, ld_importe_faena = 0;
+        double ld_porc_ing_brutos = 0, ld_valor_ing_brutos = 0;
+        double ld_costo_total = 0;
+     
+        if (registroModDetalle.getKilosFaenados() != null) {
+            ld_kilos_faenados = registroModDetalle.getKilosFaenados().doubleValue();
+        }
+        
+        if (registroModDetalle.getPrecioKiloFaenado() != null) {
+            ld_precio_kilo_faenado = registroModDetalle.getPrecioKiloFaenado().doubleValue();
+            ld_precio_kilo_faenado = Math.round(ld_precio_kilo_faenado * 10000d) / 10000d;
+        }
+        
+        //Calculo el importe de la faena de acuerdo a como cobra el productor
+        ld_importe_faena = ld_kilos_faenados * ld_precio_kilo_faenado;
+        ld_importe_faena = Math.round(ld_importe_faena * 100d) / 100d;
+   
+        if (registroModDetalle.getPorcIngBrutos() != null) {
+            ld_porc_ing_brutos = registroModDetalle.getPorcIngBrutos().doubleValue();
+        }
 
+        ld_valor_ing_brutos = ld_importe_faena * ld_porc_ing_brutos / 100.00;
+        ld_valor_ing_brutos = Math.round(ld_valor_ing_brutos * 100d) / 100d;
+        
+        //Calculo el costo total
+        ld_costo_total =  ld_importe_faena + ld_valor_ing_brutos;
+
+        
+        registroModDetalle.setImporteFaena(new BigDecimal(ld_importe_faena));
+        registroModDetalle.setValorIngBrutos(new BigDecimal(ld_valor_ing_brutos));
+        registroModDetalle.setImporteCostoTotal(new BigDecimal(ld_costo_total));
+        return;
+    }
+    
     //Actualiza el costo total debido a actualización del pago a cuenta de iva
     public void actualizaValorPagoCuentaIva() {
         double ld_pago_cuenta_iva = 0, ld_importe_kilos_vivos = 0, ld_importe_faena = 0, ld_valor_ing_brutos = 0;

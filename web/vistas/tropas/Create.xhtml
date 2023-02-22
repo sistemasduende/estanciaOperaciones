@@ -11,6 +11,7 @@
             <div style="align: center">
             <h:form id="EditForm">
                 <p:tabView id="tabViewCab">
+                    <p:ajax event="tabChange"  update="botonesCrearDetalle, datosDetalles" /> 
                     <p:tab title="Tropa" >
                     <p:panelGrid columns="4"  rendered="#{tropacontroller.registroMod != null}" style="background: white; width: 100%; border-width: thin; border-style: hidden">
                         
@@ -69,8 +70,8 @@
                                          required="true" style="width: 100%; font-size: 10pt; color: #045491 "
                                          disabled="#{tropacontroller.registroMod.procesada eq '1'}">
                                 <f:selectItem itemLabel="Faena" itemValue="F"  />
-                                <f:selectItem itemLabel="Invernada" itemValue="I"  />
                                 <f:selectItem itemLabel="Terceros" itemValue="T"  />
+                                <p:ajax update="tabDetalle"/>
                         </p:selectOneMenu> 
 
                         <p:outputLabel value="Depósito:" for="deposito" style="font-size: 10pt; color: #045491"/>                        
@@ -259,11 +260,20 @@
                     </p:tab>
                     
                     <p:tab title="Detalle de tropa" id="tabDetalle">
+                        
+                        <h:panelGroup id="botonesCrearDetalle" >
+                        <br/>
                         <p:commandButton id="createDetTropa" icon="ui-icon-plus"   value="Crear detalle"  
                            actionListener="#{tropacontroller.nuevoDetalle()}" update=":CreateFormDetalle" oncomplete="PF('CreateDialogDetalle').show()"
                            style="font-size: 10pt; color: #045491" immediate="true" 
+                           rendered="#{tropacontroller.registroMod.tipo eq 'F'}"
                            disabled="#{tropacontroller.registroMod.procesada eq '1' or tropacontroller.registroMod.procesada eq '2'}"/>
-                        
+                        <p:commandButton id="createDetTropaTerceros" icon="ui-icon-plus"   value="Crear detalle" 
+                           actionListener="#{tropacontroller.nuevoDetalle()}" update=":CreateFormDetalleTerceros" oncomplete="PF('CreateDialogDetalleTerceros').show()"
+                           style="font-size: 10pt; color: #045491" immediate="true"
+                           rendered="#{tropacontroller.registroMod.tipo eq 'T'}"
+                           disabled="#{tropacontroller.registroMod.procesada eq '1' or tropacontroller.registroMod.procesada eq '2'}" />
+                        </h:panelGroup>
                         <br/>                           
                         <br/> 
                         
@@ -286,7 +296,7 @@
                             </p:commandLink>
                         </p:column>
                         
-                        <p:column style="width: 5%; font-size: 8pt; color: #045491">
+                        <p:column style="width: 5%; font-size: 8pt; color: #045491" rendered="#{tropacontroller.registroMod.tipo eq 'F'}">
                             <f:facet name="header">
                                 <h:outputText value="Cab. vivas"/>
                             </f:facet>
@@ -295,7 +305,7 @@
                             </h:outputText>
                         </p:column>          
                             
-                        <p:column style="width: 5%; font-size: 8pt; color: #045491">
+                        <p:column style="width: 5%; font-size: 8pt; color: #045491" rendered="#{tropacontroller.registroMod.tipo eq 'F'}">
                             <f:facet name="header">
                                 <h:outputText value="Cab. Dte"/>
                             </f:facet>
@@ -304,7 +314,7 @@
                             </h:outputText>
                         </p:column>    
                             
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right" rendered="#{tropacontroller.registroMod.tipo eq 'F'}">
                             <f:facet name="header">
                                 <h:outputText value="Kilos vivos"/>
                             </f:facet>
@@ -313,7 +323,7 @@
                             </h:outputText>
                         </p:column>    
 
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right" rendered="#{tropacontroller.registroMod.tipo eq 'F'}">
                             <f:facet name="header">
                                 <h:outputText value="Decomisos"/>
                             </f:facet>
@@ -331,7 +341,7 @@
                             </h:outputText>
                         </p:column> 
                             
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right" rendered="#{tropacontroller.registroMod.tipo eq 'F'}">
                             <f:facet name="header">
                                 <h:outputText value="Rendimiento"/>
                             </f:facet>
@@ -340,7 +350,7 @@
                             </h:outputText>
                         </p:column>          
                             
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right" rendered="#{tropacontroller.registroMod.tipo eq 'F'}">
                             <f:facet name="header">
                                 <h:outputText value="Precio del kilo vivo"/>
                             </f:facet>
@@ -349,7 +359,7 @@
                             </h:outputText>
                         </p:column>                             
                             
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right" rendered="#{tropacontroller.registroMod.tipo eq 'F'}">
                             <f:facet name="header">
                                 <h:outputText value="Importe kilos vivos"/>
                             </f:facet>
@@ -385,7 +395,7 @@
                             </h:outputText>
                         </p:column>    
                             
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right" rendered="#{tropacontroller.registroMod.tipo eq 'F'}">
                             <f:facet name="header">
                                 <h:outputText value="Pago a cuenta de Iva"/>
                             </f:facet>
@@ -394,7 +404,7 @@
                             </h:outputText>
                         </p:column>     
                             
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right" rendered="#{tropacontroller.registroMod.tipo eq 'F'}">
                             <f:facet name="header">
                                 <h:outputText value="Importe Comisión"/>
                             </f:facet>
@@ -623,7 +633,8 @@
                 <p:commandButton action="/vistas/tropas/Tropas" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
 
             </h:form>
-            <ui:include src="CreateDetalle.xhtml"/>   
+            <ui:include src="CreateDetalle.xhtml"/>
+            <ui:include src="CreateDetalleTerceros.xhtml"/>
             <ui:include src="BuscaViajes.xhtml"/>   
             <ui:include src="PagosCuentaIva.xhtml"/>   
             <ui:include src="BuscaComisionista.xhtml"/>   
