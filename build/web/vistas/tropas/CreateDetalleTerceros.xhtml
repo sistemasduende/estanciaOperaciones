@@ -24,11 +24,12 @@
                         <h:outputText value="" style="font-size: 10pt; color: #045491"/>
 
                        
-                        <h:outputText value="Medias reses:" style="font-size: 10pt; color: #045491"/>
+                        <p:outputLabel value="Medias reses:" for="mediasReses"  style="font-size: 10pt; color: #045491"/>
                         <p:inputNumber id="mediasReses" required="true"  value="#{tropacontroller.registroModDetalle.mediasReces}" 
                                      style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
                                      inputStyle="text-align: right"
                                      autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1' or tropacontroller.registroMod.tipo eq 'F' or tropacontroller.registroMod.tipo eq 'I'}">
+                            <f:validateLongRange minimum="1"/>
                         </p:inputNumber>                        
 
                         <h:outputText value="" style="font-size: 10pt; color: #045491"/>
@@ -39,6 +40,7 @@
                                      style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
                                      inputStyle="text-align: right"
                                      autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1' or tropacontroller.registroMod.procesada eq '2'}">
+                            <f:validateLongRange minimum="1"/>
                             <p:ajax process="@all" listener="#{tropacontroller.calculaValoresTropa()}" event="keyup" 
                                     update="importeFaena,valorIngBrutos,importeCostoTotal"/>                                                                                    
                         </p:inputNumber>
