@@ -71,7 +71,7 @@
                                          disabled="#{tropacontroller.registroMod.procesada eq '1'}">
                                 <f:selectItem itemLabel="Faena" itemValue="F"  />
                                 <f:selectItem itemLabel="Terceros" itemValue="T"  />
-                                <p:ajax update="tabDetalle"/>
+                                <p:ajax update="tabDetalle, tabViewCab"/>
                         </p:selectOneMenu> 
 
                         <p:outputLabel value="Depósito:" for="deposito" style="font-size: 10pt; color: #045491"/>                        
@@ -291,8 +291,14 @@
                                 <h:outputText value="Cat."/>
                             </f:facet>
                             <p:commandLink actionListener="#{tropacontroller.editaDetTropa(item)}" style="text-decoration: underline; color: blue"
-                                           update=":CreateFormDetalle" immediate="true" oncomplete="PF('CreateDialogDetalle').show()">
+                                           update=":CreateFormDetalle" oncomplete="PF('CreateDialogDetalle').show()"
+                                           rendered="#{tropacontroller.registroMod.tipo eq 'F'}">
                                 <h:outputText id="CatNombre"  value="#{item.categoria.nombre}" />
+                            </p:commandLink>
+                            <p:commandLink actionListener="#{tropacontroller.editaDetTropa(item)}" style="text-decoration: underline; color: blue"
+                                           update=":CreateFormDetalleTerceros" oncomplete="PF('CreateDialogDetalleTerceros').show()"   
+                                           rendered="#{tropacontroller.registroMod.tipo eq 'T'}">
+                                <h:outputText id="CatNombreTerceros"  value="#{item.categoria.nombre}" />
                             </p:commandLink>
                         </p:column>
                         

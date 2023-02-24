@@ -1099,7 +1099,6 @@ public class TropaController extends BeanBase implements Serializable {
             buscaListaDatos();
         }
         
-
         //Grabo la auditoría de la transacción
         try {
             grabaAuditoria(getUsuarioConectado().getIdUsuario(), ResourceBundle.getBundle("general/Permisos").getString("ModificarTropa"),
@@ -1859,5 +1858,12 @@ public class TropaController extends BeanBase implements Serializable {
             return null;
         }
     }
-
+    
+    public void abrirFaenaOTerceros(){
+        if (registroMod.getTipo() =='F') {
+            PrimeFaces.current().executeScript("'CreateDialogDetalle').show();");
+        } else {
+            PrimeFaces.current().executeScript("'CreateDialogDetalleTerceros').show();");
+        }
+    }
 }
