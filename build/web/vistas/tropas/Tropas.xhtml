@@ -14,10 +14,10 @@
             <ui:define name="content">
                 
                 <h:form id="ListaForm">
-                <h:outputText id="Titulo" value="Tropas por fecha de faena" style="font-size: 12pt; color: #045491; font-weight: bold" />
+                <h:outputText id="Titulo" value="Tropas por fecha" style="font-size: 12pt; color: #045491; font-weight: bold" />
                 <br/>
                 <br/>                    
-                <h:panelGrid columns="5" columnClasses="list-column-right,list-column-left">
+                <h:panelGrid columns="4" columnClasses="list-column-right,list-column-left">
                     <h:outputLabel for="FEC_DESDE" id="FEC_DESDELabel" value="Desde:" style="font-size: 10pt; color: #045491"/>
                     <p:calendar id="FEC_DESDE" tabindex="10" pattern="dd/MM/yyyy" value="#{tropacontroller.fec_desde}" showOn="button"
                         style="font-size: 10pt; color: #045491">
@@ -30,6 +30,14 @@
                         <f:convertDateTime timeZone="#{tropacontroller.zona}" pattern="dd/MM/yyyy" />        
                     </p:calendar> 
                     
+                    <p:outputLabel value="Tipo" style="font-size: 10pt; color: #045491 " />
+                    <p:selectOneMenu id="tipoTropa"
+                                     value="#{tropacontroller.tipoTropa}" required="true" style="font-size: 10pt; color: #045491 ">
+                                <f:selectItem itemLabel="Faena y terceros" itemValue="F"/>                              
+                                <f:selectItem itemLabel="Invernada" itemValue="I"  />
+                                <p:ajax listener="#{tropacontroller.onChangeTipoTropa()}" update="datos,:growl" />                                                        
+                    </p:selectOneMenu>
+
                     <p:commandButton ajax="true" actionListener="#{tropacontroller.buscaListaDatos()}" value="Buscar"  
                                      update="datos,:growl"
                                      style="font-size: 10pt; color: #045491"/>
@@ -288,7 +296,7 @@
                         
                         <f:facet name="footer">
                             <p:commandButton id="createButton" ajax="false" icon="ui-icon-plus"   value="#{bundle.Create}"
-                                             action="#{tropacontroller.nuevo}" 
+                                             action="#{tropacontroller.nuevo}" actionListener="#{tropacontroller.setOrigen('/vistas/tropas/Tropas')}"
                                              style="font-size: 10pt; color: #045491"/>
                             <p:commandButton id="editButton" ajax="false" icon="ui-icon-pencil" value="#{bundle.Edit}" disabled="#{empty tropacontroller.registroSel}"
                                              action="#{tropacontroller.edita('/vistas/tropas/Tropas')}" 
