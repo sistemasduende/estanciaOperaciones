@@ -5,9 +5,6 @@
  */
 package controllers;
 
-import antlr.StringUtils;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import database.Conector;
 import entidades.Categoria;
 import entidades.Comisionista;
@@ -15,7 +12,6 @@ import entidades.Deposito;
 import entidades.Empresa;
 import entidades.Entrega;
 import entidades.InventarioTropa;
-import entidades.LiquidacionEfectivo;
 import entidades.Tropa;
 import entidades.TropaDet;
 import entidades.TropaDetGarron;
@@ -26,23 +22,14 @@ import general.Asiento;
 import general.AsientoCuentaAdicional;
 import general.AsientoRealizado;
 import general.BeanBase;
-import general.ParametroAsiento;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -54,12 +41,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,8 +52,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseId;
-import javax.faces.model.SelectItem;
 import jxl.Sheet;
 import jxl.Workbook;
 import org.hibernate.Hibernate;
@@ -76,13 +59,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.primefaces.PrimeFaces;
-import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
-import org.primefaces.util.Constants;
-import seguridad.LogIn;
 
 /**
  *
@@ -120,7 +98,8 @@ public class TropaController extends BeanBase implements Serializable {
     private String nombreComisionista;
     private List<Comisionista> listaComisionistas = new ArrayList<Comisionista>();
     private Comisionista comisionistaSel;
-
+    private String tipoTropa;
+    
     //Stock
     TropaStock registroStockSel;
 
@@ -328,6 +307,14 @@ public class TropaController extends BeanBase implements Serializable {
         this.comisionistaSel = comisionistaSel;
     }
 
+    public String getTipoTropa() {
+        return tipoTropa;
+    }
+
+    public void setTipoTropa(String tipoTropa) {
+        this.tipoTropa = tipoTropa;
+    }
+   
     //Obtiene lista de todos las tropas
     public void buscaListaDatos() {
         FacesMessage msg;
@@ -342,7 +329,12 @@ public class TropaController extends BeanBase implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return;
         }
-
+        
+        if (tipoTropa==null){
+            msg = new FacesMessage("Debe ingresar el tipo de tropa para la búsqueda");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
         java.util.Calendar fecha_desde = java.util.Calendar.getInstance();
         fecha_desde.setTimeZone(TimeZone.getTimeZone("America/Buenos_Aires"));
         fecha_desde.setTime(fec_desde);
@@ -363,10 +355,19 @@ public class TropaController extends BeanBase implements Serializable {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             org.hibernate.Transaction tx = session.beginTransaction();
-            Query q = session.createQuery("from Tropa a where fecIng >= :fec_desde and fecIng <= :fec_hasta order by a.fecIng desc");
-            q.setParameter("fec_desde", lda_fecha_desde);
-            q.setParameter("fec_hasta", lda_fecha_hasta);
-            this.lista = (List<Tropa>) q.list();
+            if(tipoTropa.charAt(0)=='F'){
+                Query q = session.createQuery("from Tropa a where fecIng >= :fec_desde and fecIng <= :fec_hasta and tipo in ('F', 'T') order by a.fecIng desc");
+                q.setParameter("fec_desde", lda_fecha_desde);
+                q.setParameter("fec_hasta", lda_fecha_hasta);
+                q.setParameter("fec_hasta", lda_fecha_hasta);
+                this.lista = (List<Tropa>) q.list();
+            }else{
+                Query q = session.createQuery("from Tropa a where fecIng >= :fec_desde and fecIng <= :fec_hasta and tipo = 'I' order by a.fecIng desc");
+                q.setParameter("fec_desde", lda_fecha_desde);
+                q.setParameter("fec_hasta", lda_fecha_hasta);
+                this.lista = (List<Tropa>) q.list();
+            }
+                
             session.getTransaction().commit();
         } catch (HibernateException e) {
             session.getTransaction().rollback();
@@ -450,8 +451,13 @@ public class TropaController extends BeanBase implements Serializable {
         depositoSel.setPrecioUnidad(BigDecimal.ZERO);
         this.registroMod.setDeposito(depositoSel);
         estadoActual = EN_TRAMITE; //Tropa nueva por default EN TRAMITE
-        return "/vistas/tropas/Create";
-
+        /*if(this.tipoTropa=="F"){*/
+            return "/vistas/tropas/Create";
+        /*}
+        else{
+            this.registroMod.setTipo('I');
+            return "/vistas/tropas/CreateInvernada";
+        }*/
     }
     public String cancelar(){
         this.registroSel = null;
@@ -634,7 +640,19 @@ public class TropaController extends BeanBase implements Serializable {
 
     public void onClickPagoCIva() {
     }
-
+    
+    public void onChangeTipoTropa(){
+        try{
+            if(this.lista!=null){
+            buscaListaDatos();
+            }
+        }catch(Exception e){
+            FacesMessage msg;
+            msg = new FacesMessage("Error: " + e.getCause().getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+    
     //Elimina registro seleccionado
     public void elimina() {
         FacesContext context = FacesContext.getCurrentInstance();
@@ -1061,10 +1079,13 @@ public class TropaController extends BeanBase implements Serializable {
 
         estadoActual = registroMod.getProcesada(); //Actualizo el estado actual
         if(!this.origen.equals("/vistas/tropas/TropasPorNumero")){
+            if(fec_desde==null && fec_hasta==null){
+                fec_desde = new Date();
+                fec_hasta = new Date();
+            }
             buscaListaDatos();
         }
         
-
         //Grabo la auditoría de la transacción
         try {
             grabaAuditoria(getUsuarioConectado().getIdUsuario(), ResourceBundle.getBundle("general/Permisos").getString("ModificarTropa"),
@@ -1075,7 +1096,8 @@ public class TropaController extends BeanBase implements Serializable {
 
         msg = new FacesMessage("Actualización exitosa!");
         FacesContext.getCurrentInstance().addMessage(null, msg);
-        return this.origen;
+        System.out.println("Direccion de origen: " + this.origen.toString());
+        return this.origen.toString();
     }
 
     //Calcula medias reces
@@ -1185,7 +1207,43 @@ public class TropaController extends BeanBase implements Serializable {
         registroModDetalle.setImporteCostoTotal(new BigDecimal(ld_costo_total));
         return;
     }
+    public void calculaValoresTropaTerceros() {
+        
+        double ld_kilos_faenados = 0;
+        double ld_precio_kilo_faenado = 0, ld_importe_faena = 0;
+        double ld_porc_ing_brutos = 0, ld_valor_ing_brutos = 0;
+        double ld_costo_total = 0;
+     
+        if (registroModDetalle.getKilosFaenados() != null) {
+            ld_kilos_faenados = registroModDetalle.getKilosFaenados().doubleValue();
+        }
+        
+        if (registroModDetalle.getPrecioKiloFaenado() != null) {
+            ld_precio_kilo_faenado = registroModDetalle.getPrecioKiloFaenado().doubleValue();
+            ld_precio_kilo_faenado = Math.round(ld_precio_kilo_faenado * 10000d) / 10000d;
+        }
+        
+        //Calculo el importe de la faena de acuerdo a como cobra el productor
+        ld_importe_faena = ld_kilos_faenados * ld_precio_kilo_faenado;
+        ld_importe_faena = Math.round(ld_importe_faena * 100d) / 100d;
+   
+        if (registroModDetalle.getPorcIngBrutos() != null) {
+            ld_porc_ing_brutos = registroModDetalle.getPorcIngBrutos().doubleValue();
+        }
 
+        ld_valor_ing_brutos = ld_importe_faena * ld_porc_ing_brutos / 100.00;
+        ld_valor_ing_brutos = Math.round(ld_valor_ing_brutos * 100d) / 100d;
+        
+        //Calculo el costo total
+        ld_costo_total =  ld_importe_faena + ld_valor_ing_brutos;
+
+        
+        registroModDetalle.setImporteFaena(new BigDecimal(ld_importe_faena));
+        registroModDetalle.setValorIngBrutos(new BigDecimal(ld_valor_ing_brutos));
+        registroModDetalle.setImporteCostoTotal(new BigDecimal(ld_costo_total));
+        return;
+    }
+    
     //Actualiza el costo total debido a actualización del pago a cuenta de iva
     public void actualizaValorPagoCuentaIva() {
         double ld_pago_cuenta_iva = 0, ld_importe_kilos_vivos = 0, ld_importe_faena = 0, ld_valor_ing_brutos = 0;
@@ -1788,5 +1846,23 @@ public class TropaController extends BeanBase implements Serializable {
             return null;
         }
     }
-
+    
+    public void abrirFaenaOTerceros(){
+        if (registroMod.getTipo() =='F') {
+            PrimeFaces current = PrimeFaces.current();
+            current.executeScript("'CreateDialogDetalle').show();");
+        } else {
+            PrimeFaces current = PrimeFaces.current();
+            current.executeScript("'CreateDialogDetalleTerceros').show();");
+        }
+    }
+    public void abrirFaenaTercerosOInvernada(){
+        if (registroMod.getTipo() =='F') {
+            PrimeFaces current = PrimeFaces.current();
+            current.executeScript("'CreateDialogDetalle').show();");
+        } else {
+            PrimeFaces current = PrimeFaces.current();
+            current.executeScript("'CreateDialogDetalleTerceros').show();");
+        }
+    }
 }
