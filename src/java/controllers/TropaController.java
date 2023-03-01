@@ -5,9 +5,6 @@
  */
 package controllers;
 
-import antlr.StringUtils;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import database.Conector;
 import entidades.Categoria;
 import entidades.Comisionista;
@@ -15,7 +12,6 @@ import entidades.Deposito;
 import entidades.Empresa;
 import entidades.Entrega;
 import entidades.InventarioTropa;
-import entidades.LiquidacionEfectivo;
 import entidades.Tropa;
 import entidades.TropaDet;
 import entidades.TropaDetGarron;
@@ -26,23 +22,14 @@ import general.Asiento;
 import general.AsientoCuentaAdicional;
 import general.AsientoRealizado;
 import general.BeanBase;
-import general.ParametroAsiento;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -54,12 +41,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,8 +52,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseId;
-import javax.faces.model.SelectItem;
 import jxl.Sheet;
 import jxl.Workbook;
 import org.hibernate.Hibernate;
@@ -76,13 +59,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.primefaces.PrimeFaces;
-import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
-import org.primefaces.util.Constants;
-import seguridad.LogIn;
 
 /**
  *
@@ -473,8 +451,13 @@ public class TropaController extends BeanBase implements Serializable {
         depositoSel.setPrecioUnidad(BigDecimal.ZERO);
         this.registroMod.setDeposito(depositoSel);
         estadoActual = EN_TRAMITE; //Tropa nueva por default EN TRAMITE
-        return "/vistas/tropas/Create";
-
+        /*if(this.tipoTropa=="F"){*/
+            return "/vistas/tropas/Create";
+        /*}
+        else{
+            this.registroMod.setTipo('I');
+            return "/vistas/tropas/CreateInvernada";
+        }*/
     }
     public String cancelar(){
         this.registroSel = null;
@@ -1096,6 +1079,10 @@ public class TropaController extends BeanBase implements Serializable {
 
         estadoActual = registroMod.getProcesada(); //Actualizo el estado actual
         if(!this.origen.equals("/vistas/tropas/TropasPorNumero")){
+            if(fec_desde==null && fec_hasta==null){
+                fec_desde = new Date();
+                fec_hasta = new Date();
+            }
             buscaListaDatos();
         }
         
@@ -1109,7 +1096,8 @@ public class TropaController extends BeanBase implements Serializable {
 
         msg = new FacesMessage("Actualización exitosa!");
         FacesContext.getCurrentInstance().addMessage(null, msg);
-        return this.origen;
+        System.out.println("Direccion de origen: " + this.origen.toString());
+        return this.origen.toString();
     }
 
     //Calcula medias reces
@@ -1861,9 +1849,20 @@ public class TropaController extends BeanBase implements Serializable {
     
     public void abrirFaenaOTerceros(){
         if (registroMod.getTipo() =='F') {
-            PrimeFaces.current().executeScript("'CreateDialogDetalle').show();");
+            PrimeFaces current = PrimeFaces.current();
+            current.executeScript("'CreateDialogDetalle').show();");
         } else {
-            PrimeFaces.current().executeScript("'CreateDialogDetalleTerceros').show();");
+            PrimeFaces current = PrimeFaces.current();
+            current.executeScript("'CreateDialogDetalleTerceros').show();");
+        }
+    }
+    public void abrirFaenaTercerosOInvernada(){
+        if (registroMod.getTipo() =='F') {
+            PrimeFaces current = PrimeFaces.current();
+            current.executeScript("'CreateDialogDetalle').show();");
+        } else {
+            PrimeFaces current = PrimeFaces.current();
+            current.executeScript("'CreateDialogDetalleTerceros').show();");
         }
     }
 }

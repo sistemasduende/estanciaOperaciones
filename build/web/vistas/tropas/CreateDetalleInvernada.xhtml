@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="CreateDlgDetalle" style="font-size: 10pt; color: #045491" widgetVar="CreateDialogDetalle" modal="true" resizable="false" appendTo="@(body)" header="Detalle de tropa"
+                  onShow="PF('CreateDialogDetalle').initPosition()">
+            <h:form id="CreateFormDetalle">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="4" rendered="#{tropacontroller.registroModDetalle != null}">
+
+                        <p:outputLabel value="Categoría:" for="categoria" style="font-size: 10pt; color: #045491"/>
+                        <p:selectOneMenu id="categoria" value="#{tropacontroller.registroModDetalle.categoria.id}" 
+                                     required="true" style="font-size: 10pt; color: #045491 "
+                                     disabled="#{tropacontroller.registroMod.procesada eq '1'}">
+                            <f:selectItems value="#{listacategorias.items}"/>
+                        </p:selectOneMenu>  
+                        
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+
+                        <p:outputLabel value="Cabezas según Dte:" for="cabezasDte"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="cabezasDte" required="true"  value="#{tropacontroller.registroModDetalle.cabezasDte}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right"
+                                     autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                            <p:ajax process="@all" listener="#{tropacontroller.calculaValoresTropa()}" event="keyup" 
+                                    update="pagoCuentaIva,rendimiento,importeKiloVivo,importeFaena,valorIngBrutos,importeComision,importeCostoTotal"/>                                                                                    
+                        </p:inputNumber>
+                        
+                        <p:outputLabel value="Cabezas vivas:" for="cabezasVivas"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="cabezasVivas" required="true"  value="#{tropacontroller.registroModDetalle.cabezasVivas}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right"
+                                     autocomplete="off"
+                                     readonly="#{tropacontroller.registroMod.procesada eq '1'}" >
+                            <f:validateLongRange minimum="1"/>
+                        </p:inputNumber>
+                        
+                        <p:outputLabel value="Decomisos:" for="decomisos"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="decomisos" required="true"  value="#{tropacontroller.registroModDetalle.decomisos}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right"
+                                     autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                        </p:inputNumber>
+                        
+                        <p:outputLabel value="Cabezas muertas:" for="cabMuertas"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="cabMuertas" required="true"  value="#{tropacontroller.registroModDetalle.cabezasMuertas}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right"
+                                     autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                        </p:inputNumber>
+
+                        <p:outputLabel value="Cabezas faenadas:" for="cabFaenadas"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="cabFaenadas" required="true"  value="#{tropacontroller.registroModDetalle.cabezasFaenadas}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right"
+                                     autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                            <p:ajax process="@this" 
+                                    listener="#{tropacontroller.calculaMediasReces()}" event="keyup" 
+                                    update="mediasReses"/>                                                        
+                        </p:inputNumber>
+                        
+                        <h:outputText value="Medias reses:" style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="mediasReses" required="true"  value="#{tropacontroller.registroModDetalle.mediasReces}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right"
+                                     autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1' or tropacontroller.registroMod.tipo eq 'F' or tropacontroller.registroMod.tipo eq 'I'}">
+                        </p:inputNumber>                        
+
+                        <p:outputLabel value="Kilos vivos:" for="kilosVivos"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="kilosVivos" required="true"  value="#{tropacontroller.registroModDetalle.kilosVivos}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right"
+                                     autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                            <p:ajax process="@all" 
+                                    listener="#{tropacontroller.calculaValoresTropa()}" event="keyup" 
+                                    update="pagoCuentaIva,rendimiento,importeKiloVivo,importeFaena,valorIngBrutos,importeComision,importeCostoTotal"/>                                                        
+                        </p:inputNumber>
+                        
+                        <p:outputLabel value="Kilos faenados:" for="kilosFaenados"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="kilosFaenados" required="true"  value="#{tropacontroller.registroModDetalle.kilosFaenados}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right"
+                                     autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1' or tropacontroller.registroMod.procesada eq '2'}">
+                            <p:ajax process="@all" listener="#{tropacontroller.calculaValoresTropa()}" event="keyup" 
+                                    update="pagoCuentaIva,rendimiento,importeKiloVivo,importeFaena,valorIngBrutos,importeComision,importeCostoTotal"/>                                                                                    
+                        </p:inputNumber>
+
+                        <p:outputLabel value="Kilos decomisados:" for="kilosDecomisados"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="kilosDecomisados" required="true"  value="#{tropacontroller.registroModDetalle.kilosDecomisados}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right"
+                                     autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                            <p:ajax process="@all" listener="#{tropacontroller.calculaValoresTropa()}" event="keyup" 
+                                    update="pagoCuentaIva,rendimiento,importeKiloVivo,importeFaena,valorIngBrutos,importeComision,importeCostoTotal"/>                                                                                    
+                        </p:inputNumber>
+                        
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        
+                        <p:outputLabel value="Precio del kilo vivo:" for="precioKiloVivo"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="precioKiloVivo" required="true"  value="#{tropacontroller.registroModDetalle.precioKiloVivo}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right" decimalPlaces="4"
+                                     autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                            <p:ajax process="@all" listener="#{tropacontroller.calculaValoresTropa()}" event="keyup" 
+                                    update="pagoCuentaIva,rendimiento,importeKiloVivo,importeFaena,valorIngBrutos,importeComision,importeCostoTotal"/>                                                                                    
+                        </p:inputNumber>
+                        
+                        <h:outputText value="Importe kilos vivos:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="importeKiloVivo" value="#{tropacontroller.registroModDetalle.importeKiloVivo}" style="float: right; text-align: right; font-size: 10pt; color: #045491">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>                        
+
+                        <p:outputLabel value="Costo de faena:" for="precioKiloFaenado"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="precioKiloFaenado" required="true"  value="#{tropacontroller.registroModDetalle.precioKiloFaenado}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right" decimalPlaces="4"
+                                     autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                            <p:ajax process="@all" listener="#{tropacontroller.calculaValoresTropa()}" event="keyup" 
+                                    update="pagoCuentaIva,rendimiento,importeKiloVivo,importeFaena,valorIngBrutos,importeComision,importeCostoTotal"/>                                                                                    
+                        </p:inputNumber>
+
+                        <h:outputText value="Importe de faena:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="importeFaena" value="#{tropacontroller.registroModDetalle.importeFaena}" style="float: right; text-align: right; font-size: 10pt; color: #045491">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>                        
+                        
+                        
+                        
+                        <p:outputLabel value="%Ing. Brutos:" for="porcIngBrutos"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="porcIngBrutos" required="true"  value="#{tropacontroller.registroModDetalle.porcIngBrutos}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right"
+                                     autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                            <p:ajax process="@all" listener="#{tropacontroller.calculaValoresTropa()}" event="keyup" 
+                                    update="pagoCuentaIva,rendimiento,importeKiloVivo,importeFaena,valorIngBrutos,importeComision,importeCostoTotal"/>                                                                                    
+                            
+                        </p:inputNumber>
+                        
+                        <h:outputText value="Valor ingresos brutos:" style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="valorIngBrutos" required="true"  value="#{tropacontroller.registroModDetalle.valorIngBrutos}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right"
+                                     autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                            <p:ajax listener="#{tropacontroller.actualizaValorIngBrutos()}" event="change" 
+                                    update="importeCostoTotal,porcIngBrutos"/>                                                                                
+                        </p:inputNumber>                        
+                        
+                        <p:outputLabel value="%Com. Consignatario:" for="porcComision"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="porcComision" required="true"  value="#{tropacontroller.registroModDetalle.porcComision}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right"
+                                     autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                            <p:ajax process="@all" listener="#{tropacontroller.calculaValoresTropa()}" event="change" 
+                                    update="pagoCuentaIva,rendimiento,importeKiloVivo,importeFaena,valorIngBrutos,importeComision,importeCostoTotal"/>                                                                                    
+                        </p:inputNumber>
+                        
+                        <h:outputText value="Importe Comisión:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="importeComision" value="#{tropacontroller.registroModDetalle.importeComision}" style="float: right; text-align: right; font-size: 10pt; color: #045491">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>                        
+                        
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+
+                        <p:outputLabel value="Pago a cuenta de Iva:" for="pagoCuentaIva"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="pagoCuentaIva" required="true"  value="#{tropacontroller.registroModDetalle.pagoCuentaIva}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
+                                     inputStyle="text-align: right"
+                                     autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                            <p:ajax listener="#{tropacontroller.actualizaValorPagoCuentaIva()}" event="keyup" 
+                                    update="importeCostoTotal"/>                                                                                    
+                        </p:inputNumber>
+
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        
+                        <h:outputText value="Costo total:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="importeCostoTotal" value="#{tropacontroller.registroModDetalle.importeCostoTotal}" style="float: right; text-align: right; font-size: 10pt; color: #045491">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>    
+
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        
+                        <h:outputText value="Rendimiento(%):" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="rendimiento" value="#{tropacontroller.registroModDetalle.rendimiento}" style="float: right; text-align: right; font-size: 10pt; color: #045491">
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>           
+                        
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton ajax="true" actionListener="#{tropacontroller.agregaDetalle()}" 
+                                     value="#{bundle.Save}" disabled="#{tropacontroller.registroMod.procesada eq '1'}"
+                                     update="display,
+                                     :EditForm:tabViewCab:datosDetalles,
+                                     :EditForm:tabViewCab:cabezasVivas,
+                                     :EditForm:tabViewCab:cabezasDte,
+                                     :EditForm:tabViewCab:decomisos,
+                                     :EditForm:tabViewCab:cabMuertas,
+                                     :EditForm:tabViewCab:cabFaenadas,
+                                     :EditForm:tabViewCab:mediasReses,
+                                     :EditForm:tabViewCab:kilosVivos,
+                                     :EditForm:tabViewCab:kilosFaenados,
+                                     :EditForm:tabViewCab:importeKiloVivo,
+                                     :EditForm:tabViewCab:importeFaena,
+                                     :EditForm:tabViewCab:valorIngBrutos,
+                                     :EditForm:tabViewCab:pagoCuentaIva,
+                                     :EditForm:tabViewCab:importeComision,
+                                     :EditForm:tabViewCab:importeCostoTotal,
+                                     :EditForm:tabViewCab:importeCostoTotalTropa,
+                                     :EditForm:tabViewCab:costoUnitarioTropa,
+                                     :EditForm:tabViewCab:rendimiento,
+                                     :growl" 
+                                     oncomplete="handleSubmit(args,'CreateDialogDetalle');"
+                                     style="font-size: 10pt; color: #045491" />
+                    <p:commandButton value="#{bundle.Cancel}" onclick="CreateDialogDetalle.hide()"
+                                     style="font-size: 10pt; color: #045491" immediate="true"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>
