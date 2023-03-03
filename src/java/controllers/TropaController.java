@@ -451,13 +451,13 @@ public class TropaController extends BeanBase implements Serializable {
         depositoSel.setPrecioUnidad(BigDecimal.ZERO);
         this.registroMod.setDeposito(depositoSel);
         estadoActual = EN_TRAMITE; //Tropa nueva por default EN TRAMITE
-        /*if(this.tipoTropa=="F"){*/
+        if(this.tipoTropa.toString().equals("F")){
             return "/vistas/tropas/Create";
-        /*}
+        }
         else{
             this.registroMod.setTipo('I');
             return "/vistas/tropas/CreateInvernada";
-        }*/
+        }
     }
     public String cancelar(){
         this.registroSel = null;
