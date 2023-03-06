@@ -6,6 +6,7 @@
       xmlns:em="http://java.sun.com/jsf/composite/componentes">
     <body>
     <ui:composition template="./../../Template04.xhtml">
+
             <ui:define name="content">
             <div style="align: center">
             <h:form id="EditForm">
@@ -85,12 +86,13 @@
                     </p:panelGrid>
                         
                     <p:dataTable id="detalleVenta" 
-                                   paginatorPosition="top"
-                                   value="#{ventaestanciacontroller.registroMod.ventaEstanciaDets}" 
+                                   paginatorPosition="top"                
+                                   value="#{ventaestanciacontroller.ventaEstanciaDetalle}"
                                    var="item"
                                    rowIndexVar="fila"
                                    style="font-size: 10pt; color: #045491"
                                    reflow="true"
+                                   sortBy="#{item.id}"
                                    >
                             
                         <p:column style="font-size: 8pt; color: #045491; text-align: center">
@@ -146,12 +148,15 @@
                                 <f:convertNumber pattern="#,##0.00" />
                             </h:outputText>
                         </p:column>
-                        
-                        
+                        <p:summaryRow>    
+                            <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                                <h:outputText value=" total: #{ventaestanciacontroller.ventaEstanciaDetalle.stream().map(e->e.cantidad).sum()}">
+                                    <f:convertNumber pattern="#,##0.00 kg" />
+                                </h:outputText>    
+                            </p:column>
+                        </p:summaryRow>
                         </p:dataTable>                        
-                        
-                        
-                    
+
                     </p:tab>
                     
                     <p:tab title="Remitos relacionados" id="tabRemitos">
@@ -212,8 +217,9 @@
                 </p:tabView>
                 <br/>                    
                 <p:commandButton action="#{ventaestanciacontroller.graba()}" value="#{bundle.Save}" update=":growl" ajax="false" style="font-size: 10pt; color: #045491"/>                        
-                <p:commandButton action="/vistas/ventas/Ventas" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
-
+                <p:commandButton actionListener="#{ventaestanciacontroller.cancelar()}" action="/vistas/ventas/Ventas" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
+                <p:commandButton action="#{ventaestanciacontroller.cancelar()}" update="EditForm:tabViewVenta:detalleVenta,EditForm:tabViewVenta:porcIVA,
+                                               EditForm:tabViewVenta:valorIVA,EditForm:tabViewVenta:subTotal,EditForm:tabViewVenta:total, tabRemitos, datosRemitos" value="Limpiar" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>
             </h:form>
             <ui:include src="BuscaRemitos.xhtml"/> 
             <ui:include src="BuscaCliente.xhtml"/> 

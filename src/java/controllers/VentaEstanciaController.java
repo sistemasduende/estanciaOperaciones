@@ -29,6 +29,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
+import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -54,6 +56,7 @@ public class VentaEstanciaController extends BeanBase{
     private VentaEstancia registroMod;
     private List <VentaEstancia> lista=null;
     private List <VentaEstancia> listaFiltrada=null;
+    private List <VentaEstanciaDet> ventaEstanciaDetalle = null;
     private String modo="";
     private List <RemitoVenta> listaRemitos=new ArrayList<>();
     private List <RemitoVenta> listaRemitosSeleccionados=new ArrayList<>();
@@ -64,7 +67,7 @@ public class VentaEstanciaController extends BeanBase{
     private List<AsientoRealizado> listaAsientos= new ArrayList<AsientoRealizado>();
     
     public VentaEstanciaController() {
-        
+        ventaEstanciaDetalle = new ArrayList<VentaEstanciaDet>();
     }
 
     public VentaEstancia getRegistroSel() {
@@ -179,8 +182,13 @@ public class VentaEstanciaController extends BeanBase{
         this.idLocalSel = idLocalSel;
     }
 
-    
-    
+    public List<VentaEstanciaDet> getVentaEstanciaDetalle() {
+        return ventaEstanciaDetalle;
+    }
+
+    public void setVentaEstanciaDetalle(List<VentaEstanciaDet> ventaEstanciaDetalle) {
+        this.ventaEstanciaDetalle = ventaEstanciaDetalle;
+    } 
     
     //Obtiene lista de todos las entregas
     public void buscaListaDatos(){
@@ -438,6 +446,7 @@ public class VentaEstanciaController extends BeanBase{
                             listaDetalle.add(detVenta);
                         }
                         this.getRegistroMod().setVentaEstanciaDets(new HashSet<>(listaDetalle));
+                        this.ventaEstanciaDetalle = listaDetalle.stream().collect(Collectors.toCollection(ArrayList::new));
                     }
                 } 
         }    
@@ -496,6 +505,7 @@ public class VentaEstanciaController extends BeanBase{
         String ls_tipo_compro;
         String ls_pdv,ls_num_fact;
         FacesMessage msg;
+        this.registroMod.setVentaEstanciaDets(ventaEstanciaDetalle.stream().collect(Collectors.toCollection(HashSet<VentaEstanciaDet>::new)));
         listaAsientos.clear();
                 
         if (idLocalSel==0){
@@ -587,6 +597,7 @@ public class VentaEstanciaController extends BeanBase{
             if (!tx.wasCommitted()){
                 tx.commit();
             }
+            ventaEstanciaDetalle.clear();
             msg = new FacesMessage("Actualización exitosa!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return "Ventas";
@@ -700,6 +711,7 @@ public class VentaEstanciaController extends BeanBase{
     
     //Actualiza total de remanentes
     public void actualizaTotalVenta(){
+        this.registroMod.setVentaEstanciaDets(ventaEstanciaDetalle.stream().collect(Collectors.toCollection(HashSet<VentaEstanciaDet>::new)));
         double ld_total=0;
         Iterator i= this.getRegistroMod().getVentaEstanciaDets().iterator();
         while (i.hasNext()){
@@ -832,5 +844,10 @@ public class VentaEstanciaController extends BeanBase{
         
         return true;
 
-    }    
+    }   
+    public void cancelar(){
+        ventaEstanciaDetalle.clear();
+        //this.getRegistroMod().getVentaEstanciaRemitos().clear();
+        nuevo();
+    }
 }
