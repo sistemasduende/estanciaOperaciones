@@ -95,7 +95,7 @@
                                    sortBy="#{item.id}"
                                    >
                             
-                        <p:column style="font-size: 8pt; color: #045491; text-align: center">
+                        <p:column colspan="2"  style="width: 15%; font-size: 8pt; color: #045491; text-align: center">
                             <f:facet name="header">
                                 <h:outputText value="Cantidad"/>
                             </f:facet>
@@ -148,14 +148,21 @@
                                 <f:convertNumber pattern="#,##0.00" />
                             </h:outputText>
                         </p:column>
-                        <p:summaryRow>    
-                            <p:column style="font-size: 8pt; color: #045491;text-align: right">
-                                <h:outputText value=" total: #{ventaestanciacontroller.ventaEstanciaDetalle.stream().map(e->e.cantidad).sum()}">
-                                    <f:convertNumber pattern="#,##0.00 kg" />
-                                </h:outputText>    
-                            </p:column>
+                        <p:summaryRow>
                         </p:summaryRow>
-                        </p:dataTable>                        
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="1" style="text-align:right" footerText="Total: " />
+                                <p:column colspan="6" style="text-align:left">
+                                    <f:facet name="footer">
+                                        <h:outputText  value="#{ventaestanciacontroller.ventaEstanciaDetalle.stream().map(e->e.cantidad).sum()}">
+                                            <f:convertNumber pattern="#,##0.00 kg" />
+                                        </h:outputText>                                    
+                                    </f:facet>
+                                </p:column>   
+                            </p:row>
+                        </p:columnGroup> 
+                    </p:dataTable>                        
 
                     </p:tab>
                     
