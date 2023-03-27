@@ -136,7 +136,7 @@
                             </h:outputText>
                         </p:column>                            
 
-                        <p:column style="font-size: 8pt; color: #045491; width: 0%">
+                        <p:column style="font-size: 8pt; color: #045491; width: 0%" rendered="#{!tropacontroller.tipoTropa.toString() eq 'I'}">
                             <f:facet name="header">
                                 <h:outputText value="Cab. Faenadas"/>
                             </f:facet>
@@ -154,7 +154,7 @@
                             </h:outputText>
                         </p:column>                          
                         
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 0%">
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 0%" rendered="#{!tropacontroller.tipoTropa.toString() eq 'I'}">
                             <f:facet name="header">
                                 <h:outputText value="Decom."/>
                             </f:facet>
@@ -172,7 +172,7 @@
                             </h:outputText>
                         </p:column>    
 
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 6%">
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 6%" rendered="#{!tropacontroller.tipoTropa.toString() eq 'I'}">
                             <f:facet name="header">
                                 <h:outputText value="Kilos faenados"/>
                             </f:facet>
@@ -181,7 +181,7 @@
                             </h:outputText>
                         </p:column> 
 
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 0%">
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 0%" rendered="#{!tropacontroller.tipoTropa.toString() eq 'I'}">
                             <f:facet name="header">
                                 <h:outputText value="Kilos decomisados"/>
                             </f:facet>
@@ -189,8 +189,26 @@
                                 <f:convertNumber pattern="#,##0.00" />
                             </h:outputText>
                         </p:column> 
+                        
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 0%;">
+                            <f:facet name="header">
+                                <h:outputText value="Iva kilos vivos"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.ivaKiloVivo}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column> 
 
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right;width: 0%">
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right; width: 0%;">
+                            <f:facet name="header">
+                                <h:outputText value="Importe kilos vivos sin iva"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.importeKiloVivoSinIva}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column> 
+
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right;">
                             <f:facet name="header">
                                 <h:outputText value="Importe kilos vivos"/>
                             </f:facet>
@@ -199,7 +217,7 @@
                             </h:outputText>
                         </p:column>                             
                             
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right" rendered="#{!tropacontroller.tipoTropa.toString() eq 'I'}">
                             <f:facet name="header">
                                 <h:outputText value="Importe de faena"/>
                             </f:facet>
@@ -278,7 +296,7 @@
                             </h:outputText>
                         </p:column>  
                         
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right" rendered="#{!tropacontroller.tipoTropa.toString() eq 'I'}">
                             <f:facet name="header">
                                 <h:outputText value="Rendimiento"/>
                             </f:facet>

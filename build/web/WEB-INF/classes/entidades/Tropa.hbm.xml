@@ -76,9 +76,19 @@
         <property name="cabezasDte" type="int">
             <column name="cabezasDte" not-null="true" />
         </property>
+        <property name="kilosVivosOriginal" type="big_decimal">
+            <column name="kilosVivosOriginal" precision="20" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
         <property name="kilosVivos" type="big_decimal">
             <column name="kilosVivos" precision="20" not-null="true">
                 <comment>Total de kilos vivos de la tropa</comment>
+            </column>
+        </property>
+        <property name="kilosVivosReales" type="big_decimal">
+            <column name="kilosVivosReales" precision="20" not-null="true">
+                <comment></comment>
             </column>
         </property>
         <property name="decomisos" type="int">
@@ -104,6 +114,18 @@
                 <comment>Kilos faenados/Kilos vivos</comment>
             </column>
         </property>
+        <property name="importeKiloVivoSinIva" type="big_decimal">
+            <column name="importeKiloVivoSinIva" precision="20" not-null="true" />
+        </property>
+        <property name="entregaEfectivoB" type="big_decimal">
+            <column name="entregaEfectivoB" precision="20" not-null="true" />
+        </property>
+        <property name="importeKiloVivoImponible" type="big_decimal">
+            <column name="importeKiloVivoImponible" precision="20" not-null="true" />
+        </property>
+        <property name="ivaKiloVivo" type="big_decimal">
+            <column name="ivaKiloVivo" precision="20" not-null="true" />
+        </property>
         <property name="importeKiloVivo" type="big_decimal">
             <column name="importeKiloVivo" precision="20" not-null="true" />
         </property>
@@ -116,17 +138,59 @@
         <property name="pagoCuentaIva" type="big_decimal">
             <column name="pagoCuentaIva" precision="20" not-null="true" />
         </property>
+        <property name="importeComisionSinIva" type="big_decimal">
+            <column name="importeComisionSinIva" precision="20" not-null="true" />
+        </property>
+        <property name="entregaEfectivoComisionB" type="big_decimal">
+            <column name="entregaEfectivoComisionB" precision="20" not-null="true" />
+        </property>
+        <property name="importeComisionImponible" type="big_decimal">
+            <column name="importeComisionImponible" precision="20" not-null="true" />
+        </property>
+        <property name="ivaComision" type="big_decimal">
+            <column name="ivaComision" precision="20" not-null="true" />
+        </property>
         <property name="importeComision" type="big_decimal">
             <column name="importeComision" precision="20" not-null="true" />
+        </property>
+        <property name="importeCostoTotalSinIva" type="big_decimal">
+            <column name="importeCostoTotalSinIva" precision="20" not-null="true">
+                <comment></comment>
+            </column>
         </property>
         <property name="importeCostoTotal" type="big_decimal">
             <column name="importeCostoTotal" precision="20" not-null="true">
                 <comment>Suma de costos totales de los detalles de tropa (No incluye fletes)</comment>
             </column>
         </property>
+        <property name="valorFleteSinIva" type="big_decimal">
+            <column name="valorFleteSinIva" precision="20" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="entregaEfectivoFleteB" type="big_decimal">
+            <column name="entregaEfectivoFleteB" precision="20" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="valorFleteImponible" type="big_decimal">
+            <column name="valorFleteImponible" precision="20" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="ivaFlete" type="big_decimal">
+            <column name="ivaFlete" precision="20" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
         <property name="valorFlete" type="big_decimal">
             <column name="valorFlete" precision="20" not-null="true">
                 <comment>Valor del flete de la tropa</comment>
+            </column>
+        </property>
+        <property name="importeCostoTotalTropaSinIva" type="big_decimal">
+            <column name="importeCostoTotalTropaSinIva" precision="20" not-null="true">
+                <comment></comment>
             </column>
         </property>
         <property name="importeCostoTotalTropa" type="big_decimal">

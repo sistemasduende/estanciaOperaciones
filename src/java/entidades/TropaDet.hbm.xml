@@ -29,9 +29,24 @@
                 <comment>Cabezas seg&#250;n Dte</comment>
             </column>
         </property>
+        <property name="kilosVivosOriginal" type="big_decimal">
+            <column name="kilosVivosOriginal" precision="20" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="porcDesbaste" type="big_decimal">
+            <column name="porcDesbaste" precision="20" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
         <property name="kilosVivos" type="big_decimal">
             <column name="kilosVivos" precision="20" not-null="true">
                 <comment>Kilos vivos</comment>
+            </column>
+        </property>
+        <property name="kilosVivosReales" type="big_decimal">
+            <column name="kilosVivosReales" precision="20" not-null="true">
+                <comment></comment>
             </column>
         </property>
         <property name="decomisos" type="int">
@@ -69,11 +84,36 @@
                 <comment>Kilos faenados/Kilos vivos</comment>
             </column>
         </property>
+        <property name="porcIvaProductor" type="big_decimal">
+            <column name="porcIvaProductor" precision="10" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
         <property name="precioKiloVivo" type="big_decimal">
             <column name="precioKiloVivo" precision="20" scale="4" not-null="true">
                 <comment>Precio del kilo vivo</comment>
             </column>
         </property>
+        <property name="importeKiloVivoSinIva" type="big_decimal">
+            <column name="importeKiloVivoSinIva" precision="20" scale="4" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="entregaEfectivoB" type="big_decimal">
+            <column name="entregaEfectivoB" precision="20" scale="4" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="importeKiloVivoImponible" type="big_decimal">
+            <column name="importeKiloVivoImponible" precision="20" scale="4" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="ivaKiloVivo" type="big_decimal">
+            <column name="ivaKiloVivo" precision="20" scale="4" not-null="true">
+                <comment></comment>
+            </column>
+        </property>        
         <property name="importeKiloVivo" type="big_decimal">
             <column name="importeKiloVivo" precision="20" not-null="true">
                 <comment>Importe de kilos vivos: kilos vivos * precio del kilo vivo</comment>
@@ -109,9 +149,39 @@
                 <comment>Porcentaje de comisi&#243;n al consignatario</comment>
             </column>
         </property>
+        <property name="porcIvaComisionista" type="big_decimal">
+            <column name="porcIvaComisionista" precision="10" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="importeComisionSinIva" type="big_decimal">
+            <column name="importeComisionSinIva" precision="20" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="entregaEfectivoComisionB" type="big_decimal">
+            <column name="entregaEfectivoComisionB" precision="20" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="importeComisionImponible" type="big_decimal">
+            <column name="importeComisionImponible" precision="20" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="ivaComision" type="big_decimal">
+            <column name="ivaComision" precision="20" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
         <property name="importeComision" type="big_decimal">
             <column name="importeComision" precision="20" not-null="true">
                 <comment>Importe de la comisi&#243;n al consignatario: (Importe de kilos vivos * porc. comisi&#243;n)/100.00</comment>
+            </column>
+        </property>
+        <property name="importeCostoTotalSinIva" type="big_decimal">
+            <column name="importeCostoTotalSinIva" precision="20" not-null="true">
+                <comment></comment>
             </column>
         </property>
         <property name="importeCostoTotal" type="big_decimal">

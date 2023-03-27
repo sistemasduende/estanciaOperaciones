@@ -4,11 +4,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/controllers/TropaController.java</file>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/entidades/Tropa.hbm.xml</file>
             <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/vistas/tropas/CreateDetalleInvernada.xhtml</file>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/entidades/TropaDet.java</file>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/vistas/tropas/Tropas.xhtml</file>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/entidades/Tropa.java</file>
+            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/vistas/tropas/CreateInvernada.xhtml</file>
+            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/vistas/tropas/EditInvernada.xhtml</file>
         </group>
     </open-files>
 </project-private>

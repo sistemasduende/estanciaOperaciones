@@ -14,18 +14,28 @@ public class TropaViaje  implements java.io.Serializable {
      private Tropa tropa;
      private Viaje viaje;
      private BigDecimal porcAfectado;
+     private BigDecimal porcIva;
+     private BigDecimal valorAfectadoSinIva;
+     private BigDecimal entregaEfectivoViajeB;
+     private BigDecimal valorAfectadoImponible;
+     private BigDecimal valorIva;
      private BigDecimal valorAfectado;
 
     public TropaViaje() {
     }
 
-    public TropaViaje(Tropa tropa, Viaje viaje, BigDecimal porcAfectado, BigDecimal valorAfectado) {
-       this.tropa = tropa;
-       this.viaje = viaje;
-       this.porcAfectado = porcAfectado;
-       this.valorAfectado = valorAfectado;
+    public TropaViaje(Tropa tropa, Viaje viaje, BigDecimal porcAfectado, BigDecimal porcIva, BigDecimal valorAfectadoSinIva, BigDecimal entregaEfectivoViajeB, BigDecimal valorAfectadoImponible, BigDecimal valorIva, BigDecimal valorAfectado) {
+        this.tropa = tropa;
+        this.viaje = viaje;
+        this.porcAfectado = porcAfectado;
+        this.porcIva = porcIva;
+        this.valorAfectadoSinIva = valorAfectadoSinIva;
+        this.entregaEfectivoViajeB = entregaEfectivoViajeB;
+        this.valorAfectadoImponible = valorAfectadoImponible;
+        this.valorIva = valorIva;
+        this.valorAfectado = valorAfectado;
     }
-   
+
     public Integer getId() {
         return this.id;
     }
@@ -54,6 +64,48 @@ public class TropaViaje  implements java.io.Serializable {
     public void setPorcAfectado(BigDecimal porcAfectado) {
         this.porcAfectado = porcAfectado;
     }
+
+    public BigDecimal getPorcIva() {
+        return porcIva;
+    }
+
+    public void setPorcIva(BigDecimal porcIva) {
+        this.porcIva = porcIva;
+    }
+
+    public BigDecimal getValorAfectadoSinIva() {
+        return valorAfectadoSinIva;
+    }
+    
+    public void setValorAfectadoSinIva(BigDecimal valorAfectadoSinIva) {
+        this.valorAfectadoSinIva = valorAfectadoSinIva;
+    }
+
+    public BigDecimal getEntregaEfectivoViajeB() {
+        return entregaEfectivoViajeB;
+    }
+
+    public void setEntregaEfectivoViajeB(BigDecimal entregaEfectivoViajeB) {
+        this.entregaEfectivoViajeB = entregaEfectivoViajeB;
+    }
+
+    public BigDecimal getValorAfectadoImponible() {
+        return valorAfectadoImponible;
+    }
+
+    public void setValorAfectadoImponible(BigDecimal valorAfectadoImponible) {
+        this.valorAfectadoImponible = valorAfectadoImponible;
+    }
+    
+
+    public BigDecimal getValorIva() {
+        return valorIva;
+    }
+
+    public void setValorIva(BigDecimal valorIva) {
+        this.valorIva = valorIva;
+    }
+    
     public BigDecimal getValorAfectado() {
         return this.valorAfectado;
     }
@@ -61,9 +113,6 @@ public class TropaViaje  implements java.io.Serializable {
     public void setValorAfectado(BigDecimal valorAfectado) {
         this.valorAfectado = valorAfectado;
     }
-
-
-
 
 }
 
