@@ -15,7 +15,8 @@
                         <p:panelGrid columns="2"  rendered="#{categoriacontroller.registroMod != null}" style="background: white; width: 100%; border-width: thin; border-style: hidden">
                             <p:outputLabel value="#{bundle.NombreCategoria}" for="nombre" style="font-size: 10pt; color: #045491"/>
                             <p:inputText id="nombre" value="#{categoriacontroller.registroMod.nombre}" required="true" style="font-size: 10pt; color: #045491"/>
-                            
+                            <p:outputLabel value="CC costo de invernada:" for="ccCostoInvernada" style="font-size: 10pt; color: #045491"/>                            
+                            <p:inputText id="ccCostoInvernada" value="#{categoriacontroller.registroMod.ccCostoInvernada}" style="font-size: 10pt; color: #045491"/>
                             <p:outputLabel value="Producto relacionado:" for="producto" style="font-size: 10pt; color: #045491"/>
                                 <p:selectOneMenu id="producto" value="#{categoriacontroller.registroMod.producto.id}" 
                                          required="true" style="font-size: 10pt; color: #045491 ">

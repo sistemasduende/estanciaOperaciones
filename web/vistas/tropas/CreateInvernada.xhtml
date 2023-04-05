@@ -109,21 +109,34 @@
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
                             <f:convertNumber pattern="#,##0" />
                         </h:outputText>
+                        
+                        <h:outputText value="Cabezas muertas:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="cabezasMuertas" value="#{tropacontroller.registroMod.cabezasMuertas}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0" />
+                        </h:outputText>
+                        
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        
                         <h:outputText value="Kilos vivos original:" style="font-size: 10pt; color: #045491"/>
                         <h:outputText id="kilosVivosOriginal" value="#{tropacontroller.registroMod.kilosVivosOriginal}" 
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
                             <f:convertNumber pattern="#,##0.00" />
-                        </h:outputText>       
+                        </h:outputText>    
+                        
                         <h:outputText value="Kilos vivos:" style="font-size: 10pt; color: #045491"/>
                         <h:outputText id="kilosVivos" value="#{tropacontroller.registroMod.kilosVivos}" 
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
+                        
                         <h:outputText value="Kilos vivos reales:" style="font-size: 10pt; color: #045491"/>
                         <h:outputText id="kilosVivosReales" value="#{tropacontroller.registroMod.kilosVivosReales}" 
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
                             <f:convertNumber pattern="#,##0.00" />
-                        </h:outputText>                        
+                        </h:outputText>  
+                        
                         <h:outputText value="" style="font-size: 10pt; color: #045491"/>
                         <h:outputText value="" style="font-size: 10pt; color: #045491"/>
                         
@@ -132,8 +145,8 @@
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
  
-                        <h:outputText value="Entrega efectivo lado B:" style="font-size: 10pt; color: #045491"/>
-                        <h:outputText id="entregaEfectivoLadoB" value="#{tropacontroller.registroMod.entregaEfectivoB}" 
+                        <h:outputText value="Entrega efectivo proveedor:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="entregaProveedorEfectivo" value="#{tropacontroller.registroMod.entregaProveedorEfectivo}" 
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
@@ -171,8 +184,8 @@
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
                         
-                        <h:outputText value="Entrega comisión efectivo B:" style="font-size: 10pt; color: #045491"/>
-                        <h:outputText id="entregaEfectivoComisionB" value="#{tropacontroller.registroMod.entregaEfectivoComisionB}" style="float: right; text-align: right; font-size: 10pt; color: #045491">
+                        <h:outputText value="Entrega comisión efectivo:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="entregaEfectivoComision" value="#{tropacontroller.registroMod.entregaEfectivoComision}" style="float: right; text-align: right; font-size: 10pt; color: #045491">
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
                         
@@ -215,16 +228,21 @@
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
-                        <h:outputText value="Entrega efectivo flete B:" style="font-size: 10pt; color: #045491"/>
-                        <h:outputText id="entregaEfectivoFleteB" value="#{tropacontroller.registroMod.entregaEfectivoFleteB}" 
+                        <h:outputText value="Entrega efectivo flete:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="entregaEfectivoFlete" value="#{tropacontroller.registroMod.entregaEfectivoFlete}" 
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
                             <f:convertNumber pattern="#,##0.00" />
-                        </h:outputText>
+                        </h:outputText>                       
                         <h:outputText value="Valor Flete imponible:" style="font-size: 10pt; color: #045491"/>
                         <h:outputText id="valorFleteImponible" value="#{tropacontroller.registroMod.valorFleteImponible}" 
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
+                        <h:outputText value="Iva flete:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="ivaFlete" value="#{tropacontroller.registroMod.ivaFlete}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>                         
                         <h:outputText value="Flete:" style="font-size: 10pt; color: #045491"/>
                         <h:outputText id="fletes" value="#{tropacontroller.registroMod.valorFlete}" 
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
@@ -259,7 +277,6 @@
                                          required="true" style="width: 100%; font-size: 10pt; color: #045491" disabled="#{tropacontroller.registroMod.procesada eq '1' or tropacontroller.modo eq 'N'}">
                             <f:selectItem itemLabel="En trámite" itemValue="0" />                            
                             <f:selectItem itemLabel="Procesada" itemValue="1" />
-                            <f:selectItem itemLabel="En stock" itemValue="2" />
                         </p:selectOneMenu>
                         
                     </p:panelGrid>
@@ -294,25 +311,7 @@
                                 <h:outputText id="CatNombre"  value="#{item.categoria.nombre}" />
                             </p:commandLink>
                         </p:column>
-                        
-                        <p:column style="width: 5%; font-size: 8pt; color: #045491">
-                            <f:facet name="header">
-                                <h:outputText value="Cab. vivas"/>
-                            </f:facet>
-                            <h:outputText  value="#{item.cabezasVivas}">
-                                <f:convertNumber pattern="#,##0" />
-                            </h:outputText>
-                        </p:column>          
-                            
-                        <p:column style="width: 5%; font-size: 8pt; color: #045491">
-                            <f:facet name="header">
-                                <h:outputText value="Cab. Dte"/>
-                            </f:facet>
-                            <h:outputText  value="#{item.cabezasDte}">
-                                <f:convertNumber pattern="#,##0" />
-                            </h:outputText>
-                        </p:column>    
-                            
+
                         <p:column style="font-size: 8pt; color: #045491;text-align: right">
                             <f:facet name="header">
                                 <h:outputText value="Kilos vivos"/>
@@ -349,6 +348,22 @@
                         </p:column>
                         <p:column style="font-size: 8pt; color: #045491;text-align: right">
                             <f:facet name="header">
+                                <h:outputText value="Ent. Prov. efec."/>
+                            </f:facet>
+                            <h:outputText  value="#{item.entregaProveedorEfectivo}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Importe kilos vivos imponible"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.importeKiloVivoImponible}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>                             
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
                                 <h:outputText value="Iva kilos vivos"/>
                             </f:facet>
                             <h:outputText  value="#{item.ivaKiloVivo}">
@@ -363,24 +378,7 @@
                                 <f:convertNumber pattern="#,##0.00" />
                             </h:outputText>
                         </p:column>                             
-                                                       
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
-                            <f:facet name="header">
-                                <h:outputText value="Valor ingresos brutos"/>
-                            </f:facet>
-                            <h:outputText  value="#{item.valorIngBrutos}">
-                                <f:convertNumber pattern="#,##0.00" />
-                            </h:outputText>
-                        </p:column>    
-                            
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
-                            <f:facet name="header">
-                                <h:outputText value="Pago a cuenta de Iva"/>
-                            </f:facet>
-                            <h:outputText  value="#{item.pagoCuentaIva}">
-                                <f:convertNumber pattern="#,##0.00" />
-                            </h:outputText>
-                        </p:column>     
+                                                            
                         <p:column style="font-size: 8pt; color: #045491;text-align: right">
                             <f:facet name="header">
                                 <h:outputText value="Porcentaje iva comisionista"/>
@@ -389,14 +387,34 @@
                                 <f:convertNumber pattern="#,##0,00 %" />
                             </h:outputText>
                         </p:column>
+                            
                         <p:column style="font-size: 8pt; color: #045491;text-align: right">
                             <f:facet name="header">
-                                <h:outputText value="Importe Comisión sin iva"/>
+                                <h:outputText value="Importe comisión sin iva"/>
                             </f:facet>
                             <h:outputText  value="#{item.importeComisionSinIva}">
                                 <f:convertNumber pattern="#,##0.00" />
                             </h:outputText>
                         </p:column>
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Entrega efectivo Comisión"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.entregaEfectivoComision}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>    
+
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Importe comisión imponible"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.importeComisionImponible}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>
+                            
                         <p:column style="font-size: 8pt; color: #045491;text-align: right">
                             <f:facet name="header">
                                 <h:outputText value="Iva Comisión"/>
@@ -405,6 +423,7 @@
                                 <f:convertNumber pattern="#,##0.00" />
                             </h:outputText>
                         </p:column>
+                            
                         <p:column style="font-size: 8pt; color: #045491;text-align: right">
                             <f:facet name="header">
                                 <h:outputText value="Importe Comisión"/>
@@ -412,7 +431,16 @@
                             <h:outputText  value="#{item.importeComision}">
                                 <f:convertNumber pattern="#,##0.00" />
                             </h:outputText>
-                        </p:column>                               
+                        </p:column>
+                            
+                        <p:column style="width: 10%;font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Costo total sin iva"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.importeCostoTotalSinIva}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>                             
                                                         
                         <p:column style="width: 10%;font-size: 8pt; color: #045491;text-align: right">
                             <f:facet name="header">
@@ -514,15 +542,16 @@
                             </f:facet>
                             <p:inputNumber value="#{item.porcAfectado}" required="true" size="10"
                                      inputStyle="text-align: left"
-                                     style="font-size: 10pt; color: #045491; width: 1%;" maxlength="15" 
+                                     style="font-size: 8pt; color: #045491; width: 1%;" maxlength="15" 
                                      readonly="#{tropacontroller.registroMod.procesada eq '1'}">
                                 <f:validateLongRange minimum="1" maximum="100"/>
                                 <p:ajax process="@this" 
                                     listener="#{tropacontroller.calculaValorAfectadoViajeInvernada(item)}" event="change" 
                                     update="EditForm:tabViewCab:datosViajes,
                                             EditForm:tabViewCab:fletesSinIva,
-                                            EditForm:tabViewCab:entregaEfectivoFleteB,
+                                            EditForm:tabViewCab:entregaEfectivoFlete,
                                             EditForm:tabViewCab:valorFleteImponible,
+                                            EditForm:tabViewCab:ivaFlete,
                                             EditForm:tabViewCab:fletes,
                                             EditForm:tabViewCab:importeCostoTotalTropa,
                                             EditForm:tabViewCab:importeCostoTotalTropaSinIva,
@@ -535,7 +564,7 @@
                                 <h:outputText value="% Iva"/>
                             </f:facet>
                         <p:selectOneMenu id="porcIva" value="#{item.porcIva}" 
-                                         required="true" style="width: 100%; font-size: 10pt; color: #045491 "
+                                         required="true" style="width: 100%; font-size: 8pt; color: #045491 "
                                          >
                             <f:selectItem itemLabel="0 %" itemValue="0.00"/>
                             <f:selectItem itemLabel="10.50 %" itemValue="10.50"/>
@@ -543,8 +572,9 @@
                             <p:ajax listener="#{tropacontroller.calculaValorAfectadoViajeInvernada(item)}" 
                                     update="EditForm:tabViewCab:datosViajes,
                                             EditForm:tabViewCab:fletesSinIva,
-                                            EditForm:tabViewCab:entregaEfectivoFleteB,
+                                            EditForm:tabViewCab:entregaEfectivoFlete,
                                             EditForm:tabViewCab:valorFleteImponible,
+                                            EditForm:tabViewCab:ivaFlete,
                                             EditForm:tabViewCab:fletes,
                                             EditForm:tabViewCab:importeCostoTotalTropaSinIva,
                                             EditForm:tabViewCab:importeCostoTotalTropa,
@@ -562,18 +592,19 @@
                         </p:column>
                         <p:column style="font-size: 8pt; color: #045491;text-align: right">
                             <f:facet name="header">
-                                <h:outputText value="Entrega efectivo viaje 'B'"/>
+                                <h:outputText value="Entrega efectivo viaje"/>
                             </f:facet>
-                            <p:inputNumber value="#{item.entregaEfectivoViajeB}" required="true" size="10"
+                            <p:inputNumber value="#{item.entregaEfectivoViaje}" required="true" size="10"
                                      inputStyle="text-align: right"
-                                     style="font-size: 10pt; color: #045491" maxlength="15" 
+                                     style="font-size: 8pt; color: #045491" maxlength="15" 
                                      readonly="#{tropacontroller.registroMod.procesada eq '1'}">   
                                 <p:ajax process="@this" 
                                     listener="#{tropacontroller.calculaValorAfectadoViajeInvernada(item)}" event="keyup" 
                                     update="EditForm:tabViewCab:datosViajes,
                                             EditForm:tabViewCab:fletesSinIva,
-                                            EditForm:tabViewCab:entregaEfectivoFleteB,
+                                            EditForm:tabViewCab:entregaEfectivoFlete,
                                             EditForm:tabViewCab:valorFleteImponible,
+                                            EditForm:tabViewCab:ivaFlete,
                                             EditForm:tabViewCab:fletes,
                                             EditForm:tabViewCab:importeCostoTotalTropaSinIva,
                                             EditForm:tabViewCab:importeCostoTotalTropa,
@@ -603,15 +634,16 @@
                             </f:facet>
                             <p:inputNumber value="#{item.valorAfectado}" required="true" size="10"
                                      inputStyle="text-align: right"
-                                     style="font-size: 10pt; color: #045491" maxlength="15" 
+                                     style="font-size: 8pt; color: #045491" maxlength="15" 
                                      readonly="#{tropacontroller.registroMod.procesada eq '1'}">
                                 <f:validateLongRange minimum="1"/>
                                 <p:ajax process="@this" 
                                         listener="#{tropacontroller.calculaPorcAfectadoViajeInvernada(item)}" event="keyup" 
                                     update="EditForm:tabViewCab:datosViajes,
                                             EditForm:tabViewCab:fletesSinIva,
-                                            EditForm:tabViewCab:entregaEfectivoFleteB,
+                                            EditForm:tabViewCab:entregaEfectivoFlete,
                                             EditForm:tabViewCab:valorFleteImponible,
+                                            EditForm:tabViewCab:ivaFlete,
                                             EditForm:tabViewCab:fletes,
                                             EditForm:tabViewCab:importeCostoTotalTropaSinIva,
                                             EditForm:tabViewCab:importeCostoTotalTropa,
@@ -620,7 +652,7 @@
                             </p:inputNumber>
                         </p:column>      
                             
-                        <p:column  style="text-align: center; font-size: 10pt; color: #045491">
+                        <p:column  style="text-align: center; font-size: 8pt; color: #045491">
                             <f:facet name="header">
                             </f:facet>
                             <p:commandButton icon="ui-icon-trash" actionListener="#{tropacontroller.eliminaViaje(item)}"

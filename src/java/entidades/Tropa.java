@@ -41,7 +41,7 @@ public class Tropa  implements java.io.Serializable {
      private BigDecimal kilosDecomisados;
      private BigDecimal rendimiento;
      private BigDecimal importeKiloVivoSinIva;
-     private BigDecimal entregaEfectivoB;
+     private BigDecimal entregaProveedorEfectivo;
      private BigDecimal importeKiloVivoImponible;
      private BigDecimal ivaKiloVivo;
      private BigDecimal importeKiloVivo;
@@ -49,14 +49,14 @@ public class Tropa  implements java.io.Serializable {
      private BigDecimal valorIngBrutos;
      private BigDecimal pagoCuentaIva;
      private BigDecimal importeComisionSinIva;
-     private BigDecimal entregaEfectivoComisionB;
+     private BigDecimal entregaEfectivoComision;
      private BigDecimal importeComisionImponible;
      private BigDecimal ivaComision;
      private BigDecimal importeComision;
      private BigDecimal importeCostoTotalSinIva;
      private BigDecimal importeCostoTotal;
      private BigDecimal valorFleteSinIva;
-     private BigDecimal entregaEfectivoFleteB;
+     private BigDecimal entregaEfectivoFlete;
      private BigDecimal valorFleteImponible;
      private BigDecimal ivaFlete;
      private BigDecimal valorFlete;
@@ -100,7 +100,7 @@ public class Tropa  implements java.io.Serializable {
         this.kilosDecomisados = kilosDecomisados;
         this.rendimiento = rendimiento;
         this.importeKiloVivoSinIva = importeKiloVivoSinIva;
-        this.entregaEfectivoB = entregaEfectivoB;
+        this.entregaProveedorEfectivo = entregaEfectivoB;
         this.importeKiloVivoImponible = importeKiloVivoImponible;
         this.ivaKiloVivo = ivaKiloVivo;
         this.importeKiloVivo = importeKiloVivo;
@@ -108,14 +108,14 @@ public class Tropa  implements java.io.Serializable {
         this.valorIngBrutos = valorIngBrutos;
         this.pagoCuentaIva = pagoCuentaIva;
         this.importeComisionSinIva = importeComisionSinIva;
-        this.entregaEfectivoComisionB = entregaEfectivoComisionB;
+        this.entregaEfectivoComision = entregaEfectivoComisionB;
         this.importeComisionImponible = importeComisionImponible;
         this.ivaComision = ivaComision;
         this.importeComision = importeComision;
         this.importeCostoTotalSinIva = importeCostoTotalSinIva;
         this.importeCostoTotal = importeCostoTotal;
         this.valorFleteSinIva = valorFleteSinIva;
-        this.entregaEfectivoFleteB = entregaEfectivoFleteB;
+        this.entregaEfectivoFlete = entregaEfectivoFleteB;
         this.valorFleteImponible = valorFleteImponible;
         this.ivaFlete = ivaFlete;
         this.valorFlete = valorFlete;
@@ -370,12 +370,12 @@ public class Tropa  implements java.io.Serializable {
         this.importeKiloVivoSinIva = importeKiloVivoSinIva;
     }
 
-    public BigDecimal getEntregaEfectivoB() {
-        return entregaEfectivoB;
+    public BigDecimal getEntregaProveedorEfectivo() {
+        return entregaProveedorEfectivo;
     }
 
-    public void setEntregaEfectivoB(BigDecimal entregaEfectivoB) {
-        this.entregaEfectivoB = entregaEfectivoB;
+    public void setEntregaProveedorEfectivo(BigDecimal entregaProveedorEfectivo) {
+        this.entregaProveedorEfectivo = entregaProveedorEfectivo;
     }
 
     public BigDecimal getImporteKiloVivoImponible() {
@@ -427,12 +427,12 @@ public class Tropa  implements java.io.Serializable {
         this.importeComisionSinIva = importeComisionSinIva;
     }
 
-    public BigDecimal getEntregaEfectivoComisionB() {
-        return entregaEfectivoComisionB;
+    public BigDecimal getEntregaEfectivoComision() {
+        return entregaEfectivoComision;
     }
 
-    public void setEntregaEfectivoComisionB(BigDecimal entregaEfectivoComisionB) {
-        this.entregaEfectivoComisionB = entregaEfectivoComisionB;
+    public void setEntregaEfectivoComision(BigDecimal entregaEfectivoComision) {
+        this.entregaEfectivoComision = entregaEfectivoComision;
     }
 
     public BigDecimal getImporteComisionImponible() {
@@ -479,12 +479,12 @@ public class Tropa  implements java.io.Serializable {
         return valorFleteSinIva;
     }
 
-    public BigDecimal getEntregaEfectivoFleteB() {
-        return entregaEfectivoFleteB;
+    public BigDecimal getEntregaEfectivoFlete() {
+        return entregaEfectivoFlete;
     }
 
-    public void setEntregaEfectivoFleteB(BigDecimal entregaEfectivoFleteB) {
-        this.entregaEfectivoFleteB = entregaEfectivoFleteB;
+    public void setEntregaEfectivoFlete(BigDecimal entregaEfectivoFlete) {
+        this.entregaEfectivoFlete = entregaEfectivoFlete;
     }
 
     public BigDecimal getValorFleteImponible() {
@@ -603,7 +603,7 @@ public class Tropa  implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "Tropa{" + "id=" + id + ", categoria=" + categoria + ", comisionista=" + comisionista + ", deposito=" + deposito + ", productor=" + productor + ", numeroTropa=" + numeroTropa + ", tipo=" + tipo + ", puntoVenta=" + puntoVenta + ", numFactura=" + numFactura + ", tipoFactura=" + tipoFactura + ", fecIng=" + fecIng + ", fecCarga=" + fecCarga + ", idUsuario=" + idUsuario + ", dte=" + dte + ", cabezasVivas=" + cabezasVivas + ", cabezasDte=" + cabezasDte + ", kilosVivosOriginal=" + kilosVivosOriginal + ", kilosVivos=" + kilosVivos + ", kilosVivosReales=" + kilosVivosReales + ", decomisos=" + decomisos + ", mediasReces=" + mediasReces + ", cabezasFaenadas=" + cabezasFaenadas + ", cabezasMuertas=" + cabezasMuertas + ", kilosFaenados=" + kilosFaenados + ", kilosDecomisados=" + kilosDecomisados + ", rendimiento=" + rendimiento + ", importeKiloVivoSinIva=" + importeKiloVivoSinIva + ", entregaEfectivoB=" + entregaEfectivoB + ", importeKiloVivoImponible=" + importeKiloVivoImponible + ", ivaKiloVivo=" + ivaKiloVivo + ", importeKiloVivo=" + importeKiloVivo + ", importeFaena=" + importeFaena + ", valorIngBrutos=" + valorIngBrutos + ", pagoCuentaIva=" + pagoCuentaIva + ", importeComisionSinIva=" + importeComisionSinIva + ", entregaEfectivoComisionB=" + entregaEfectivoComisionB + ", importeComisionImponible=" + importeComisionImponible + ", ivaComision=" + ivaComision + ", importeComision=" + importeComision + ", importeCostoTotalSinIva=" + importeCostoTotalSinIva + ", importeCostoTotal=" + importeCostoTotal + ", valorFleteSinIva=" + valorFleteSinIva + ", entregaEfectivoFleteB=" + entregaEfectivoFleteB + ", valorFleteImponible=" + valorFleteImponible + ", ivaFlete=" + ivaFlete + ", valorFlete=" + valorFlete + ", importeCostoTotalTropaSinIva=" + importeCostoTotalTropaSinIva + ", importeCostoTotalTropa=" + importeCostoTotalTropa + ", costoUnitario=" + costoUnitario + ", observaciones=" + observaciones + ", documentoAsociado=" + documentoAsociado + ", procesada=" + procesada + ", tropaDets=" + tropaDets + ", tropaDetGarrons=" + tropaDetGarrons + ", inventarioTropas=" + inventarioTropas + ", ventaDets=" + ventaDets + ", tropaPagoCivas=" + tropaPagoCivas + ", tropaViajes=" + tropaViajes + '}';
+        return "Tropa{" + "id=" + id + ", categoria=" + categoria + ", comisionista=" + comisionista + ", deposito=" + deposito + ", productor=" + productor + ", numeroTropa=" + numeroTropa + ", tipo=" + tipo + ", puntoVenta=" + puntoVenta + ", numFactura=" + numFactura + ", tipoFactura=" + tipoFactura + ", fecIng=" + fecIng + ", fecCarga=" + fecCarga + ", idUsuario=" + idUsuario + ", dte=" + dte + ", cabezasVivas=" + cabezasVivas + ", cabezasDte=" + cabezasDte + ", kilosVivosOriginal=" + kilosVivosOriginal + ", kilosVivos=" + kilosVivos + ", kilosVivosReales=" + kilosVivosReales + ", decomisos=" + decomisos + ", mediasReces=" + mediasReces + ", cabezasFaenadas=" + cabezasFaenadas + ", cabezasMuertas=" + cabezasMuertas + ", kilosFaenados=" + kilosFaenados + ", kilosDecomisados=" + kilosDecomisados + ", rendimiento=" + rendimiento + ", importeKiloVivoSinIva=" + importeKiloVivoSinIva + ", entregaEfectivoB=" + entregaProveedorEfectivo + ", importeKiloVivoImponible=" + importeKiloVivoImponible + ", ivaKiloVivo=" + ivaKiloVivo + ", importeKiloVivo=" + importeKiloVivo + ", importeFaena=" + importeFaena + ", valorIngBrutos=" + valorIngBrutos + ", pagoCuentaIva=" + pagoCuentaIva + ", importeComisionSinIva=" + importeComisionSinIva + ", entregaEfectivoComisionB=" + entregaEfectivoComision + ", importeComisionImponible=" + importeComisionImponible + ", ivaComision=" + ivaComision + ", importeComision=" + importeComision + ", importeCostoTotalSinIva=" + importeCostoTotalSinIva + ", importeCostoTotal=" + importeCostoTotal + ", valorFleteSinIva=" + valorFleteSinIva + ", entregaEfectivoFleteB=" + entregaEfectivoFlete + ", valorFleteImponible=" + valorFleteImponible + ", ivaFlete=" + ivaFlete + ", valorFlete=" + valorFlete + ", importeCostoTotalTropaSinIva=" + importeCostoTotalTropaSinIva + ", importeCostoTotalTropa=" + importeCostoTotalTropa + ", costoUnitario=" + costoUnitario + ", observaciones=" + observaciones + ", documentoAsociado=" + documentoAsociado + ", procesada=" + procesada + ", tropaDets=" + tropaDets + ", tropaDetGarrons=" + tropaDetGarrons + ", inventarioTropas=" + inventarioTropas + ", ventaDets=" + ventaDets + ", tropaPagoCivas=" + tropaPagoCivas + ", tropaViajes=" + tropaViajes + '}';
     }
 
 }

@@ -14,6 +14,7 @@ public class Categoria  implements java.io.Serializable {
      private Integer id;
      private Producto producto= new Producto();
      private String nombre;
+     private String ccCostoInvernada;
      private Set<TropaDet> tropaDets = new HashSet<TropaDet>(0);
      private Set<Tropa> tropas = new HashSet<Tropa>(0);
      private Set<TropaDetGarron> tropaDetGarrons = new HashSet<TropaDetGarron>(0);
@@ -57,6 +58,15 @@ public class Categoria  implements java.io.Serializable {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    public String getCcCostoInvernada() {
+        return ccCostoInvernada;
+    }
+
+    public void setCcCostoInvernada(String ccCostoInvernada) {
+        this.ccCostoInvernada = ccCostoInvernada;
+    }
+    
     public Set<TropaDet> getTropaDets() {
         return this.tropaDets;
     }
@@ -85,9 +95,6 @@ public class Categoria  implements java.io.Serializable {
     public void setCategoriaDets(Set<CategoriaDet> categoriaDets) {
         this.categoriaDets = categoriaDets;
     }
-
-
-
 
 }
 

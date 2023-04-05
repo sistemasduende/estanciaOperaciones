@@ -9,7 +9,7 @@
     <ui:composition template="./../../Template04.xhtml">
             <ui:define name="content">
             <div style="align: center">
-            <h:form id="EditForm">
+             <h:form id="EditForm">
                 <p:tabView id="tabViewCab">
                     <p:ajax event="tabChange"  update="botonesCrearDetalle, datosDetalles" /> 
                     <p:tab title="Tropa" >
@@ -181,7 +181,7 @@
                         </h:outputText>
                         
                         <h:outputText value="Pago a cuenta de Iva:" style="font-size: 10pt; color: #045491"/>
-                        <p:commandLink actionListener="#{tropacontroller.onClickPagoCIva()}" 
+                        <p:commandLink actionListener="#{tropacontroller.onClickPagoCIva()}"
                                        update=":PagosCuentaIvaForm" oncomplete="PF('PagosCuentaIvaDialog').show()"
                                        immediate="true" style="text-decoration: underline; color: blue">
                             <h:outputText id="pagoCuentaIva" value="#{tropacontroller.registroMod.pagoCuentaIva}" 

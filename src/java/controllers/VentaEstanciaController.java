@@ -10,7 +10,6 @@ import entidades.Empresa;
 import entidades.LocalCarniceria;
 import entidades.RemitoVenta;
 import entidades.RemitoVentaDet;
-import entidades.TropaViaje;
 import entidades.VentaEstancia;
 import entidades.VentaEstanciaDet;
 import entidades.VentaEstanciaRemito;
@@ -343,9 +342,7 @@ public class VentaEstanciaController extends BeanBase{
             q.setParameter("idLocalSel",idLocalSel);
             listaRemitos=(List<RemitoVenta>) q.list();
             for (RemitoVenta remito: listaRemitos){
-                Hibernate.initialize(remito.getRemitoVentaDets());
-                //linea agregada por diego
-                //remito.getRemitoVentaDets().stream().forEach(x->x.getUnidad().getNombre());
+                Hibernate.initialize(remito.getRemitoVentaDets()); 
             }
             session.getTransaction().commit();
         }

@@ -24,6 +24,7 @@ public class Deposito  implements java.io.Serializable {
      private char tipoCobroFaena;
      private BigDecimal precioUnidad;
      private String ccCostoTropa;
+     private String ccIvaCreditoFiscal;
      private Set<Tropa> tropas = new HashSet<Tropa>(0);
 
     public Deposito() {
@@ -138,6 +139,14 @@ public class Deposito  implements java.io.Serializable {
     public void setCcCostoTropa(String ccCostoTropa) {
         this.ccCostoTropa = ccCostoTropa;
     }
+
+    public String getCcIvaCreditoFiscal() {
+        return ccIvaCreditoFiscal;
+    }
+
+    public void setCcIvaCreditoFiscal(String ccIvaCreditoFiscal) {
+        this.ccIvaCreditoFiscal = ccIvaCreditoFiscal;
+    }
     
     
     public Set<Tropa> getTropas() {
@@ -147,9 +156,6 @@ public class Deposito  implements java.io.Serializable {
     public void setTropas(Set<Tropa> tropas) {
         this.tropas = tropas;
     }
-
-
-
 
 }
 

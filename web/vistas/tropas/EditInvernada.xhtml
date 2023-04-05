@@ -132,8 +132,8 @@
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
  
-                        <h:outputText value="Entrega efectivo lado B:" style="font-size: 10pt; color: #045491"/>
-                        <h:outputText id="entregaEfectivoLadoB" value="#{tropacontroller.registroMod.entregaEfectivoB}" 
+                        <h:outputText value="Entrega efectivo proveedor:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="entregaProveedorEfectivo" value="#{tropacontroller.registroMod.entregaProveedorEfectivo}" 
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
@@ -171,8 +171,8 @@
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
                         
-                        <h:outputText value="Entrega comisión efectivo B:" style="font-size: 10pt; color: #045491"/>
-                        <h:outputText id="entregaEfectivoComisionB" value="#{tropacontroller.registroMod.entregaEfectivoComisionB}" style="float: right; text-align: right; font-size: 10pt; color: #045491">
+                        <h:outputText value="Entrega comisión efectivo:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="entregaEfectivoComision" value="#{tropacontroller.registroMod.entregaEfectivoComision}" style="float: right; text-align: right; font-size: 10pt; color: #045491">
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
                         
@@ -215,8 +215,8 @@
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
-                        <h:outputText value="Entrega efectivo flete B:" style="font-size: 10pt; color: #045491"/>
-                        <h:outputText id="entregaEfectivoFleteB" value="#{tropacontroller.registroMod.entregaEfectivoFleteB}" 
+                        <h:outputText value="Entrega efectivo flete:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="entregaEfectivoFlete" value="#{tropacontroller.registroMod.entregaEfectivoFlete}" 
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
@@ -225,6 +225,11 @@
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
+                        <h:outputText value="Iva flete:" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText id="ivaFlete" value="#{tropacontroller.registroMod.ivaFlete}" 
+                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
+                            <f:convertNumber pattern="#,##0.00" />
+                        </h:outputText>                         
                         <h:outputText value="Flete:" style="font-size: 10pt; color: #045491"/>
                         <h:outputText id="fletes" value="#{tropacontroller.registroMod.valorFlete}" 
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
@@ -259,7 +264,6 @@
                                          required="true" style="width: 100%; font-size: 10pt; color: #045491" disabled="#{tropacontroller.registroMod.procesada eq '1' or tropacontroller.modo eq 'N'}">
                             <f:selectItem itemLabel="En trámite" itemValue="0" />                            
                             <f:selectItem itemLabel="Procesada" itemValue="1" />
-                            <f:selectItem itemLabel="En stock" itemValue="2" />
                         </p:selectOneMenu>
                         
                     </p:panelGrid>
@@ -521,7 +525,7 @@
                                     listener="#{tropacontroller.calculaValorAfectadoViajeInvernada(item)}" event="change" 
                                     update="EditForm:tabViewCab:datosViajes,
                                             EditForm:tabViewCab:fletesSinIva,
-                                            EditForm:tabViewCab:entregaEfectivoFleteB,
+                                            EditForm:tabViewCab:entregaEfectivoFlete,
                                             EditForm:tabViewCab:valorFleteImponible,
                                             EditForm:tabViewCab:fletes,
                                             EditForm:tabViewCab:importeCostoTotalTropa,
@@ -543,7 +547,7 @@
                             <p:ajax listener="#{tropacontroller.calculaValorAfectadoViajeInvernada(item)}" 
                                     update="EditForm:tabViewCab:datosViajes,
                                             EditForm:tabViewCab:fletesSinIva,
-                                            EditForm:tabViewCab:entregaEfectivoFleteB,
+                                            EditForm:tabViewCab:entregaEfectivoFlete,
                                             EditForm:tabViewCab:valorFleteImponible,
                                             EditForm:tabViewCab:fletes,
                                             EditForm:tabViewCab:importeCostoTotalTropaSinIva,
@@ -564,7 +568,7 @@
                             <f:facet name="header">
                                 <h:outputText value="Entrega efectivo viaje 'B'"/>
                             </f:facet>
-                            <p:inputNumber value="#{item.entregaEfectivoViajeB}" required="true" size="10"
+                            <p:inputNumber value="#{item.entregaEfectivoViaje}" required="true" size="10"
                                      inputStyle="text-align: right"
                                      style="font-size: 10pt; color: #045491" maxlength="15" 
                                      readonly="#{tropacontroller.registroMod.procesada eq '1'}">   
@@ -572,7 +576,7 @@
                                     listener="#{tropacontroller.calculaValorAfectadoViajeInvernada(item)}" event="keyup" 
                                     update="EditForm:tabViewCab:datosViajes,
                                             EditForm:tabViewCab:fletesSinIva,
-                                            EditForm:tabViewCab:entregaEfectivoFleteB,
+                                            EditForm:tabViewCab:entregaEfectivoFlete,
                                             EditForm:tabViewCab:valorFleteImponible,
                                             EditForm:tabViewCab:fletes,
                                             EditForm:tabViewCab:importeCostoTotalTropaSinIva,
@@ -610,7 +614,7 @@
                                         listener="#{tropacontroller.calculaPorcAfectadoViajeInvernada(item)}" event="keyup" 
                                     update="EditForm:tabViewCab:datosViajes,
                                             EditForm:tabViewCab:fletesSinIva,
-                                            EditForm:tabViewCab:entregaEfectivoFleteB,
+                                            EditForm:tabViewCab:entregaEfectivoFlete,
                                             EditForm:tabViewCab:valorFleteImponible,
                                             EditForm:tabViewCab:fletes,
                                             EditForm:tabViewCab:importeCostoTotalTropaSinIva,

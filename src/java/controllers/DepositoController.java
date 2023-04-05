@@ -161,6 +161,7 @@ public class DepositoController extends BeanBase implements Serializable {
         registroMod.setPrecioUnidad(registroSel.getPrecioUnidad());
         registroMod.setTropas(registroSel.getTropas());
         registroMod.setCcCostoTropa(registroSel.getCcCostoTropa());
+        registroMod.setCcIvaCreditoFiscal(registroSel.getCcIvaCreditoFiscal());
         this.modo="M";
         
         ListaLocalidades listaLoc= new  ListaLocalidades();

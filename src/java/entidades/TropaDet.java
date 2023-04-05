@@ -29,7 +29,7 @@ public class TropaDet  implements java.io.Serializable {
      private BigDecimal porcIvaProductor;
      private BigDecimal precioKiloVivo;
      private BigDecimal importeKiloVivoSinIva;
-     private BigDecimal entregaEfectivoB;
+     private BigDecimal entregaProveedorEfectivo;
      private BigDecimal importeKiloVivoImponible;
      private BigDecimal ivaKiloVivo;
      private BigDecimal importeKiloVivo;
@@ -41,7 +41,7 @@ public class TropaDet  implements java.io.Serializable {
      private BigDecimal porcComision;
      private BigDecimal porcIvaComisionista;
      private BigDecimal importeComisionSinIva;
-     private BigDecimal entregaEfectivoComisionB;
+     private BigDecimal entregaEfectivoComision;
      private BigDecimal importeComisionImponible;
      private BigDecimal ivaComision;
      private BigDecimal importeComision;
@@ -52,7 +52,7 @@ public class TropaDet  implements java.io.Serializable {
     public TropaDet() {
     }
 
-    public TropaDet(int cabezasVivas, int cabezasDte, BigDecimal kilosVivosOriginal, BigDecimal porcDesbaste, BigDecimal kilosVivos, BigDecimal kilosVivosReales, int decomisos, short mediasReces, int cabezasFaenadas, int cabezasMuertas, BigDecimal kilosFaenados, BigDecimal kilosDecomisados, BigDecimal rendimiento, BigDecimal porcIvaProductor, BigDecimal precioKiloVivo, BigDecimal importeKiloVivoSinIva, BigDecimal entregaEfectivoB, BigDecimal importeKiloVivoImponible, BigDecimal ivaKiloVivo, BigDecimal importeKiloVivo, BigDecimal precioKiloFaenado, BigDecimal importeFaena, BigDecimal porcIngBrutos, BigDecimal valorIngBrutos, BigDecimal pagoCuentaIva, BigDecimal porcComision, BigDecimal porcIvaComisionista, BigDecimal importeComisionSinIva, BigDecimal entregaEfectivoComisionB, BigDecimal importeComisionImponible, BigDecimal ivaComision, BigDecimal importeComision, BigDecimal importeCostoTotalSinIva, BigDecimal importeCostoTotal, String observaciones) {
+    public TropaDet(int cabezasVivas, int cabezasDte, BigDecimal kilosVivosOriginal, BigDecimal porcDesbaste, BigDecimal kilosVivos, BigDecimal kilosVivosReales, int decomisos, short mediasReces, int cabezasFaenadas, int cabezasMuertas, BigDecimal kilosFaenados, BigDecimal kilosDecomisados, BigDecimal rendimiento, BigDecimal porcIvaProductor, BigDecimal precioKiloVivo, BigDecimal importeKiloVivoSinIva, BigDecimal entregaProveedorEfectivo, BigDecimal importeKiloVivoImponible, BigDecimal ivaKiloVivo, BigDecimal importeKiloVivo, BigDecimal precioKiloFaenado, BigDecimal importeFaena, BigDecimal porcIngBrutos, BigDecimal valorIngBrutos, BigDecimal pagoCuentaIva, BigDecimal porcComision, BigDecimal porcIvaComisionista, BigDecimal importeComisionSinIva, BigDecimal entregaEfectivoComisionB, BigDecimal importeComisionImponible, BigDecimal ivaComision, BigDecimal importeComision, BigDecimal importeCostoTotalSinIva, BigDecimal importeCostoTotal, String observaciones) {
         this.cabezasVivas = cabezasVivas;
         this.cabezasDte = cabezasDte;
         this.kilosVivosOriginal = kilosVivosOriginal;
@@ -69,7 +69,7 @@ public class TropaDet  implements java.io.Serializable {
         this.porcIvaProductor = porcIvaProductor;
         this.precioKiloVivo = precioKiloVivo;
         this.importeKiloVivoSinIva = importeKiloVivoSinIva;
-        this.entregaEfectivoB = entregaEfectivoB;
+        this.entregaProveedorEfectivo = entregaProveedorEfectivo;
         this.importeKiloVivoImponible = importeKiloVivoImponible;
         this.ivaKiloVivo = ivaKiloVivo;
         this.importeKiloVivo = importeKiloVivo;
@@ -81,7 +81,7 @@ public class TropaDet  implements java.io.Serializable {
         this.porcComision = porcComision;
         this.porcIvaComisionista = porcIvaComisionista;
         this.importeComisionSinIva = importeComisionSinIva;
-        this.entregaEfectivoComisionB = entregaEfectivoComisionB;
+        this.entregaEfectivoComision = entregaEfectivoComisionB;
         this.importeComisionImponible = importeComisionImponible;
         this.ivaComision = ivaComision;
         this.importeComision = importeComision;
@@ -89,6 +89,8 @@ public class TropaDet  implements java.io.Serializable {
         this.importeCostoTotal = importeCostoTotal;
         this.observaciones = observaciones;
     }
+
+
 
     public Integer getId() {
         return this.id;
@@ -225,12 +227,12 @@ public class TropaDet  implements java.io.Serializable {
         return this.importeKiloVivo;
     }
 
-    public BigDecimal getEntregaEfectivoB() {
-        return entregaEfectivoB;
+    public BigDecimal getEntregaProveedorEfectivo() {
+        return entregaProveedorEfectivo;
     }
 
-    public void setEntregaEfectivoB(BigDecimal entregaEfectivoB) {
-        this.entregaEfectivoB = entregaEfectivoB;
+    public void setEntregaProveedorEfectivo(BigDecimal entregaProveedorEfectivo) {
+        this.entregaProveedorEfectivo = entregaProveedorEfectivo;
     }
 
     public BigDecimal getImporteKiloVivoImponible() {
@@ -315,12 +317,12 @@ public class TropaDet  implements java.io.Serializable {
         return importeComisionSinIva;
     }
 
-    public BigDecimal getEntregaEfectivoComisionB() {
-        return entregaEfectivoComisionB;
+    public BigDecimal getEntregaEfectivoComision() {
+        return entregaEfectivoComision;
     }
 
-    public void setEntregaEfectivoComisionB(BigDecimal entregaEfectivoComisionB) {
-        this.entregaEfectivoComisionB = entregaEfectivoComisionB;
+    public void setEntregaEfectivoComision(BigDecimal entregaEfectivoComision) {
+        this.entregaEfectivoComision = entregaEfectivoComision;
     }
 
     public BigDecimal getImporteComisionImponible() {
@@ -376,8 +378,9 @@ public class TropaDet  implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "TropaDet{" + "id=" + id + ", categoria=" + categoria + ", tropa=" + tropa + ", cabezasVivas=" + cabezasVivas + ", cabezasDte=" + cabezasDte + ", kilosVivosOriginal=" + kilosVivosOriginal + ", porcDesbaste=" + porcDesbaste + ", kilosVivos=" + kilosVivos + ", kilosVivosReales=" + kilosVivosReales + ", decomisos=" + decomisos + ", mediasReces=" + mediasReces + ", cabezasFaenadas=" + cabezasFaenadas + ", cabezasMuertas=" + cabezasMuertas + ", kilosFaenados=" + kilosFaenados + ", kilosDecomisados=" + kilosDecomisados + ", rendimiento=" + rendimiento + ", porcIvaProductor=" + porcIvaProductor + ", precioKiloVivo=" + precioKiloVivo + ", importeKiloVivoSinIva=" + importeKiloVivoSinIva + ", entregaEfectivoB=" + entregaEfectivoB + ", importeKiloVivoImponible=" + importeKiloVivoImponible + ", ivaKiloVivo=" + ivaKiloVivo + ", importeKiloVivo=" + importeKiloVivo + ", precioKiloFaenado=" + precioKiloFaenado + ", importeFaena=" + importeFaena + ", porcIngBrutos=" + porcIngBrutos + ", valorIngBrutos=" + valorIngBrutos + ", pagoCuentaIva=" + pagoCuentaIva + ", porcComision=" + porcComision + ", porcIvaComisionista=" + porcIvaComisionista + ", importeComisionSinIva=" + importeComisionSinIva + ", entregaEfectivoComisionB=" + entregaEfectivoComisionB + ", importeComisionImponible=" + importeComisionImponible + ", ivaComision=" + ivaComision + ", importeComision=" + importeComision + ", importeCostoTotalSinIva=" + importeCostoTotalSinIva + ", importeCostoTotal=" + importeCostoTotal + ", observaciones=" + observaciones + '}';
+        return "TropaDet{" + "id=" + id + ", categoria=" + categoria + ", tropa=" + tropa + ", cabezasVivas=" + cabezasVivas + ", cabezasDte=" + cabezasDte + ", kilosVivosOriginal=" + kilosVivosOriginal + ", porcDesbaste=" + porcDesbaste + ", kilosVivos=" + kilosVivos + ", kilosVivosReales=" + kilosVivosReales + ", decomisos=" + decomisos + ", mediasReces=" + mediasReces + ", cabezasFaenadas=" + cabezasFaenadas + ", cabezasMuertas=" + cabezasMuertas + ", kilosFaenados=" + kilosFaenados + ", kilosDecomisados=" + kilosDecomisados + ", rendimiento=" + rendimiento + ", porcIvaProductor=" + porcIvaProductor + ", precioKiloVivo=" + precioKiloVivo + ", importeKiloVivoSinIva=" + importeKiloVivoSinIva + ", entregaProveedorEfectivo=" + entregaProveedorEfectivo + ", importeKiloVivoImponible=" + importeKiloVivoImponible + ", ivaKiloVivo=" + ivaKiloVivo + ", importeKiloVivo=" + importeKiloVivo + ", precioKiloFaenado=" + precioKiloFaenado + ", importeFaena=" + importeFaena + ", porcIngBrutos=" + porcIngBrutos + ", valorIngBrutos=" + valorIngBrutos + ", pagoCuentaIva=" + pagoCuentaIva + ", porcComision=" + porcComision + ", porcIvaComisionista=" + porcIvaComisionista + ", importeComisionSinIva=" + importeComisionSinIva + ", entregaEfectivoComisionB=" + entregaEfectivoComision + ", importeComisionImponible=" + importeComisionImponible + ", ivaComision=" + ivaComision + ", importeComision=" + importeComision + ", importeCostoTotalSinIva=" + importeCostoTotalSinIva + ", importeCostoTotal=" + importeCostoTotal + ", observaciones=" + observaciones + '}';
     }
+
 }
 
 

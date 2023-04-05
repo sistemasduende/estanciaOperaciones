@@ -30,8 +30,8 @@
                 <comment></comment>
             </column>
         </property>
-        <property name="entregaEfectivoViajeB" type="big_decimal">
-            <column name="entregaEfectivoViajeB" precision="10" not-null="true">
+        <property name="entregaEfectivoViaje" type="big_decimal">
+            <column name="entregaEfectivoViaje" precision="10" not-null="true">
                 <comment></comment>
             </column>
         </property>

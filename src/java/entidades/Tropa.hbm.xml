@@ -1,260 +1,259 @@
-<?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 16 jun. 2022 20:10:38 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="entidades.Tropa" table="tropa" catalog="estancia" optimistic-lock="version" lazy="false">
-        <comment>Tropa</comment>
-        <id name="id" type="java.lang.Integer">
-            <column name="id" />
-            <generator class="identity" />
-        </id>
-        <many-to-one name="categoria" class="entidades.Categoria" fetch="select">
-            <column name="idProducto" not-null="true">
-                <comment>Categor&#237;a del producto</comment>
-            </column>
-        </many-to-one>
-        <many-to-one name="comisionista" class="entidades.Comisionista" fetch="select">
-            <column name="idComisionista">
-                <comment>Id del consignatario o comisionista</comment>
-            </column>
-        </many-to-one>
-        <many-to-one name="deposito" class="entidades.Deposito" fetch="select">
-            <column name="idDeposito">
-                <comment>Id del dep&#243;sito</comment>
-            </column>
-        </many-to-one>
-        <many-to-one name="productor" class="entidades.Productor" fetch="select">
-            <column name="idProductor">
-                <comment>Id. del proveedor</comment>
-            </column>
-        </many-to-one>
-        <property name="numeroTropa" type="string">
-            <column name="numeroTropa" length="60" not-null="true" unique="true">
-                <comment>N&#250;mero de tropa. Asignado por frigor&#237;fico</comment>
-            </column>
-        </property>
-        <property name="tipo" type="char">
-            <column name="tipo" length="1" not-null="true">
-                <comment>Tipo: Faena/Invernada</comment>
-            </column>
-        </property>
-        <property name="puntoVenta" type="string">
-            <column name="puntoVenta" length="5" />
-        </property>
-        <property name="numFactura" type="string">
-            <column name="numFactura" length="10" />
-        </property>
-        <property name="tipoFactura" type="string">
-            <column name="tipoFactura" length="5" />
-        </property>
-        <property name="fecIng" type="timestamp">
-            <column name="fec_ing" length="19" not-null="true">
-                <comment>Fecha de ingreso de la tropa</comment>
-            </column>
-        </property>
-        <property name="fecCarga" type="timestamp">
-            <column name="fec_carga" length="19" not-null="true">
-                <comment>Fecha de carga en sistema</comment>
-            </column>
-        </property>
-        <property name="idUsuario" type="int">
-            <column name="idUsuario" not-null="true">
-                <comment>Id del usuario que carga la tropa</comment>
-            </column>
-        </property>
-        <property name="dte" type="string">
-            <column name="dte" length="60" not-null="true" unique="true">
-                <comment>Documento de tr&#225;nsito electr&#243;nico</comment>
-            </column>
-        </property>
-        <property name="cabezasVivas" type="int">
-            <column name="cabezasVivas" not-null="true">
-                <comment>Total de cabezas vivas de la tropa</comment>
-            </column>
-        </property>
-        <property name="cabezasDte" type="int">
-            <column name="cabezasDte" not-null="true" />
-        </property>
-        <property name="kilosVivosOriginal" type="big_decimal">
-            <column name="kilosVivosOriginal" precision="20" not-null="true">
-                <comment></comment>
-            </column>
-        </property>
-        <property name="kilosVivos" type="big_decimal">
-            <column name="kilosVivos" precision="20" not-null="true">
-                <comment>Total de kilos vivos de la tropa</comment>
-            </column>
-        </property>
-        <property name="kilosVivosReales" type="big_decimal">
-            <column name="kilosVivosReales" precision="20" not-null="true">
-                <comment></comment>
-            </column>
-        </property>
-        <property name="decomisos" type="int">
-            <column name="decomisos" not-null="true" />
-        </property>
-        <property name="mediasReces" type="short">
-            <column name="mediasReces" not-null="true" />
-        </property>
-        <property name="cabezasFaenadas" type="int">
-            <column name="cabezasFaenadas" not-null="true" />
-        </property>
-        <property name="cabezasMuertas" type="int">
-            <column name="cabezasMuertas" not-null="true" />
-        </property>
-        <property name="kilosFaenados" type="big_decimal">
-            <column name="kilosFaenados" precision="20" not-null="true" />
-        </property>
-        <property name="kilosDecomisados" type="big_decimal">
-            <column name="kilosDecomisados" precision="20" not-null="true" />
-        </property>
-        <property name="rendimiento" type="big_decimal">
-            <column name="rendimiento" precision="20" scale="4" not-null="true">
-                <comment>Kilos faenados/Kilos vivos</comment>
-            </column>
-        </property>
-        <property name="importeKiloVivoSinIva" type="big_decimal">
-            <column name="importeKiloVivoSinIva" precision="20" not-null="true" />
-        </property>
-        <property name="entregaEfectivoB" type="big_decimal">
-            <column name="entregaEfectivoB" precision="20" not-null="true" />
-        </property>
-        <property name="importeKiloVivoImponible" type="big_decimal">
-            <column name="importeKiloVivoImponible" precision="20" not-null="true" />
-        </property>
-        <property name="ivaKiloVivo" type="big_decimal">
-            <column name="ivaKiloVivo" precision="20" not-null="true" />
-        </property>
-        <property name="importeKiloVivo" type="big_decimal">
-            <column name="importeKiloVivo" precision="20" not-null="true" />
-        </property>
-        <property name="importeFaena" type="big_decimal">
-            <column name="importeFaena" precision="20" not-null="true" />
-        </property>
-        <property name="valorIngBrutos" type="big_decimal">
-            <column name="valorIngBrutos" precision="20" not-null="true" />
-        </property>
-        <property name="pagoCuentaIva" type="big_decimal">
-            <column name="pagoCuentaIva" precision="20" not-null="true" />
-        </property>
-        <property name="importeComisionSinIva" type="big_decimal">
-            <column name="importeComisionSinIva" precision="20" not-null="true" />
-        </property>
-        <property name="entregaEfectivoComisionB" type="big_decimal">
-            <column name="entregaEfectivoComisionB" precision="20" not-null="true" />
-        </property>
-        <property name="importeComisionImponible" type="big_decimal">
-            <column name="importeComisionImponible" precision="20" not-null="true" />
-        </property>
-        <property name="ivaComision" type="big_decimal">
-            <column name="ivaComision" precision="20" not-null="true" />
-        </property>
-        <property name="importeComision" type="big_decimal">
-            <column name="importeComision" precision="20" not-null="true" />
-        </property>
-        <property name="importeCostoTotalSinIva" type="big_decimal">
-            <column name="importeCostoTotalSinIva" precision="20" not-null="true">
-                <comment></comment>
-            </column>
-        </property>
-        <property name="importeCostoTotal" type="big_decimal">
-            <column name="importeCostoTotal" precision="20" not-null="true">
-                <comment>Suma de costos totales de los detalles de tropa (No incluye fletes)</comment>
-            </column>
-        </property>
-        <property name="valorFleteSinIva" type="big_decimal">
-            <column name="valorFleteSinIva" precision="20" not-null="true">
-                <comment></comment>
-            </column>
-        </property>
-        <property name="entregaEfectivoFleteB" type="big_decimal">
-            <column name="entregaEfectivoFleteB" precision="20" not-null="true">
-                <comment></comment>
-            </column>
-        </property>
-        <property name="valorFleteImponible" type="big_decimal">
-            <column name="valorFleteImponible" precision="20" not-null="true">
-                <comment></comment>
-            </column>
-        </property>
-        <property name="ivaFlete" type="big_decimal">
-            <column name="ivaFlete" precision="20" not-null="true">
-                <comment></comment>
-            </column>
-        </property>
-        <property name="valorFlete" type="big_decimal">
-            <column name="valorFlete" precision="20" not-null="true">
-                <comment>Valor del flete de la tropa</comment>
-            </column>
-        </property>
-        <property name="importeCostoTotalTropaSinIva" type="big_decimal">
-            <column name="importeCostoTotalTropaSinIva" precision="20" not-null="true">
-                <comment></comment>
-            </column>
-        </property>
-        <property name="importeCostoTotalTropa" type="big_decimal">
-            <column name="importeCostoTotalTropa" precision="20" not-null="true">
-                <comment>Costo total de tropa incluye fletes</comment>
-            </column>
-        </property>
-        <property name="costoUnitario" type="big_decimal">
-            <column name="costoUnitario" precision="20" scale="4" not-null="true">
-                <comment>Costo unitario por tropa</comment>
-            </column>
-        </property>
-        <property name="observaciones" type="string">
-            <column name="observaciones" />
-        </property>
-        <property name="documentoAsociado" type="binary">
-            <column name="documentoAsociado">
-                <comment>Imagen o documento relacionado con la tropa</comment>
-            </column>
-        </property>
-        <property name="procesada" type="char">
-            <column name="procesada" length="1" not-null="true" />
-        </property>
-        <set name="tropaDets" table="tropa_det" inverse="true" lazy="true" fetch="select" cascade="all-delete-orphan">
-            <key>
-                <column name="idTropa" not-null="true">
-                    <comment>Id de la tropa</comment>
-                </column>
-            </key>
-            <one-to-many class="entidades.TropaDet" />
-        </set>
-        <set name="tropaDetGarrons" table="tropa_det_garron" inverse="true" lazy="true" fetch="select" cascade="all-delete-orphan">
-            <key>
-                <column name="idTropa" not-null="true">
-                    <comment>Id. de la tropa</comment>
-                </column>
-            </key>
-            <one-to-many class="entidades.TropaDetGarron" />
-        </set>
-        <set name="inventarioTropas" table="inventario_tropa" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="idTropa" not-null="true">
-                    <comment>Id de la tropa relacionada</comment>
-                </column>
-            </key>
-            <one-to-many class="entidades.InventarioTropa" />
-        </set>
-        <set name="ventaDets" table="venta_det" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="idTropa" />
-            </key>
-            <one-to-many class="entidades.VentaDet" />
-        </set>
-        <set name="tropaPagoCivas" table="tropa_pago_civa" inverse="true" lazy="true" fetch="select" cascade="all-delete-orphan">
-            <key>
-                <column name="idTropa" not-null="true" />
-            </key>
-            <one-to-many class="entidades.TropaPagoCiva" />
-        </set>
-        <set name="tropaViajes" table="tropa_viaje" inverse="true" lazy="true" fetch="select" cascade="all-delete-orphan">
-            <key>
-                <column name="idTropa" not-null="true" />
-            </key>
-            <one-to-many class="entidades.TropaViaje" />
-        </set>
-    </class>
+  <class catalog="estancia" lazy="false" name="entidades.Tropa" optimistic-lock="version" table="tropa">
+    <comment>Tropa</comment>
+    <id name="id" type="java.lang.Integer">
+      <column name="id"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="entidades.Categoria" fetch="select" name="categoria">
+      <column name="idProducto" not-null="true">
+        <comment>Categoría del producto</comment>
+      </column>
+    </many-to-one>
+    <many-to-one class="entidades.Comisionista" fetch="select" name="comisionista">
+      <column name="idComisionista">
+        <comment>Id del consignatario o comisionista</comment>
+      </column>
+    </many-to-one>
+    <many-to-one class="entidades.Deposito" fetch="select" name="deposito">
+      <column name="idDeposito">
+        <comment>Id del depósito</comment>
+      </column>
+    </many-to-one>
+    <many-to-one class="entidades.Productor" fetch="select" name="productor">
+      <column name="idProductor">
+        <comment>Id. del proveedor</comment>
+      </column>
+    </many-to-one>
+    <property name="numeroTropa" type="string">
+      <column length="60" name="numeroTropa" not-null="true" unique="true">
+        <comment>Número de tropa. Asignado por frigorífico</comment>
+      </column>
+    </property>
+    <property name="tipo" type="char">
+      <column length="1" name="tipo" not-null="true">
+        <comment>Tipo: Faena/Invernada</comment>
+      </column>
+    </property>
+    <property name="puntoVenta" type="string">
+      <column length="5" name="puntoVenta"/>
+    </property>
+    <property name="numFactura" type="string">
+      <column length="10" name="numFactura"/>
+    </property>
+    <property name="tipoFactura" type="string">
+      <column length="5" name="tipoFactura"/>
+    </property>
+    <property name="fecIng" type="timestamp">
+      <column length="19" name="fec_ing" not-null="true">
+        <comment>Fecha de ingreso de la tropa</comment>
+      </column>
+    </property>
+    <property name="fecCarga" type="timestamp">
+      <column length="19" name="fec_carga" not-null="true">
+        <comment>Fecha de carga en sistema</comment>
+      </column>
+    </property>
+    <property name="idUsuario" type="int">
+      <column name="idUsuario" not-null="true">
+        <comment>Id del usuario que carga la tropa</comment>
+      </column>
+    </property>
+    <property name="dte" type="string">
+      <column length="60" name="dte" not-null="true" unique="true">
+        <comment>Documento de tránsito electrónico</comment>
+      </column>
+    </property>
+    <property name="cabezasVivas" type="int">
+      <column name="cabezasVivas" not-null="true">
+        <comment>Total de cabezas vivas de la tropa</comment>
+      </column>
+    </property>
+    <property name="cabezasDte" type="int">
+      <column name="cabezasDte" not-null="true"/>
+    </property>
+    <property name="kilosVivosOriginal" type="big_decimal">
+      <column name="kilosVivosOriginal" not-null="true" precision="20">
+        <comment/>
+      </column>
+    </property>
+    <property name="kilosVivos" type="big_decimal">
+      <column name="kilosVivos" not-null="true" precision="20">
+        <comment>Total de kilos vivos de la tropa</comment>
+      </column>
+    </property>
+    <property name="kilosVivosReales" type="big_decimal">
+      <column name="kilosVivosReales" not-null="true" precision="20">
+        <comment/>
+      </column>
+    </property>
+    <property name="decomisos" type="int">
+      <column name="decomisos" not-null="true"/>
+    </property>
+    <property name="mediasReces" type="short">
+      <column name="mediasReces" not-null="true"/>
+    </property>
+    <property name="cabezasFaenadas" type="int">
+      <column name="cabezasFaenadas" not-null="true"/>
+    </property>
+    <property name="cabezasMuertas" type="int">
+      <column name="cabezasMuertas" not-null="true"/>
+    </property>
+    <property name="kilosFaenados" type="big_decimal">
+      <column name="kilosFaenados" not-null="true" precision="20"/>
+    </property>
+    <property name="kilosDecomisados" type="big_decimal">
+      <column name="kilosDecomisados" not-null="true" precision="20"/>
+    </property>
+    <property name="rendimiento" type="big_decimal">
+      <column name="rendimiento" not-null="true" precision="20" scale="4">
+        <comment>Kilos faenados/Kilos vivos</comment>
+      </column>
+    </property>
+    <property name="importeKiloVivoSinIva" type="big_decimal">
+      <column name="importeKiloVivoSinIva" not-null="true" precision="20"/>
+    </property>
+    <property name="entregaProveedorEfectivo" type="big_decimal">
+      <column name="entregaProveedorEfectivo" not-null="true" precision="20"/>
+    </property>
+    <property name="importeKiloVivoImponible" type="big_decimal">
+      <column name="importeKiloVivoImponible" not-null="true" precision="20"/>
+    </property>
+    <property name="ivaKiloVivo" type="big_decimal">
+      <column name="ivaKiloVivo" not-null="true" precision="20"/>
+    </property>
+    <property name="importeKiloVivo" type="big_decimal">
+      <column name="importeKiloVivo" not-null="true" precision="20"/>
+    </property>
+    <property name="importeFaena" type="big_decimal">
+      <column name="importeFaena" not-null="true" precision="20"/>
+    </property>
+    <property name="valorIngBrutos" type="big_decimal">
+      <column name="valorIngBrutos" not-null="true" precision="20"/>
+    </property>
+    <property name="pagoCuentaIva" type="big_decimal">
+      <column name="pagoCuentaIva" not-null="true" precision="20"/>
+    </property>
+    <property name="importeComisionSinIva" type="big_decimal">
+      <column name="importeComisionSinIva" not-null="true" precision="20"/>
+    </property>
+    <property name="entregaEfectivoComision" type="big_decimal">
+      <column name="entregaEfectivoComision" not-null="true" precision="20"/>
+    </property>
+    <property name="importeComisionImponible" type="big_decimal">
+      <column name="importeComisionImponible" not-null="true" precision="20"/>
+    </property>
+    <property name="ivaComision" type="big_decimal">
+      <column name="ivaComision" not-null="true" precision="20"/>
+    </property>
+    <property name="importeComision" type="big_decimal">
+      <column name="importeComision" not-null="true" precision="20"/>
+    </property>
+    <property name="importeCostoTotalSinIva" type="big_decimal">
+      <column name="importeCostoTotalSinIva" not-null="true" precision="20">
+        <comment/>
+      </column>
+    </property>
+    <property name="importeCostoTotal" type="big_decimal">
+      <column name="importeCostoTotal" not-null="true" precision="20">
+        <comment>Suma de costos totales de los detalles de tropa (No incluye fletes)</comment>
+      </column>
+    </property>
+    <property name="valorFleteSinIva" type="big_decimal">
+      <column name="valorFleteSinIva" not-null="true" precision="20">
+        <comment/>
+      </column>
+    </property>
+    <property name="entregaEfectivoFlete" type="big_decimal">
+      <column name="entregaEfectivoFlete" not-null="true" precision="20">
+        <comment/>
+      </column>
+    </property>
+    <property name="valorFleteImponible" type="big_decimal">
+      <column name="valorFleteImponible" not-null="true" precision="20">
+        <comment/>
+      </column>
+    </property>
+    <property name="ivaFlete" type="big_decimal">
+      <column name="ivaFlete" not-null="true" precision="20">
+        <comment/>
+      </column>
+    </property>
+    <property name="valorFlete" type="big_decimal">
+      <column name="valorFlete" not-null="true" precision="20">
+        <comment>Valor del flete de la tropa</comment>
+      </column>
+    </property>
+    <property name="importeCostoTotalTropaSinIva" type="big_decimal">
+      <column name="importeCostoTotalTropaSinIva" not-null="true" precision="20">
+        <comment/>
+      </column>
+    </property>
+    <property name="importeCostoTotalTropa" type="big_decimal">
+      <column name="importeCostoTotalTropa" not-null="true" precision="20">
+        <comment>Costo total de tropa incluye fletes</comment>
+      </column>
+    </property>
+    <property name="costoUnitario" type="big_decimal">
+      <column name="costoUnitario" not-null="true" precision="20" scale="4">
+        <comment>Costo unitario por tropa</comment>
+      </column>
+    </property>
+    <property name="observaciones" type="string">
+      <column name="observaciones"/>
+    </property>
+    <property name="documentoAsociado" type="binary">
+      <column name="documentoAsociado">
+        <comment>Imagen o documento relacionado con la tropa</comment>
+      </column>
+    </property>
+    <property name="procesada" type="char">
+      <column length="1" name="procesada" not-null="true"/>
+    </property>
+    <set cascade="all-delete-orphan" fetch="select" inverse="true" lazy="true" name="tropaDets" table="tropa_det">
+      <key>
+        <column name="idTropa" not-null="true">
+          <comment>Id de la tropa</comment>
+        </column>
+      </key>
+      <one-to-many class="entidades.TropaDet"/>
+    </set>
+    <set cascade="all-delete-orphan" fetch="select" inverse="true" lazy="true" name="tropaDetGarrons" table="tropa_det_garron">
+      <key>
+        <column name="idTropa" not-null="true">
+          <comment>Id. de la tropa</comment>
+        </column>
+      </key>
+      <one-to-many class="entidades.TropaDetGarron"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="inventarioTropas" table="inventario_tropa">
+      <key>
+        <column name="idTropa" not-null="true">
+          <comment>Id de la tropa relacionada</comment>
+        </column>
+      </key>
+      <one-to-many class="entidades.InventarioTropa"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="ventaDets" table="venta_det">
+      <key>
+        <column name="idTropa"/>
+      </key>
+      <one-to-many class="entidades.VentaDet"/>
+    </set>
+    <set cascade="all-delete-orphan" fetch="select" inverse="true" lazy="true" name="tropaPagoCivas" table="tropa_pago_civa">
+      <key>
+        <column name="idTropa" not-null="true"/>
+      </key>
+      <one-to-many class="entidades.TropaPagoCiva"/>
+    </set>
+    <set cascade="all-delete-orphan" fetch="select" inverse="true" lazy="true" name="tropaViajes" table="tropa_viaje">
+      <key>
+        <column name="idTropa" not-null="true"/>
+      </key>
+      <one-to-many class="entidades.TropaViaje"/>
+    </set>
+  </class>
 </hibernate-mapping>
