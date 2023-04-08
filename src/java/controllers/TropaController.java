@@ -450,8 +450,6 @@ public class TropaController extends BeanBase implements Serializable {
         this.registroMod.setKilosVivos(BigDecimal.ZERO);
         this.registroMod.setKilosVivosReales(BigDecimal.ZERO);
         this.registroMod.setValorFleteSinIva(BigDecimal.ZERO);
-        this.registroMod.setEntregaEfectivoFlete(BigDecimal.ZERO);
-        this.registroMod.setValorFleteImponible(BigDecimal.ZERO);
         this.registroMod.setIvaFlete(BigDecimal.ZERO);
         this.registroMod.setValorFlete(BigDecimal.ZERO);
         this.registroMod.setValorIngBrutos(BigDecimal.ZERO);
@@ -786,10 +784,8 @@ public class TropaController extends BeanBase implements Serializable {
             e.setViaje(viaje);
             e.setTropa(registroMod);
             e.setPorcAfectado(BigDecimal.ZERO);
-            e.setPorcIva(BigDecimal.ZERO);
+            e.setPorcIva(viaje.getPorcIva());
             e.setValorAfectadoSinIva(BigDecimal.ZERO);
-            e.setEntregaEfectivoViaje(BigDecimal.ZERO);
-            e.setValorAfectadoImponible(BigDecimal.ZERO);
             e.setValorIva(BigDecimal.ZERO);
             e.setValorAfectado(BigDecimal.ZERO);
             this.getRegistroMod().getTropaViajes().add(e);
@@ -832,7 +828,7 @@ public class TropaController extends BeanBase implements Serializable {
     }
     
         public void calculaValorAfectadoViajeInvernada(TropaViaje i) {
-        double ld_total_viaje = 0, ld_porc_afec = 0, ld_porc_iva = 0, ld_valor_afec_sin_iva = 0, ld_entrega_efectivo = 0, ld_valor_afec_imponible = 0,ld_valor_iva = 0,ld_valor_afec = 0;
+        double ld_total_viaje = 0, ld_porc_afec = 0, ld_porc_iva = 0, ld_valor_afec_sin_iva = 0,ld_valor_iva = 0,ld_valor_afec = 0;
         TropaViaje viajeSel = i;
         if (viajeSel.getViaje().getValorTotal() != null) {
             ld_total_viaje = viajeSel.getViaje().getValorTotal().doubleValue();
@@ -844,23 +840,17 @@ public class TropaController extends BeanBase implements Serializable {
         if (viajeSel.getPorcIva() != null) {
             ld_porc_iva = viajeSel.getPorcIva().doubleValue();
         }
-        if (viajeSel.getEntregaEfectivoViaje() != null) {
-            ld_entrega_efectivo = viajeSel.getEntregaEfectivoViaje().doubleValue();
-        }
-        ld_valor_afec_sin_iva = ld_total_viaje * ld_porc_afec / 100.00;
-        ld_valor_afec_sin_iva = Math.round(ld_valor_afec_sin_iva * 100d) / 100d;
         
-        ld_valor_afec_imponible = ld_valor_afec_sin_iva - ld_entrega_efectivo;
-        ld_valor_afec_imponible = Math.round(ld_valor_afec_imponible * 100d) /100d;
-        
-        ld_valor_afec = ld_valor_afec_imponible * (1 + (ld_porc_iva / 100d));
+        ld_valor_afec = ld_total_viaje * ld_porc_afec / 100.00;
         ld_valor_afec = Math.round(ld_valor_afec * 100d) / 100d;
         
-        ld_valor_iva = ld_valor_afec - (ld_valor_afec_sin_iva - ld_entrega_efectivo);
+        ld_valor_iva = ld_valor_afec - (ld_valor_afec / (1 + (ld_porc_iva/100d)));
         ld_valor_iva = Math.round(ld_valor_iva * 100d) / 100d;
         
+        ld_valor_afec_sin_iva = ld_valor_afec - ld_valor_iva;
+        ld_valor_afec_sin_iva = Math.round(ld_valor_afec_sin_iva * 100d) / 100d;
+         
         viajeSel.setValorAfectadoSinIva(new BigDecimal(ld_valor_afec_sin_iva));
-        viajeSel.setValorAfectadoImponible(new BigDecimal(ld_valor_afec_imponible));
         viajeSel.setValorIva(new BigDecimal(ld_valor_iva));
         viajeSel.setValorAfectado(new BigDecimal(ld_valor_afec));
         //Actualizo valor de total de fletes
@@ -891,8 +881,8 @@ public class TropaController extends BeanBase implements Serializable {
     }
     
     public void calculaPorcAfectadoViajeInvernada(TropaViaje i) {
-        double ld_total_viaje = 0, ld_porc_afec = 0, ld_porc_iva = 0, ld_valor_afec_sin_iva = 0, ld_entrega_efectivo_b = 0,
-                ld_valor_afec_imponible = 0, ld_valor_iva = 0, ld_valor_afec = 0;
+        double ld_total_viaje = 0, ld_porc_afec = 0, ld_porc_iva = 0, ld_valor_afec_sin_iva = 0, 
+                 ld_valor_iva = 0, ld_valor_afec = 0;
         TropaViaje viajeSel = i;
 
         if (viajeSel.getViaje().getValorTotal() != null) {
@@ -906,27 +896,18 @@ public class TropaController extends BeanBase implements Serializable {
         if (viajeSel.getPorcIva() != null) {
             ld_porc_iva = viajeSel.getPorcIva().doubleValue();
         }
-        
-        if (viajeSel.getEntregaEfectivoViaje() != null) {
-            ld_entrega_efectivo_b = viajeSel.getEntregaEfectivoViaje().doubleValue();
-        }
-        
+              
         ld_valor_iva = ld_valor_afec - (ld_valor_afec / (1 + (ld_porc_iva / 100d)));
         ld_valor_iva = Math.round(ld_valor_iva * 100d) / 100d;
-        
-        ld_valor_afec_imponible = ld_valor_afec - ld_valor_iva;
-        ld_valor_afec_imponible = Math.round(ld_valor_afec_imponible * 100d) / 100d;
-        
-        ld_valor_afec_sin_iva = ld_valor_afec_imponible + ld_entrega_efectivo_b;
+    
+        ld_valor_afec_sin_iva = ld_valor_afec - ld_valor_iva;
         ld_valor_afec_sin_iva = Math.round(ld_valor_afec_sin_iva * 100d) / 100d;
         
-        ld_porc_afec = (ld_valor_afec_sin_iva / ld_total_viaje) * 100d;
+        ld_porc_afec = (ld_valor_afec / ld_total_viaje) * 100d;
         ld_porc_afec = Math.round(ld_porc_afec * 100d) / 100d;
         
         viajeSel.setPorcAfectado(new BigDecimal(ld_porc_afec));
         viajeSel.setValorAfectadoSinIva(new BigDecimal(ld_valor_afec_sin_iva));
-        viajeSel.setEntregaEfectivoViaje(new  BigDecimal(ld_entrega_efectivo_b));
-        viajeSel.setValorAfectadoImponible(new BigDecimal(ld_valor_afec_imponible));
         viajeSel.setValorIva(new BigDecimal(ld_valor_iva));
         //Actualizo valor de total de fletes
         actualizaValorFlete();
@@ -957,22 +938,18 @@ public class TropaController extends BeanBase implements Serializable {
 
     //Actualiza total de fletes afectados a tropa
     public void actualizaValorFlete() {
-        double ld_fletes_sin_iva = 0, ld_entrega_efectivo_flete = 0, ld_fletes_imponible = 0, ld_iva_fletes = 0, ld_fletes = 0, 
+        double ld_fletes_sin_iva = 0, ld_iva_fletes = 0, ld_fletes = 0, 
                 ld_costo_total = 0, ld_costo_total_sin_iva = 0,ld_costo_total_tropa_sin_iva,ld_costo_total_tropa = 0, ld_costo_unitario = 0, 
                 ld_kilos_faenados = 0, ld_kilos_reales = 0;
         Iterator i = this.getRegistroMod().getTropaViajes().iterator();
         while (i.hasNext()) {
             TropaViaje g = (TropaViaje) i.next();
             ld_fletes_sin_iva = ld_fletes_sin_iva + g.getValorAfectadoSinIva().doubleValue();
-            ld_entrega_efectivo_flete = ld_entrega_efectivo_flete + g.getEntregaEfectivoViaje().doubleValue();
-            ld_fletes_imponible = ld_fletes_imponible + g.getValorAfectadoImponible().doubleValue();
             ld_iva_fletes = ld_iva_fletes + g.getValorIva().doubleValue();
             ld_fletes = ld_fletes + g.getValorAfectado().doubleValue();
         }
 
         registroMod.setValorFleteSinIva(new BigDecimal(ld_fletes_sin_iva));
-        registroMod.setEntregaEfectivoFlete(new BigDecimal(ld_entrega_efectivo_flete));
-        registroMod.setValorFleteImponible(new BigDecimal(ld_fletes_imponible));
         registroMod.setIvaFlete(new BigDecimal(ld_iva_fletes));
         registroMod.setValorFlete(new BigDecimal(ld_fletes));
 
@@ -991,7 +968,7 @@ public class TropaController extends BeanBase implements Serializable {
         //Importe total de la tropa incluyendo flete
         ld_costo_total_tropa_sin_iva = ld_costo_total_sin_iva + ld_fletes_sin_iva;
         //Importe total de la tropa incluyendo flete
-        ld_costo_total_tropa = ld_costo_total + ld_fletes + ld_entrega_efectivo_flete;
+        ld_costo_total_tropa = ld_costo_total + ld_fletes;
         registroMod.setImporteCostoTotalSinIva(new BigDecimal(ld_costo_total_tropa_sin_iva));
         registroMod.setImporteCostoTotalTropa(new BigDecimal(ld_costo_total_tropa));
         if(registroMod.getTipo()!='I'){
@@ -2178,31 +2155,32 @@ public class TropaController extends BeanBase implements Serializable {
         AsientoCuentaAdicional cuentaAdic = null;
 
         //FEED LOT TERNEROS INVERNADA
-        if(registroMod.getCategoria()!=null){
-        cuentaAdic = new AsientoCuentaAdicional();
-        cuentaAdic.setNumeroCuenta(registroMod.getCategoria().getCcCostoInvernada());
-        cuentaAdic.setDc("D");
-        cuentaAdic.setValor(Math.round(registroMod.getImporteCostoTotalTropaSinIva().doubleValue() * 100d) / 100d);
-        asiento.getListaCuentasAdic().add(cuentaAdic);
+        if (registroMod.getCategoria() != null) {
+            cuentaAdic = new AsientoCuentaAdicional();
+            cuentaAdic.setNumeroCuenta(registroMod.getCategoria().getCcCostoInvernada());
+            cuentaAdic.setDc("D");
+            cuentaAdic.setValor(Math.round(registroMod.getImporteCostoTotalTropaSinIva().doubleValue() * 100d) / 100d);
+            asiento.getListaCuentasAdic().add(cuentaAdic);
         }
         //IVA CREDITO FISCAL FEEDLOT
-        if(registroMod.getDeposito()!=null){
-        cuentaAdic = new AsientoCuentaAdicional();
-        cuentaAdic.setNumeroCuenta(registroMod.getDeposito().getCcIvaCreditoFiscal());
-        cuentaAdic.setDc("D");
-        double ld_ivas = registroMod.getIvaKiloVivo().doubleValue()
-              + registroMod.getIvaComision().doubleValue() + registroMod.getIvaFlete().doubleValue();
-        cuentaAdic.setValor(ld_ivas);
-        asiento.getListaCuentasAdic().add(cuentaAdic);
+        if (registroMod.getDeposito() != null) {
+            cuentaAdic = new AsientoCuentaAdicional();
+            cuentaAdic.setNumeroCuenta(registroMod.getDeposito().getCcIvaCreditoFiscal());
+            cuentaAdic.setDc("D");
+            double ld_ivas = registroMod.getIvaKiloVivo().doubleValue()
+                    + registroMod.getIvaComision().doubleValue() + registroMod.getIvaFlete().doubleValue();
+            cuentaAdic.setValor(ld_ivas);
+            asiento.getListaCuentasAdic().add(cuentaAdic);
         }
-        
-        //Agrego cuenta contable de Ingresos Brutos
-        cuentaAdic = new AsientoCuentaAdicional();
-        cuentaAdic.setNumeroCuenta(empresa.getCcIngBrutos());
-        cuentaAdic.setDc("C");
-        cuentaAdic.setValor(Math.round(registroMod.getValorIngBrutos().doubleValue() * 100d) / 100d);
-        asiento.getListaCuentasAdic().add(cuentaAdic);
 
+        //Agrego cuenta contable de Ingresos Brutos
+        if (registroMod.getValorIngBrutos().doubleValue() > 0) {
+            cuentaAdic = new AsientoCuentaAdicional();
+            cuentaAdic.setNumeroCuenta(empresa.getCcIngBrutos());
+            cuentaAdic.setDc("C");
+            cuentaAdic.setValor(Math.round(registroMod.getValorIngBrutos().doubleValue() * 100d) / 100d);
+            asiento.getListaCuentasAdic().add(cuentaAdic);
+        }
         if (registroMod.getProductor() != null) {
             //Agrego cuenta contable del productor
             cuentaAdic = new AsientoCuentaAdicional();
@@ -2224,7 +2202,6 @@ public class TropaController extends BeanBase implements Serializable {
             asiento.getListaCuentasAdic().add(cuentaAdic);
         }
 
-
         //Agrego cuenta contable por cada uno de los fletes
         Iterator i = this.getRegistroMod().getTropaViajes().iterator();
         while (i.hasNext()) {
@@ -2232,7 +2209,7 @@ public class TropaController extends BeanBase implements Serializable {
             cuentaAdic = new AsientoCuentaAdicional();
             cuentaAdic.setNumeroCuenta(viaje.getViaje().getChofer().getCcCostoTropa());
             cuentaAdic.setDc("C");
-            cuentaAdic.setValor(Math.round((viaje.getValorAfectado().doubleValue() + viaje.getEntregaEfectivoViaje().doubleValue())* 100d) / 100d);
+            cuentaAdic.setValor(Math.round(viaje.getValorAfectado().doubleValue() * 100d) / 100d);
             asiento.getListaCuentasAdic().add(cuentaAdic);
         }
 

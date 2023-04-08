@@ -167,16 +167,6 @@
         <comment/>
       </column>
     </property>
-    <property name="entregaEfectivoFlete" type="big_decimal">
-      <column name="entregaEfectivoFlete" not-null="true" precision="20">
-        <comment/>
-      </column>
-    </property>
-    <property name="valorFleteImponible" type="big_decimal">
-      <column name="valorFleteImponible" not-null="true" precision="20">
-        <comment/>
-      </column>
-    </property>
     <property name="ivaFlete" type="big_decimal">
       <column name="ivaFlete" not-null="true" precision="20">
         <comment/>

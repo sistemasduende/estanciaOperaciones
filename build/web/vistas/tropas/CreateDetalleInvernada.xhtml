@@ -92,6 +92,10 @@
                                     update="importeKiloVivoSinIva, importeKiloVivoImponible, ivaKiloVivo, importeKiloVivo, 
                                     valorIngBrutos, importeComisionSinIva, ivaComision, importeComision, importeCostoTotalSinIva,importeCostoTotal, :growl"/>                                                                                    
                         </p:inputNumber>
+
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        
                         <p:outputLabel value="Porc. iva productor:" for="porcIvaProductor" style="font-size: 10pt; color: #045491"/>
                         <p:selectOneMenu id="porcIvaProductor" value="#{tropacontroller.registroModDetalle.porcIvaProductor}" 
                                          required="true" style="width: 100%; font-size: 10pt; color: #045491 "
@@ -129,6 +133,9 @@
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
                         
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>                        
+                        
                         <p:outputLabel value="%Ing. Brutos:" for="porcIngBrutos"  style="font-size: 10pt; color: #045491"/>
                         <p:inputNumber id="porcIngBrutos" required="true"  value="#{tropacontroller.registroModDetalle.porcIngBrutos}" 
                                      style="width: 100%;font-size: 10pt; color: #045491" maxlength="15"
@@ -146,7 +153,10 @@
                                      autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1'}">
                             <p:ajax listener="#{tropacontroller.actualizaValorIngBrutos()}" event="change" 
                                     update="importeCostoTotal,porcIngBrutos"/>                                                                                
-                        </p:inputNumber>                        
+                        </p:inputNumber>   
+
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>                        
                         
                         <p:outputLabel value="%Com. Consignatario:" for="porcComision"  style="font-size: 10pt; color: #045491"/>
                         <p:inputNumber id="porcComision" required="true"  value="#{tropacontroller.registroModDetalle.porcComision}" 
@@ -190,6 +200,9 @@
                         <h:outputText id="importeComision" value="#{tropacontroller.registroModDetalle.importeComision}" style="float: right; text-align: right; font-size: 10pt; color: #045491">
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText> 
+                        
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>                        
                         
                         <h:outputText value="Costo total sin iva:" style="font-size: 10pt; color: #045491"/>
                         <h:outputText id="importeCostoTotalSinIva" value="#{tropacontroller.registroModDetalle.importeCostoTotalSinIva}" style="float: right; text-align: right; font-size: 10pt; color: #045491">

@@ -642,7 +642,7 @@
                 </p:tabView>
                 <br/>                    
                 <p:commandButton action="#{tropacontroller.graba()}" value="#{bundle.Save}" update=":growl" ajax="false" style="font-size: 10pt; color: #045491"/>                        
-                <p:commandButton action="/vistas/tropas/Tropas" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
+                <p:commandButton action="#{tropacontroller.cancelar()}" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
 
             </h:form>
             <ui:include src="CreateDetalle.xhtml"/>

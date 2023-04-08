@@ -30,16 +30,6 @@
                 <comment></comment>
             </column>
         </property>
-        <property name="entregaEfectivoViaje" type="big_decimal">
-            <column name="entregaEfectivoViaje" precision="10" not-null="true">
-                <comment></comment>
-            </column>
-        </property>
-        <property name="valorAfectadoImponible" type="big_decimal">
-            <column name="valorAfectadoImponible" precision="10" not-null="true">
-                <comment></comment>
-            </column>
-        </property>
         <property name="valorIva" type="big_decimal">
             <column name="valorIva" precision="10" not-null="true">
                 <comment></comment>

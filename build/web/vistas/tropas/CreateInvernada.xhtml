@@ -228,26 +228,19 @@
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
-                        <h:outputText value="Entrega efectivo flete:" style="font-size: 10pt; color: #045491"/>
-                        <h:outputText id="entregaEfectivoFlete" value="#{tropacontroller.registroMod.entregaEfectivoFlete}" 
-                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
-                            <f:convertNumber pattern="#,##0.00" />
-                        </h:outputText>                       
-                        <h:outputText value="Valor Flete imponible:" style="font-size: 10pt; color: #045491"/>
-                        <h:outputText id="valorFleteImponible" value="#{tropacontroller.registroMod.valorFleteImponible}" 
-                                      style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
-                            <f:convertNumber pattern="#,##0.00" />
-                        </h:outputText>
+                        
                         <h:outputText value="Iva flete:" style="font-size: 10pt; color: #045491"/>
                         <h:outputText id="ivaFlete" value="#{tropacontroller.registroMod.ivaFlete}" 
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
                             <f:convertNumber pattern="#,##0.00" />
-                        </h:outputText>                         
+                        </h:outputText>  
+                        
                         <h:outputText value="Flete:" style="font-size: 10pt; color: #045491"/>
                         <h:outputText id="fletes" value="#{tropacontroller.registroMod.valorFlete}" 
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
                             <f:convertNumber pattern="#,##0.00" />
                         </h:outputText>
+                        
                         <h:outputText value="Costo total Tropa sin iva:" style="font-size: 10pt; color: #045491"/>
                         <h:outputText id="importeCostoTotalTropaSinIva" value="#{tropacontroller.registroMod.importeCostoTotalTropaSinIva}" 
                                       style="float: right; font-size: 10pt; color: #045491; text-align: right">                        
@@ -549,8 +542,6 @@
                                     listener="#{tropacontroller.calculaValorAfectadoViajeInvernada(item)}" event="change" 
                                     update="EditForm:tabViewCab:datosViajes,
                                             EditForm:tabViewCab:fletesSinIva,
-                                            EditForm:tabViewCab:entregaEfectivoFlete,
-                                            EditForm:tabViewCab:valorFleteImponible,
                                             EditForm:tabViewCab:ivaFlete,
                                             EditForm:tabViewCab:fletes,
                                             EditForm:tabViewCab:importeCostoTotalTropa,
@@ -563,23 +554,9 @@
                             <f:facet name="header">
                                 <h:outputText value="% Iva"/>
                             </f:facet>
-                        <p:selectOneMenu id="porcIva" value="#{item.porcIva}" 
-                                         required="true" style="width: 100%; font-size: 8pt; color: #045491 "
-                                         >
-                            <f:selectItem itemLabel="0 %" itemValue="0.00"/>
-                            <f:selectItem itemLabel="10.50 %" itemValue="10.50"/>
-                            <f:selectItem itemLabel="21.00 %" itemValue="21.00"/>
-                            <p:ajax listener="#{tropacontroller.calculaValorAfectadoViajeInvernada(item)}" 
-                                    update="EditForm:tabViewCab:datosViajes,
-                                            EditForm:tabViewCab:fletesSinIva,
-                                            EditForm:tabViewCab:entregaEfectivoFlete,
-                                            EditForm:tabViewCab:valorFleteImponible,
-                                            EditForm:tabViewCab:ivaFlete,
-                                            EditForm:tabViewCab:fletes,
-                                            EditForm:tabViewCab:importeCostoTotalTropaSinIva,
-                                            EditForm:tabViewCab:importeCostoTotalTropa,
-                                            EditForm:tabViewCab:costoUnitarioTropa"/>
-                        </p:selectOneMenu>
+                            <h:outputText  value="#{item.porcIva}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
                         </p:column>
 
                         <p:column style="font-size: 8pt; color: #045491;text-align: right">
@@ -590,35 +567,7 @@
                                 <f:convertNumber pattern="#,##0.00" />
                             </h:outputText>
                         </p:column>
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
-                            <f:facet name="header">
-                                <h:outputText value="Entrega efectivo viaje"/>
-                            </f:facet>
-                            <p:inputNumber value="#{item.entregaEfectivoViaje}" required="true" size="10"
-                                     inputStyle="text-align: right"
-                                     style="font-size: 8pt; color: #045491" maxlength="15" 
-                                     readonly="#{tropacontroller.registroMod.procesada eq '1'}">   
-                                <p:ajax process="@this" 
-                                    listener="#{tropacontroller.calculaValorAfectadoViajeInvernada(item)}" event="keyup" 
-                                    update="EditForm:tabViewCab:datosViajes,
-                                            EditForm:tabViewCab:fletesSinIva,
-                                            EditForm:tabViewCab:entregaEfectivoFlete,
-                                            EditForm:tabViewCab:valorFleteImponible,
-                                            EditForm:tabViewCab:ivaFlete,
-                                            EditForm:tabViewCab:fletes,
-                                            EditForm:tabViewCab:importeCostoTotalTropaSinIva,
-                                            EditForm:tabViewCab:importeCostoTotalTropa,
-                                            EditForm:tabViewCab:costoUnitarioTropa"/>                                                                                        
-                            </p:inputNumber>        
-                        </p:column>
-                        <p:column style="font-size: 8pt; color: #045491;text-align: right">
-                            <f:facet name="header">
-                                <h:outputText value="Valor afectado imponible"/>
-                            </f:facet>
-                            <h:outputText  value="#{item.valorAfectadoImponible}">
-                                <f:convertNumber pattern="#,##0.00" />
-                            </h:outputText>
-                        </p:column>
+
                         <p:column style="font-size: 8pt; color: #045491;text-align: right">
                             <f:facet name="header">
                                 <h:outputText value="Valor iva"/>
@@ -641,8 +590,6 @@
                                         listener="#{tropacontroller.calculaPorcAfectadoViajeInvernada(item)}" event="keyup" 
                                     update="EditForm:tabViewCab:datosViajes,
                                             EditForm:tabViewCab:fletesSinIva,
-                                            EditForm:tabViewCab:entregaEfectivoFlete,
-                                            EditForm:tabViewCab:valorFleteImponible,
                                             EditForm:tabViewCab:ivaFlete,
                                             EditForm:tabViewCab:fletes,
                                             EditForm:tabViewCab:importeCostoTotalTropaSinIva,
