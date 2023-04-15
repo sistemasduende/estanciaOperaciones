@@ -32,6 +32,7 @@ public class Viaje  implements java.io.Serializable {
      private BigDecimal porcIva;
      private BigDecimal valorIva;
      private BigDecimal valorTotal;
+     private BigDecimal porcUsado;
      private Character tipoJaula;
      private char procesado;
      private Set<LiquidacionViaje> liquidacionViajes = new HashSet<LiquidacionViaje>(0);
@@ -40,18 +41,25 @@ public class Viaje  implements java.io.Serializable {
     public Viaje() {
     }
 
-	
-    public Viaje(Chofer chofer, Cliente cliente, Localidad localidadByIdOrigen, Localidad localidadByIdDestino, VehiculoFlete vehiculoFlete, Date fecMov, Date fecCarga, char tipoProducto, char procesado) {
-        this.chofer = chofer;
-        this.cliente = cliente;
-        this.localidadByIdOrigen = localidadByIdOrigen;
-        this.localidadByIdDestino = localidadByIdDestino;
-        this.vehiculoFlete = vehiculoFlete;
+    public Viaje(Integer id, Date fecMov, Date fecCarga, char tipoProducto, String unidadesTransportadas, String obsOrigen, String obsDestino, BigDecimal distancia, BigDecimal cantidad, BigDecimal valorNeto, BigDecimal porcIva, BigDecimal valorIva, BigDecimal valorTotal, BigDecimal porcUsado, Character tipoJaula, char procesado) {
+        this.id = id;
         this.fecMov = fecMov;
         this.fecCarga = fecCarga;
         this.tipoProducto = tipoProducto;
+        this.unidadesTransportadas = unidadesTransportadas;
+        this.obsOrigen = obsOrigen;
+        this.obsDestino = obsDestino;
+        this.distancia = distancia;
+        this.cantidad = cantidad;
+        this.valorNeto = valorNeto;
+        this.porcIva = porcIva;
+        this.valorIva = valorIva;
+        this.valorTotal = valorTotal;
+        this.porcUsado = porcUsado;
+        this.tipoJaula = tipoJaula;
         this.procesado = procesado;
     }
+
     public Viaje(Chofer chofer, Cliente cliente, Comisionista comisionista, Localidad localidadByIdOrigen, Localidad localidadByIdDestino, VehiculoFlete vehiculoFlete, Date fecMov, Date fecCarga, char tipoProducto, String unidadesTransportadas, String obsOrigen, String obsDestino, BigDecimal distancia, BigDecimal cantidad, BigDecimal valorNeto, BigDecimal porcIva, BigDecimal valorIva, BigDecimal valorTotal, Character tipoJaula, char procesado, Set<LiquidacionViaje> liquidacionViajes, Set<TropaViaje> tropaViajes) {
        this.chofer = chofer;
        this.cliente = cliente;
@@ -206,7 +214,15 @@ public class Viaje  implements java.io.Serializable {
     public BigDecimal getValorTotal() {
         return this.valorTotal;
     }
-    
+
+    public BigDecimal getPorcUsado() {
+        return porcUsado;
+    }
+
+    public void setPorcUsado(BigDecimal porcUsado) {
+        this.porcUsado = porcUsado;
+    }
+
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
@@ -238,9 +254,6 @@ public class Viaje  implements java.io.Serializable {
     public void setTropaViajes(Set<TropaViaje> tropaViajes) {
         this.tropaViajes = tropaViajes;
     }
-
-
-
 
 }
 

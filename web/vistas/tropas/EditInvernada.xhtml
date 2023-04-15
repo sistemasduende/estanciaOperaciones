@@ -503,6 +503,16 @@
                             </h:outputText>
                         </p:column>                                 
                         
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right"
+                                  rendered="#{tropacontroller.registroMod.procesada eq '0' ? true:(tropacontroller.registroMod.procesada eq '2' ? true : false)}">
+                            <f:facet name="header">
+                                <h:outputText value="Max.% Disponible"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.porcDisponible}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>
+                            
                         <p:column style="font-size: 8pt; color: #045491;text-align: right;">
                             <f:facet name="header">
                                 <h:outputText value="%"/>
@@ -510,7 +520,9 @@
                             <p:inputNumber value="#{item.porcAfectado}" required="true" size="10"
                                      inputStyle="text-align: left"
                                      style="font-size: 10pt; color: #045491; width: 1%;" maxlength="15" 
-                                     readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                                     readonly="#{tropacontroller.registroMod.procesada eq '1'}"
+                                     maxValue="#{item.porcDisponible}"
+                                     >
                                 <f:validateLongRange minimum="1" maximum="100"/>
                                 <p:ajax process="@this" 
                                     listener="#{tropacontroller.calculaValorAfectadoViajeInvernada(item)}" event="change" 
@@ -528,7 +540,7 @@
                                 <h:outputText value="Porc. iva"/>
                             </f:facet>
                             <h:outputText  value="#{item.porcIva}">
-                                <f:convertNumber pattern="#,##0.00 %" />
+                                <f:convertNumber pattern="#,##0.00" />
                             </h:outputText>
                         </p:column>
 

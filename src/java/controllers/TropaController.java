@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
@@ -99,6 +100,7 @@ public class TropaController extends BeanBase implements Serializable {
     private List<Comisionista> listaComisionistas = new ArrayList<Comisionista>();
     private Comisionista comisionistaSel;
     private String tipoTropa;
+    private ArrayList<TropaViaje> viajesAEliminar = new ArrayList<TropaViaje>();
     
     //Stock
     TropaStock registroStockSel;
@@ -465,6 +467,7 @@ public class TropaController extends BeanBase implements Serializable {
         this.registroMod.setImporteComisionImponible(BigDecimal.ZERO);
         this.registroMod.setIvaComision(BigDecimal.ZERO);
         this.registroMod.setImporteComision(BigDecimal.ZERO);
+        this.registroMod.setImporteCostoTotalSinIva(BigDecimal.ZERO);
         this.registroMod.setImporteCostoTotal(BigDecimal.ZERO);
         this.registroMod.setImporteCostoTotalTropaSinIva(BigDecimal.ZERO);
         this.registroMod.setImporteCostoTotalTropa(BigDecimal.ZERO);
@@ -485,6 +488,7 @@ public class TropaController extends BeanBase implements Serializable {
     }
     public String cancelar(){
         this.registroSel = null;
+        viajesAEliminar.clear();
         return this.origen;
     }
     //Obtiene los detalles del registro seleccionado
@@ -500,6 +504,15 @@ public class TropaController extends BeanBase implements Serializable {
                 Hibernate.initialize(this.registroMod.getTropaDets());
                 Hibernate.initialize(this.registroMod.getTropaDetGarrons());
                 Hibernate.initialize(this.registroMod.getTropaViajes());
+                this.registroMod.getTropaViajes().forEach(new Consumer<TropaViaje>() {
+                    @Override
+                    public void accept(TropaViaje x) {
+                        x.setPorUsadoAnterior(x.getViaje().getPorcUsado());
+                        x.setPorcAfectadoAnterior(x.getPorcAfectado());
+                        x.setPorcDisponible(new BigDecimal(obtenerPorcentajeDisponible(x.getViaje().getPorcUsado()) + x.getPorcAfectado().doubleValue()));
+                    }
+                });
+                
                 Hibernate.initialize(this.registroMod.getTropaPagoCivas());
                 session.getTransaction().commit();
             } catch (HibernateException e) {
@@ -778,12 +791,23 @@ public class TropaController extends BeanBase implements Serializable {
 
     //Agrega viajes a tropa
     public void agregaViajes() {
+        FacesMessage msg;
+        for (TropaViaje tvE : viajesAEliminar) {
+            for (Viaje tvS : listaViajesSeleccionados){
+                if (tvE.getViaje().getId().intValue() == tvS.getId().intValue()){
+                    msg = new FacesMessage("No puede agregar un viaje que haya eliminado, si desea grabe o cancele y vuelva editar la tropa", "Tropas");
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    return;
+                }
+            }
+        }
         //Chequeo que no esté agregado
         for (Viaje viaje : listaViajesSeleccionados) {
             TropaViaje e = new TropaViaje();
             e.setViaje(viaje);
             e.setTropa(registroMod);
             e.setPorcAfectado(BigDecimal.ZERO);
+            e.setPorcDisponible(new BigDecimal(obtenerPorcentajeDisponible(viaje.getPorcUsado())));
             e.setPorcIva(viaje.getPorcIva());
             e.setValorAfectadoSinIva(BigDecimal.ZERO);
             e.setValorIva(BigDecimal.ZERO);
@@ -794,7 +818,9 @@ public class TropaController extends BeanBase implements Serializable {
 
     //Elimina viaje
     public void eliminaViaje(TropaViaje i) {
+        
         this.getRegistroMod().getTropaViajes().remove(i);
+        viajesAEliminar.add(i);
         //Actualizo valor de total de fletes
         actualizaValorFlete();
         //Actualizo totales de tropa
@@ -923,7 +949,7 @@ public class TropaController extends BeanBase implements Serializable {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
-            Query q = session.createQuery("from Viaje a where procesado='0'");
+            Query q = session.createQuery("from Viaje a where procesado='0' and porcUsado < 100");
             listaViajes = (List<Viaje>) q.list();
             session.getTransaction().commit();
         } catch (HibernateException e) {
@@ -1295,7 +1321,7 @@ public class TropaController extends BeanBase implements Serializable {
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
             if(u.getTipo()=='I' && this.registroMod.getId()==null){
-                System.out.println("Se esta ejecutando este metodo");
+                
                 Integer aux =   (Integer) session.save(u);
                 u.setNumeroTropa(this.registroMod.getProductor().getId().toString()
                                 + "-" + this.registroMod.getDeposito().getId().toString()
@@ -1306,6 +1332,35 @@ public class TropaController extends BeanBase implements Serializable {
                 session.saveOrUpdate(u);
             }
             
+            for (TropaViaje tv : this.registroMod.getTropaViajes()) {
+                Viaje v = (Viaje) session.get(Viaje.class, tv.getViaje().getId());
+                if ((tv.getPorcDisponible().doubleValue() == obtenerPorcentajeDisponible(v.getPorcUsado()))) {
+                    v.setPorcUsado(new BigDecimal(v.getPorcUsado().doubleValue() + tv.getPorcAfectado().doubleValue()));
+                    session.saveOrUpdate(v);
+                } else if (tv.getPorUsadoAnterior().doubleValue() == v.getPorcUsado().doubleValue()) {
+                    v.setPorcUsado(new BigDecimal(Math.abs(tv.getPorcDisponible().doubleValue() - tv.getPorcAfectado().doubleValue() - 100d)));
+                    session.saveOrUpdate(v);
+                } else {
+                    session.getTransaction().rollback();
+                    msg = new FacesMessage("Error al modificar viaje: aparentemente otro usuario ya uso todo o parte del porcentaje del viaje disponible", "Tropas");
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    return null;
+                }
+            }
+            for (TropaViaje tv : viajesAEliminar){
+                try {
+                    Viaje v = (Viaje) session.get(Viaje.class, tv.getViaje().getId());
+                    if(tv.getPorUsadoAnterior()!=null){
+                    v.setPorcUsado(new BigDecimal(v.getPorcUsado().doubleValue() - tv.getPorcAfectadoAnterior().doubleValue()));
+                    session.saveOrUpdate(v);
+                    }
+                } catch (HibernateException he) {
+                    session.getTransaction().rollback();
+                    msg = new FacesMessage("Error al eliminar viaje" );
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    return null;
+                }
+            }
             
             //Si se pasa la tropa a estado EN_STOCK actualizo el inventario y contabilizo
             if (estadoActual == EN_TRAMITE && ls_procesada == EN_STOCK) {
@@ -2367,5 +2422,8 @@ public class TropaController extends BeanBase implements Serializable {
             PrimeFaces current = PrimeFaces.current();
             current.executeScript("'CreateDialogDetalleTerceros').show();");
         }
+    }
+    public double obtenerPorcentajeDisponible(BigDecimal valor){
+        return Math.abs(valor.doubleValue() - 100d);
     }
 }

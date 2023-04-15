@@ -13,7 +13,10 @@ public class TropaViaje  implements java.io.Serializable {
      private Integer id;
      private Tropa tropa;
      private Viaje viaje;
+     private BigDecimal porcAfectadoAnterior;
      private BigDecimal porcAfectado;
+     private BigDecimal porUsadoAnterior;
+     private BigDecimal porcDisponible;
      private BigDecimal porcIva;
      private BigDecimal valorAfectadoSinIva;
      private BigDecimal valorIva;
@@ -53,12 +56,37 @@ public class TropaViaje  implements java.io.Serializable {
     public void setViaje(Viaje viaje) {
         this.viaje = viaje;
     }
+
+    public BigDecimal getPorcAfectadoAnterior() {
+        return porcAfectadoAnterior;
+    }
+
+    public void setPorcAfectadoAnterior(BigDecimal porcAfectadoAnterior) {
+        this.porcAfectadoAnterior = porcAfectadoAnterior;
+    }
+    
     public BigDecimal getPorcAfectado() {
         return this.porcAfectado;
     }
     
     public void setPorcAfectado(BigDecimal porcAfectado) {
         this.porcAfectado = porcAfectado;
+    }
+
+    public BigDecimal getPorUsadoAnterior() {
+        return porUsadoAnterior;
+    }
+
+    public void setPorUsadoAnterior(BigDecimal porUsadoAnterior) {
+        this.porUsadoAnterior = porUsadoAnterior;
+    }
+
+    public BigDecimal getPorcDisponible() {
+        return porcDisponible;
+    }
+
+    public void setPorcDisponible(BigDecimal porcDisponible) {
+        this.porcDisponible = porcDisponible;
     }
 
     public BigDecimal getPorcIva() {
