@@ -20,6 +20,21 @@
                 <comment>Porcentaje de afectaci&#243;n del viaje a la tropa</comment>
             </column>
         </property>
+        <property name="porcIva" type="big_decimal">
+            <column name="porcIva" precision="10" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="valorAfectadoSinIva" type="big_decimal">
+            <column name="valorAfectadoSinIva" precision="10" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="valorIva" type="big_decimal">
+            <column name="valorIva" precision="10" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
         <property name="valorAfectado" type="big_decimal">
             <column name="valorAfectado" precision="10" not-null="true">
                 <comment>Valor afectado del total del viaje a la tropa</comment>

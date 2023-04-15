@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
@@ -99,6 +100,7 @@ public class TropaController extends BeanBase implements Serializable {
     private List<Comisionista> listaComisionistas = new ArrayList<Comisionista>();
     private Comisionista comisionistaSel;
     private String tipoTropa;
+    private ArrayList<TropaViaje> viajesAEliminar = new ArrayList<TropaViaje>();
     
     //Stock
     TropaStock registroStockSel;
@@ -432,6 +434,7 @@ public class TropaController extends BeanBase implements Serializable {
     //Nuevo registro
     public String nuevo() {
         this.registroMod = new Tropa();
+        this.registroMod.setNumeroTropa("");
         this.modo = "N";
         this.registroMod.setIdUsuario(getUsuarioConectado().getIdUsuario());
         //Obtengo la fecha de hoy para poner como fecha de carga y fecha de movimiento
@@ -439,28 +442,53 @@ public class TropaController extends BeanBase implements Serializable {
         java.sql.Date lda_fecha = new java.sql.Date(fecha.getTimeInMillis());
         this.registroMod.setFecCarga(lda_fecha);
         this.registroMod.setFecIng(lda_fecha);
-        this.registroMod.setTipo('F');  //Faena por default
+        if(this.tipoTropa!="I"){
+            this.registroMod.setTipo('F');  //Faena por default
+        } else {
+            this.registroMod.setTipo('I');
+        }
         this.registroMod.setProcesada('0'); //En trámite
+        this.registroMod.setKilosVivosOriginal(BigDecimal.ZERO);
+        this.registroMod.setKilosVivos(BigDecimal.ZERO);
+        this.registroMod.setKilosVivosReales(BigDecimal.ZERO);
+        this.registroMod.setValorFleteSinIva(BigDecimal.ZERO);
+        this.registroMod.setIvaFlete(BigDecimal.ZERO);
         this.registroMod.setValorFlete(BigDecimal.ZERO);
+        this.registroMod.setValorIngBrutos(BigDecimal.ZERO);
+        this.registroMod.setImporteKiloVivoSinIva(BigDecimal.ZERO);
+        this.registroMod.setEntregaProveedorEfectivo(BigDecimal.ZERO);
+        this.registroMod.setImporteKiloVivoImponible(BigDecimal.ZERO);
+        this.registroMod.setIvaKiloVivo(BigDecimal.ZERO);
+        this.registroMod.setImporteKiloVivo(BigDecimal.ZERO);
+        this.registroMod.setImporteFaena(BigDecimal.ZERO);
+        this.registroMod.setPagoCuentaIva(BigDecimal.ZERO);
+        this.registroMod.setImporteComisionSinIva(BigDecimal.ZERO);
+        this.registroMod.setEntregaEfectivoComision(BigDecimal.ZERO);
+        this.registroMod.setImporteComisionImponible(BigDecimal.ZERO);
+        this.registroMod.setIvaComision(BigDecimal.ZERO);
         this.registroMod.setImporteComision(BigDecimal.ZERO);
+        this.registroMod.setImporteCostoTotalSinIva(BigDecimal.ZERO);
         this.registroMod.setImporteCostoTotal(BigDecimal.ZERO);
+        this.registroMod.setImporteCostoTotalTropaSinIva(BigDecimal.ZERO);
         this.registroMod.setImporteCostoTotalTropa(BigDecimal.ZERO);
+        this.registroMod.setRendimiento(BigDecimal.ZERO);
         listaGarrones.clear();
         codDepositoSel = 0;
         depositoSel = new Deposito();
         depositoSel.setPrecioUnidad(BigDecimal.ZERO);
         this.registroMod.setDeposito(depositoSel);
         estadoActual = EN_TRAMITE; //Tropa nueva por default EN TRAMITE
-        /*if(this.tipoTropa=="F"){*/
+        if(this.tipoTropa.toString().equals("F")){
             return "/vistas/tropas/Create";
-        /*}
+        }
         else{
             this.registroMod.setTipo('I');
             return "/vistas/tropas/CreateInvernada";
-        }*/
+        }
     }
     public String cancelar(){
         this.registroSel = null;
+        viajesAEliminar.clear();
         return this.origen;
     }
     //Obtiene los detalles del registro seleccionado
@@ -476,6 +504,15 @@ public class TropaController extends BeanBase implements Serializable {
                 Hibernate.initialize(this.registroMod.getTropaDets());
                 Hibernate.initialize(this.registroMod.getTropaDetGarrons());
                 Hibernate.initialize(this.registroMod.getTropaViajes());
+                this.registroMod.getTropaViajes().forEach(new Consumer<TropaViaje>() {
+                    @Override
+                    public void accept(TropaViaje x) {
+                        x.setPorUsadoAnterior(x.getViaje().getPorcUsado());
+                        x.setPorcAfectadoAnterior(x.getPorcAfectado());
+                        x.setPorcDisponible(new BigDecimal(obtenerPorcentajeDisponible(x.getViaje().getPorcUsado()) + x.getPorcAfectado().doubleValue()));
+                    }
+                });
+                
                 Hibernate.initialize(this.registroMod.getTropaPagoCivas());
                 session.getTransaction().commit();
             } catch (HibernateException e) {
@@ -506,7 +543,11 @@ public class TropaController extends BeanBase implements Serializable {
             }
             totalKilosGarrones = Math.round(totalKilosGarrones * 100.0) / 100.0;
             estadoActual = registroMod.getProcesada();  //Guardo el estado actual
-            return "/vistas/tropas/Edit";
+            if(!this.tipoTropa.toString().equals("I")){
+                return "/vistas/tropas/Edit";
+            }else{
+                return "/vistas/tropas/EditInvernada";
+            }
         } else {
             return null;
         }
@@ -593,7 +634,11 @@ public class TropaController extends BeanBase implements Serializable {
             }
             totalKilosGarrones = Math.round(totalKilosGarrones * 100.0) / 100.0;
             estadoActual = registroMod.getProcesada();  //Guardo el estado actual
-            return "/vistas/tropas/Edit";
+            if(!this.tipoTropa.toString().equals("I")){
+                return "/vistas/tropas/Edit";
+            }else{
+                return "/vistas/tropas/EditInvernada";
+            }
         } else {
             return null;
         }
@@ -652,6 +697,15 @@ public class TropaController extends BeanBase implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
+    public void onChangueIva(){
+        try {  
+             calculaValoresTropaInvernada(); 
+        } catch (Exception e) {
+            FacesMessage msg;
+            msg = new FacesMessage("Error: " + e.getCause().getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
     
     //Elimina registro seleccionado
     public void elimina() {
@@ -690,8 +744,11 @@ public class TropaController extends BeanBase implements Serializable {
     public void eliminaDetalle(TropaDet i) {
         this.getRegistroMod().getTropaDets().remove(i);
         //Actualizo totales de tropa
-        actualizaValoresTropa();
-
+        if (registroMod.getTipo()!='I'){
+            actualizaValoresTropa();
+        } else {
+            actualizaValoresTropaInvernada();
+        }
     }
 
     //Elimina detalle de garrones
@@ -706,6 +763,11 @@ public class TropaController extends BeanBase implements Serializable {
 
     //Agraga detalle de tropa
     public void agregaDetalle() {
+        if(registroModDetalle.getCategoria().getId()==0){
+            FacesMessage msg = new FacesMessage("Tropa detalle: Debe seleccionar una categoria!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        } 
         TropaDet det = new TropaDet();
         det = registroModDetalle;
         //Obtengo la instancia de la categoría seleccionada para que muestre bien en la pantalla
@@ -720,17 +782,35 @@ public class TropaController extends BeanBase implements Serializable {
         det.setTropa(registroMod);
         this.getRegistroMod().getTropaDets().add(det);
         //Actualizo totales de tropa
-        actualizaValoresTropa();
+        if(registroMod.getTipo()!='I'){
+            actualizaValoresTropa();
+        } else {
+            actualizaValoresTropaInvernada();
+        }
     }
 
     //Agrega viajes a tropa
     public void agregaViajes() {
+        FacesMessage msg;
+        for (TropaViaje tvE : viajesAEliminar) {
+            for (Viaje tvS : listaViajesSeleccionados){
+                if (tvE.getViaje().getId().intValue() == tvS.getId().intValue()){
+                    msg = new FacesMessage("No puede agregar un viaje que haya eliminado, si desea grabe o cancele y vuelva editar la tropa", "Tropas");
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    return;
+                }
+            }
+        }
         //Chequeo que no esté agregado
         for (Viaje viaje : listaViajesSeleccionados) {
             TropaViaje e = new TropaViaje();
             e.setViaje(viaje);
             e.setTropa(registroMod);
             e.setPorcAfectado(BigDecimal.ZERO);
+            e.setPorcDisponible(new BigDecimal(obtenerPorcentajeDisponible(viaje.getPorcUsado())));
+            e.setPorcIva(viaje.getPorcIva());
+            e.setValorAfectadoSinIva(BigDecimal.ZERO);
+            e.setValorIva(BigDecimal.ZERO);
             e.setValorAfectado(BigDecimal.ZERO);
             this.getRegistroMod().getTropaViajes().add(e);
         }
@@ -738,11 +818,17 @@ public class TropaController extends BeanBase implements Serializable {
 
     //Elimina viaje
     public void eliminaViaje(TropaViaje i) {
+        
         this.getRegistroMod().getTropaViajes().remove(i);
+        viajesAEliminar.add(i);
         //Actualizo valor de total de fletes
         actualizaValorFlete();
         //Actualizo totales de tropa
-        actualizaValoresTropa();
+        if(registroMod.getTipo()!='I'){
+            actualizaValoresTropa();
+        } else {
+            actualizaValoresTropaInvernada();
+        }
     }
 
     //Calcula valor afectado en base a porcentaje viaje
@@ -756,15 +842,47 @@ public class TropaController extends BeanBase implements Serializable {
         if (viajeSel.getPorcAfectado() != null) {
             ld_porc_afec = viajeSel.getPorcAfectado().doubleValue();
         }
-
+       
         ld_valor_afec = ld_total_viaje * ld_porc_afec / 100.00;
         ld_valor_afec = Math.round(ld_valor_afec * 100d) / 100d;
-
+              
         viajeSel.setValorAfectado(new BigDecimal(ld_valor_afec));
         //Actualizo valor de total de fletes
         actualizaValorFlete();
         //Actualizo totales de tropa
         actualizaValoresTropa();
+    }
+    
+        public void calculaValorAfectadoViajeInvernada(TropaViaje i) {
+        double ld_total_viaje = 0, ld_porc_afec = 0, ld_porc_iva = 0, ld_valor_afec_sin_iva = 0,ld_valor_iva = 0,ld_valor_afec = 0;
+        TropaViaje viajeSel = i;
+        if (viajeSel.getViaje().getValorTotal() != null) {
+            ld_total_viaje = viajeSel.getViaje().getValorTotal().doubleValue();
+        }
+
+        if (viajeSel.getPorcAfectado() != null) {
+            ld_porc_afec = viajeSel.getPorcAfectado().doubleValue();
+        }
+        if (viajeSel.getPorcIva() != null) {
+            ld_porc_iva = viajeSel.getPorcIva().doubleValue();
+        }
+        
+        ld_valor_afec = ld_total_viaje * ld_porc_afec / 100.00;
+        ld_valor_afec = Math.round(ld_valor_afec * 100d) / 100d;
+        
+        ld_valor_iva = ld_valor_afec - (ld_valor_afec / (1 + (ld_porc_iva/100d)));
+        ld_valor_iva = Math.round(ld_valor_iva * 100d) / 100d;
+        
+        ld_valor_afec_sin_iva = ld_valor_afec - ld_valor_iva;
+        ld_valor_afec_sin_iva = Math.round(ld_valor_afec_sin_iva * 100d) / 100d;
+         
+        viajeSel.setValorAfectadoSinIva(new BigDecimal(ld_valor_afec_sin_iva));
+        viajeSel.setValorIva(new BigDecimal(ld_valor_iva));
+        viajeSel.setValorAfectado(new BigDecimal(ld_valor_afec));
+        //Actualizo valor de total de fletes
+        actualizaValorFlete();
+        //Actualizo totales de tropa
+        actualizaValoresTropaInvernada();
 
     }
 
@@ -787,6 +905,40 @@ public class TropaController extends BeanBase implements Serializable {
         //Actualizo valor de total de fletes
         actualizaValorFlete();
     }
+    
+    public void calculaPorcAfectadoViajeInvernada(TropaViaje i) {
+        double ld_total_viaje = 0, ld_porc_afec = 0, ld_porc_iva = 0, ld_valor_afec_sin_iva = 0, 
+                 ld_valor_iva = 0, ld_valor_afec = 0;
+        TropaViaje viajeSel = i;
+
+        if (viajeSel.getViaje().getValorTotal() != null) {
+            ld_total_viaje = viajeSel.getViaje().getValorTotal().doubleValue();
+        }
+
+        if (viajeSel.getValorAfectado() != null) {
+            ld_valor_afec = viajeSel.getValorAfectado().doubleValue();
+        }
+        
+        if (viajeSel.getPorcIva() != null) {
+            ld_porc_iva = viajeSel.getPorcIva().doubleValue();
+        }
+              
+        ld_valor_iva = ld_valor_afec - (ld_valor_afec / (1 + (ld_porc_iva / 100d)));
+        ld_valor_iva = Math.round(ld_valor_iva * 100d) / 100d;
+    
+        ld_valor_afec_sin_iva = ld_valor_afec - ld_valor_iva;
+        ld_valor_afec_sin_iva = Math.round(ld_valor_afec_sin_iva * 100d) / 100d;
+        
+        ld_porc_afec = (ld_valor_afec / ld_total_viaje) * 100d;
+        ld_porc_afec = Math.round(ld_porc_afec * 100d) / 100d;
+        
+        viajeSel.setPorcAfectado(new BigDecimal(ld_porc_afec));
+        viajeSel.setValorAfectadoSinIva(new BigDecimal(ld_valor_afec_sin_iva));
+        viajeSel.setValorIva(new BigDecimal(ld_valor_iva));
+        //Actualizo valor de total de fletes
+        actualizaValorFlete();
+        actualizaValoresTropaInvernada();
+    }
 
     //Busco viajes pendientes
     public void buscaViajes() {
@@ -797,7 +949,7 @@ public class TropaController extends BeanBase implements Serializable {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
-            Query q = session.createQuery("from Viaje a where procesado='0'");
+            Query q = session.createQuery("from Viaje a where procesado='0' and porcUsado < 100");
             listaViajes = (List<Viaje>) q.list();
             session.getTransaction().commit();
         } catch (HibernateException e) {
@@ -812,29 +964,48 @@ public class TropaController extends BeanBase implements Serializable {
 
     //Actualiza total de fletes afectados a tropa
     public void actualizaValorFlete() {
-        double ld_fletes = 0, ld_costo_total = 0, ld_costo_total_tropa = 0, ld_costo_unitario = 0, ld_kilos_faenados = 0;
+        double ld_fletes_sin_iva = 0, ld_iva_fletes = 0, ld_fletes = 0, 
+                ld_costo_total = 0, ld_costo_total_sin_iva = 0,ld_costo_total_tropa_sin_iva,ld_costo_total_tropa = 0, ld_costo_unitario = 0, 
+                ld_kilos_faenados = 0, ld_kilos_reales = 0;
         Iterator i = this.getRegistroMod().getTropaViajes().iterator();
         while (i.hasNext()) {
             TropaViaje g = (TropaViaje) i.next();
+            ld_fletes_sin_iva = ld_fletes_sin_iva + g.getValorAfectadoSinIva().doubleValue();
+            ld_iva_fletes = ld_iva_fletes + g.getValorIva().doubleValue();
             ld_fletes = ld_fletes + g.getValorAfectado().doubleValue();
         }
+
+        registroMod.setValorFleteSinIva(new BigDecimal(ld_fletes_sin_iva));
+        registroMod.setIvaFlete(new BigDecimal(ld_iva_fletes));
         registroMod.setValorFlete(new BigDecimal(ld_fletes));
 
+        if (registroMod.getImporteCostoTotalSinIva()!= null) {
+            ld_costo_total_sin_iva = registroMod.getImporteCostoTotalSinIva().doubleValue();
+            ld_costo_total_sin_iva = Math.round(ld_costo_total_sin_iva * 100d) / 100d;
+        }
+        
         if (registroMod.getImporteCostoTotal() != null) {
-            ld_costo_total = registroMod.getImporteCostoTotal().doubleValue();
+            ld_costo_total = registroMod.getImporteCostoTotal().doubleValue();            
         }
 
         if (registroMod.getKilosFaenados() != null) {
             ld_kilos_faenados = registroMod.getKilosFaenados().doubleValue();
         }
-
+        //Importe total de la tropa incluyendo flete
+        ld_costo_total_tropa_sin_iva = ld_costo_total_sin_iva + ld_fletes_sin_iva;
         //Importe total de la tropa incluyendo flete
         ld_costo_total_tropa = ld_costo_total + ld_fletes;
+        registroMod.setImporteCostoTotalSinIva(new BigDecimal(ld_costo_total_tropa_sin_iva));
         registroMod.setImporteCostoTotalTropa(new BigDecimal(ld_costo_total_tropa));
-
-        ld_costo_unitario = Math.round(ld_costo_total_tropa / ld_kilos_faenados * 10000d) / 10000d;
+        if(registroMod.getTipo()!='I'){
+                ld_costo_unitario = Math.round(ld_costo_total_tropa / ld_kilos_faenados * 10000d) / 10000d;
+        }else{
+            if (registroMod.getKilosVivosReales() != null) {
+                ld_kilos_reales = registroMod.getKilosVivosReales().doubleValue();
+            }
+            ld_costo_unitario = Math.round(ld_costo_total_tropa_sin_iva / ld_kilos_reales * 10000d) / 10000d;
+        }
         registroMod.setCostoUnitario(new BigDecimal(ld_costo_unitario));
-
     }
 
     //Actualiza totales a nivel de tropa
@@ -906,20 +1077,121 @@ public class TropaController extends BeanBase implements Serializable {
         registroMod.setRendimiento(new BigDecimal(ld_rendimiento));
 
     }
+    
+    public void actualizaValoresTropaInvernada() {
+        double ld_kilos_faenados = 0, ld_kilos_decomisados = 0, ld_kilos_vivos_original = 0,ld_kilos_vivos = 0, 
+                ld_kilos_vivos_reales = 0, ld_importe_kilos_vivos_sin_iva = 0, ld_ent_prov_efec = 0,ld_importe_kilos_vivos_imponible = 0, 
+                ld_iva_kilos_vivos = 0, ld_importe_kilos_vivos = 0;
+        double ld_valor_ing_brutos = 0;
+        double ld_importe_comision_sin_iva = 0, ld_ent_comision = 0, ld_importe_comision_imponible = 0,
+                ld_iva_comision = 0, ld_importe_comision = 0;
+        double ld_importe_flete_sin_iva = 0, ld_importe_flete = 0, ld_costo_total_sin_iva = 0,ld_costo_total = 0, ld_costo_total_tropa_sin_iva = 0,ld_costo_total_tropa = 0;
+        int li_cabezas_vivas = 0, li_cabezas_dte = 0, li_decomisos = 0, li_cabezas_muertas = 0, li_cabezas_faenadas = 0;
+        short li_medias_reces = 0;
+        double ld_costo_unitario = 0;
+
+        Iterator i = this.getRegistroMod().getTropaDets().iterator();
+        while (i.hasNext()) {
+            TropaDet g = (TropaDet) i.next();
+            li_cabezas_vivas = li_cabezas_vivas + g.getCabezasVivas();
+            li_cabezas_dte = li_cabezas_dte + g.getCabezasDte();
+            li_decomisos = li_decomisos + g.getDecomisos();
+            li_cabezas_muertas = li_cabezas_muertas + g.getCabezasMuertas();
+            li_cabezas_faenadas = li_cabezas_faenadas + g.getCabezasFaenadas();
+            li_medias_reces = (short) (li_medias_reces + g.getMediasReces());
+            
+            ld_kilos_vivos_original = ld_kilos_vivos_original + Math.round(g.getKilosVivosOriginal().doubleValue() * 100d) / 100d;
+            ld_kilos_vivos = ld_kilos_vivos + Math.round(g.getKilosVivos().doubleValue() * 100d) / 100d;
+            ld_kilos_vivos_reales = ld_kilos_vivos_reales + Math.round(g.getKilosVivosReales().doubleValue() * 100d) / 100d;
+            ld_kilos_faenados = ld_kilos_faenados + Math.round(g.getKilosFaenados().doubleValue() * 100d) / 100d;
+            ld_kilos_decomisados = ld_kilos_decomisados + Math.round(g.getKilosDecomisados().doubleValue() * 100d) / 100d;
+            ld_importe_kilos_vivos_sin_iva = ld_importe_kilos_vivos_sin_iva + Math.round(g.getImporteKiloVivoSinIva().doubleValue() * 100d) / 100d;
+            ld_ent_prov_efec = ld_ent_prov_efec + Math.round(g.getEntregaProveedorEfectivo().doubleValue() * 100) / 100d;
+            ld_importe_kilos_vivos_imponible = ld_importe_kilos_vivos_imponible + Math.round(g.getImporteComisionImponible().doubleValue() * 100d) /100d;
+            ld_iva_kilos_vivos = ld_iva_kilos_vivos + Math.round(g.getIvaKiloVivo().doubleValue() * 100d) / 100d;
+            ld_importe_kilos_vivos = ld_importe_kilos_vivos + Math.round(g.getImporteKiloVivo().doubleValue() * 100d) / 100d;
+            ld_valor_ing_brutos = ld_valor_ing_brutos + Math.round(g.getValorIngBrutos().doubleValue() * 100d) / 100d;
+            ld_importe_comision_sin_iva = ld_importe_comision_sin_iva + Math.round(g.getImporteComisionSinIva().doubleValue() * 100d) / 100d;
+            ld_ent_comision = ld_ent_comision + Math.round(g.getEntregaEfectivoComision().doubleValue() * 100d) / 100d;
+            ld_importe_comision_imponible = ld_importe_comision_imponible + Math.round(g.getImporteComisionImponible().doubleValue() * 100d) / 100d;
+            ld_iva_comision = ld_iva_comision + Math.round(g.getIvaComision().doubleValue() * 100d) / 100d;
+            ld_importe_comision = ld_importe_comision + Math.round(g.getImporteComision().doubleValue() * 100d) / 100d;
+            ld_costo_total_sin_iva = ld_costo_total_sin_iva + Math.round(g.getImporteCostoTotalSinIva().doubleValue() * 100d) / 100d;
+            ld_costo_total = ld_costo_total + Math.round(g.getImporteCostoTotal().doubleValue() * 100d) / 100d;
+        }
+        
+        registroMod.setCabezasVivas(li_cabezas_vivas);
+        registroMod.setCabezasDte(li_cabezas_dte);
+        registroMod.setDecomisos(li_decomisos);
+        registroMod.setCabezasMuertas(li_cabezas_muertas);
+        registroMod.setCabezasFaenadas(li_cabezas_faenadas);
+        registroMod.setMediasReces(li_medias_reces);
+
+        registroMod.setKilosVivos(new BigDecimal(ld_kilos_vivos));
+        registroMod.setKilosVivosReales(new BigDecimal(ld_kilos_vivos_reales));
+        registroMod.setKilosFaenados(new BigDecimal(ld_kilos_faenados));
+        registroMod.setKilosDecomisados(new BigDecimal(ld_kilos_decomisados));
+        registroMod.setImporteKiloVivoSinIva(new BigDecimal(ld_importe_kilos_vivos_sin_iva));
+        registroMod.setEntregaProveedorEfectivo(new BigDecimal(ld_ent_prov_efec));
+        registroMod.setImporteKiloVivoImponible(new BigDecimal(ld_importe_kilos_vivos_imponible));
+        registroMod.setIvaKiloVivo(new BigDecimal(ld_iva_kilos_vivos));
+        registroMod.setImporteKiloVivo(new BigDecimal(ld_importe_kilos_vivos));
+        registroMod.setValorIngBrutos(new BigDecimal(ld_valor_ing_brutos));
+        registroMod.setImporteComisionSinIva(new BigDecimal(ld_importe_comision_sin_iva));
+        registroMod.setEntregaEfectivoComision(new BigDecimal(ld_ent_comision));
+        registroMod.setImporteComisionImponible(new BigDecimal(ld_importe_comision_imponible));
+        registroMod.setIvaComision(new BigDecimal(ld_iva_comision));
+        registroMod.setImporteComision(new BigDecimal(ld_importe_comision));
+        registroMod.setImporteCostoTotalSinIva(new BigDecimal(ld_costo_total_sin_iva));
+        registroMod.setImporteCostoTotal(new BigDecimal(ld_costo_total));
+
+        if (registroMod.getValorFlete() != null) {
+            ld_importe_flete_sin_iva = registroMod.getValorFleteSinIva().doubleValue();
+            ld_importe_flete = registroMod.getValorFlete().doubleValue();  
+        }
+
+        //Importe total de la tropa incluyendo flete, todo sin iva
+        ld_costo_total_tropa_sin_iva = ld_costo_total_sin_iva + ld_importe_flete_sin_iva;
+        //Importe total de la tropa incluyendo flete 
+        ld_costo_total_tropa = ld_costo_total + ld_importe_flete;
+        registroMod.setImporteCostoTotalTropaSinIva(new BigDecimal(ld_costo_total_tropa_sin_iva));
+        registroMod.setImporteCostoTotalTropa(new BigDecimal(ld_costo_total_tropa));
+       
+        ld_costo_unitario = Math.round(ld_costo_total_tropa_sin_iva / ld_kilos_vivos_reales * 10000d) / 10000d;
+        
+        registroMod.setCostoUnitario(new BigDecimal(ld_costo_unitario));
+    }
 
     //Nuevo detalle de tropa
     public void nuevoDetalle() {
         TropaDet detalle = new TropaDet();
-        detalle.setPorcIngBrutos(BigDecimal.ZERO);
-        detalle.setPorcComision(BigDecimal.ZERO);
+        
+        detalle.setKilosVivosOriginal(BigDecimal.ZERO);
+        detalle.setPorcDesbaste(BigDecimal.ZERO);
+        detalle.setPorcIvaProductor(BigDecimal.ZERO);
+        detalle.setEntregaProveedorEfectivo(BigDecimal.ZERO);
+        detalle.setImporteKiloVivoSinIva(BigDecimal.ZERO);
+        detalle.setImporteKiloVivoImponible(BigDecimal.ZERO);
+        detalle.setIvaKiloVivo(BigDecimal.ZERO);
         detalle.setImporteKiloVivo(BigDecimal.ZERO);
         detalle.setKilosFaenados(BigDecimal.ZERO);
         detalle.setKilosDecomisados(BigDecimal.ZERO);
+        detalle.setPorcDesbaste(BigDecimal.ZERO);
+        detalle.setKilosVivosOriginal(BigDecimal.ZERO);
         detalle.setKilosVivos(BigDecimal.ZERO);
+        detalle.setKilosVivosReales(BigDecimal.ZERO);
         detalle.setImporteFaena(BigDecimal.ZERO);
+        detalle.setPorcIngBrutos(BigDecimal.ZERO);
         detalle.setValorIngBrutos(BigDecimal.ZERO);
         detalle.setPagoCuentaIva(BigDecimal.ZERO);
+        detalle.setPorcComision(BigDecimal.ZERO);
+        detalle.setPorcIvaComisionista(BigDecimal.ZERO);
+        detalle.setImporteComisionSinIva(BigDecimal.ZERO);
+        detalle.setEntregaEfectivoComision(BigDecimal.ZERO);
+        detalle.setImporteComisionImponible(BigDecimal.ZERO);
+        detalle.setIvaComision(BigDecimal.ZERO);
         detalle.setImporteComision(BigDecimal.ZERO);
+        detalle.setImporteCostoTotalSinIva(BigDecimal.ZERO);
         detalle.setImporteCostoTotal(BigDecimal.ZERO);
         detalle.setRendimiento(BigDecimal.ZERO);
         detalle.setPrecioKiloVivo(BigDecimal.ZERO);
@@ -961,7 +1233,9 @@ public class TropaController extends BeanBase implements Serializable {
 
         //Estado de procesamiento de la tropa
         ls_procesada = registroMod.getProcesada();
-
+        
+        if(!tipoTropa.equals("I")){//Si la tropa es de tipo invernada puede ser procesada de lo contrario no...
+            
         //Si la tropa está EN_TRAMITE solo puede ser puesta EN_STOCK
         if (estadoActual == EN_TRAMITE) {
             if (ls_procesada == PROCESADA) {
@@ -969,6 +1243,7 @@ public class TropaController extends BeanBase implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, msg);
                 return null;
             }
+        }
         }
 
         if (estadoActual == EN_STOCK) {
@@ -1014,29 +1289,79 @@ public class TropaController extends BeanBase implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, msg);
                 return null;
             }
-        } 
+        } else {
+            double ld_valor_comision = 0;
+            ld_valor_comision = (registroMod.getImporteComision() != null ? registroMod.getImporteComision().doubleValue() : 0);
+            if (ld_valor_comision > 0) {
+                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Debe ingresar el comisionista", "Tropas");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                return null;
+            }
+        }
+        if(registroMod.getTipo()!='I'){
         //Valido detalle de pagos a cuenta de iva
         if (!validaTotalPagosCuentaIva()) {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Pagos a cuenta de Iva no coinciden con la tropa", "Tropas");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
         }
-
+        
         //Valido detalle de romaneo con total de kilos faenados
         if (!validaTotalRomaneo()) {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Total de kilos faenados no coincide con el romaneo", "Tropas");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return null;
         }
-
+        }
         Session session = null;
         Tropa u = this.getRegistroMod();
-        AsientoRealizado asientoRealizadoFaena = null;
+        
+        AsientoRealizado asientoRealizado = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
-            session.saveOrUpdate(u);
-
+            if(u.getTipo()=='I' && this.registroMod.getId()==null){
+                
+                Integer aux =   (Integer) session.save(u);
+                u.setNumeroTropa(this.registroMod.getProductor().getId().toString()
+                                + "-" + this.registroMod.getDeposito().getId().toString()
+                                + "-" + aux.toString());
+                
+                session.saveOrUpdate(u);
+            }else{
+                session.saveOrUpdate(u);
+            }
+            
+            for (TropaViaje tv : this.registroMod.getTropaViajes()) {
+                Viaje v = (Viaje) session.get(Viaje.class, tv.getViaje().getId());
+                if ((tv.getPorcDisponible().doubleValue() == obtenerPorcentajeDisponible(v.getPorcUsado()))) {
+                    v.setPorcUsado(new BigDecimal(v.getPorcUsado().doubleValue() + tv.getPorcAfectado().doubleValue()));
+                    session.saveOrUpdate(v);
+                } else if (tv.getPorUsadoAnterior().doubleValue() == v.getPorcUsado().doubleValue()) {
+                    v.setPorcUsado(new BigDecimal(Math.abs(tv.getPorcDisponible().doubleValue() - tv.getPorcAfectado().doubleValue() - 100d)));
+                    session.saveOrUpdate(v);
+                } else {
+                    session.getTransaction().rollback();
+                    msg = new FacesMessage("Error al modificar viaje: aparentemente otro usuario ya uso todo o parte del porcentaje del viaje disponible", "Tropas");
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    return null;
+                }
+            }
+            for (TropaViaje tv : viajesAEliminar){
+                try {
+                    Viaje v = (Viaje) session.get(Viaje.class, tv.getViaje().getId());
+                    if(tv.getPorUsadoAnterior()!=null){
+                    v.setPorcUsado(new BigDecimal(v.getPorcUsado().doubleValue() - tv.getPorcAfectadoAnterior().doubleValue()));
+                    session.saveOrUpdate(v);
+                    }
+                } catch (HibernateException he) {
+                    session.getTransaction().rollback();
+                    msg = new FacesMessage("Error al eliminar viaje" );
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    return null;
+                }
+            }
+            
             //Si se pasa la tropa a estado EN_STOCK actualizo el inventario y contabilizo
             if (estadoActual == EN_TRAMITE && ls_procesada == EN_STOCK) {
                 //Actualizo inventario
@@ -1047,14 +1372,18 @@ public class TropaController extends BeanBase implements Serializable {
             }
 
             //Si se pasa la tropa a estado EN_STOCK actualizo el inventario y contabilizo
-            if (estadoActual == EN_STOCK && ls_procesada == PROCESADA) {
+            if ((estadoActual == EN_STOCK || tipoTropa.equals("I")) && ls_procesada == PROCESADA) {
 
                 //Realizo los asientos contables
-                //Asiento de faena
-                asientoRealizadoFaena = contabilizaCostoTropa();
-                if (asientoRealizadoFaena.getIdAsiento() == 0) {
+                //Asiento 
+                if(registroMod.getTipo()!='I'){
+                    asientoRealizado = contabilizaCostoTropa();
+                } else {
+                    asientoRealizado = contabilizaCostoTropaInvernada();
+                }
+                if (asientoRealizado.getIdAsiento() == 0) {
                     session.getTransaction().rollback();
-                    msg = new FacesMessage("Error al contabilizar: " + asientoRealizadoFaena.getObservaciones());
+                    msg = new FacesMessage("Error al contabilizar: " + asientoRealizado.getObservaciones());
                     FacesContext.getCurrentInstance().addMessage(null, msg);
                     return null;
                 }
@@ -1067,7 +1396,7 @@ public class TropaController extends BeanBase implements Serializable {
             if (estadoActual == EN_STOCK && ls_procesada == PROCESADA) {
                 //Entonces elimino el asiento de faena
                 Asiento asiento = new Asiento();
-                asiento.setId(asientoRealizadoFaena.getIdAsiento());
+                asiento.setId(asientoRealizado.getIdAsiento());
                 AsientoRealizado resul = eliminaAsiento(asiento);
             }
             msg = new FacesMessage("Error: " + e.getCause().getMessage());
@@ -1076,7 +1405,6 @@ public class TropaController extends BeanBase implements Serializable {
         } finally {
             session.close();
         }
-
         estadoActual = registroMod.getProcesada(); //Actualizo el estado actual
         if(!this.origen.equals("/vistas/tropas/TropasPorNumero")){
             if(fec_desde==null && fec_hasta==null){
@@ -1099,7 +1427,7 @@ public class TropaController extends BeanBase implements Serializable {
         System.out.println("Direccion de origen: " + this.origen.toString());
         return this.origen.toString();
     }
-
+        
     //Calcula medias reces
     public void calculaMediasReces() {
         int li_cabezas_faenadas = 0;
@@ -1243,7 +1571,113 @@ public class TropaController extends BeanBase implements Serializable {
         registroModDetalle.setImporteCostoTotal(new BigDecimal(ld_costo_total));
         return;
     }
-    
+
+    public void calculaValoresTropaInvernada() {
+
+        double ld_kilos_vivos_original = 0, ld_porc_desbaste = 0, ld_kilos_vivos = 0, ld_precio_kilo_vivo = 0, 
+                ld_importe_kilos_vivos_sin_iva = 0, ld_entrega_efectivo_proveedor = 0, ld_importe_kilos_vivos_imponible = 0, 
+                ld_iva_kilos_vivos = 0, ld_importe_kilos_vivos = 0;
+        double ld_porc_ing_brutos = 0, ld_valor_ing_brutos = 0, ld_pago_cuenta_iva = 0;
+        double ld_porc_comision = 0, ld_porc_iva_comisionista = 0,ld_importe_comision_sin_iva, ld_entrega_efectivo_comision = 0, ld_importe_comision_imponible = 0, ld_iva_comision, ld_importe_comision = 0;
+        double ld_costo_total_sin_iva = 0, ld_costo_total = 0;
+
+        if (registroModDetalle.getKilosVivosOriginal() != null) {
+            ld_kilos_vivos_original = registroModDetalle.getKilosVivosOriginal().doubleValue();
+        }
+
+        if (registroModDetalle.getPorcDesbaste() != null) {
+            ld_porc_desbaste = registroModDetalle.getPorcDesbaste().doubleValue();
+        }
+
+        ld_kilos_vivos = ld_kilos_vivos_original - (ld_kilos_vivos_original * ld_porc_desbaste / 100d);
+        ld_kilos_vivos = Math.round(ld_kilos_vivos * 100d) / 100d;
+
+        if (registroModDetalle.getPrecioKiloVivo() != null) {
+            ld_precio_kilo_vivo = registroModDetalle.getPrecioKiloVivo().doubleValue();
+            ld_precio_kilo_vivo = Math.round(ld_precio_kilo_vivo * 1000d) / 1000d;
+        }
+
+        if (registroModDetalle.getEntregaProveedorEfectivo() != null) {
+            ld_entrega_efectivo_proveedor = registroModDetalle.getEntregaProveedorEfectivo().doubleValue();
+        }
+
+        ld_importe_kilos_vivos_sin_iva = ld_kilos_vivos * ld_precio_kilo_vivo;
+        ld_importe_kilos_vivos_sin_iva = Math.round(ld_importe_kilos_vivos_sin_iva * 100d) / 100d;
+
+        ld_importe_kilos_vivos_imponible = ld_importe_kilos_vivos_sin_iva - ld_entrega_efectivo_proveedor;
+        ld_importe_kilos_vivos_imponible = Math.round(ld_importe_kilos_vivos_imponible * 100d) / 100d;
+
+        ld_iva_kilos_vivos = ld_importe_kilos_vivos_imponible * (registroModDetalle.getPorcIvaProductor().doubleValue() / 100d);
+        ld_iva_kilos_vivos = Math.round(ld_iva_kilos_vivos * 100d) / 100d;
+        
+        ld_importe_kilos_vivos = ld_importe_kilos_vivos_imponible + ld_iva_kilos_vivos;
+        ld_importe_kilos_vivos = Math.round(ld_importe_kilos_vivos * 100d) / 100d;
+        
+        /*ld_importe_kilos_vivos = ld_importe_kilos_vivos_imponible * (1 + registroModDetalle.getPorcIvaProductor().doubleValue() / 100d);
+        ld_importe_kilos_vivos = Math.round(ld_importe_kilos_vivos * 100d) / 100d;
+
+        ld_iva_kilos_vivos = ld_importe_kilos_vivos - (ld_importe_kilos_vivos_sin_iva - ld_entrega_efectivo_proveedor);
+        ld_iva_kilos_vivos = Math.round(ld_iva_kilos_vivos * 100d) / 100d;*/
+
+        if (registroModDetalle.getPorcIngBrutos() != null) {
+            ld_porc_ing_brutos = registroModDetalle.getPorcIngBrutos().doubleValue();
+        }
+
+        ld_valor_ing_brutos = ld_importe_kilos_vivos * ld_porc_ing_brutos / 100.00;
+        ld_valor_ing_brutos = Math.round(ld_valor_ing_brutos * 100d) / 100d;
+
+
+        if (registroModDetalle.getPorcComision() != null) {
+            ld_porc_comision = registroModDetalle.getPorcComision().doubleValue();
+            ld_porc_comision = Math.round(ld_porc_comision * 100d ) / 100d;
+        }
+        if (registroModDetalle.getEntregaEfectivoComision() != null) {
+            ld_entrega_efectivo_comision = registroModDetalle.getEntregaEfectivoComision().doubleValue();
+        }
+        if (registroModDetalle.getPorcIvaComisionista() != null) {
+            ld_porc_iva_comisionista = registroModDetalle.getPorcIvaComisionista().doubleValue();
+            ld_porc_iva_comisionista = Math.round(ld_porc_iva_comisionista * 100d ) / 100d;
+        }
+        ld_importe_comision_sin_iva = ld_importe_kilos_vivos_sin_iva * ld_porc_comision / 100.00d;
+        ld_importe_comision_sin_iva = Math.round(ld_importe_comision_sin_iva * 100d) / 100d;
+
+        ld_importe_comision_imponible = ld_importe_comision_sin_iva - ld_entrega_efectivo_comision;
+        ld_importe_comision_imponible = Math.round(ld_importe_comision_imponible * 100d) / 100d;
+        
+        ld_iva_comision = ld_importe_comision_imponible * (registroModDetalle.getPorcIvaComisionista().doubleValue() / 100d);
+        ld_iva_comision = Math.round(ld_iva_comision * 100d) / 100d;
+        
+        ld_importe_comision = ld_importe_comision_imponible + ld_iva_comision;
+        ld_importe_comision = Math.round(ld_importe_comision * 100d) / 100d;
+        
+        /*ld_importe_comision = ld_importe_comision_imponible * (1 + registroModDetalle.getPorcIvaComisionista().doubleValue() / 100d);
+        ld_importe_comision = Math.round(ld_importe_comision * 100d) / 100d;
+
+        ld_iva_comision = ld_importe_comision - (ld_importe_comision_sin_iva - ld_entrega_efectivo_comision);
+        ld_iva_comision = Math.round(ld_iva_comision * 100d) / 100d;*/
+
+        //Calculo el costo total sin iva 
+        ld_costo_total_sin_iva = ld_importe_kilos_vivos_sin_iva + ld_valor_ing_brutos + ld_importe_comision_sin_iva;
+        //Calculo el costo total
+        ld_costo_total = ld_importe_kilos_vivos + ld_entrega_efectivo_proveedor + ld_valor_ing_brutos
+                + ld_importe_comision + ld_entrega_efectivo_comision;
+        registroModDetalle.setKilosVivos(new BigDecimal(ld_kilos_vivos));
+        registroModDetalle.setImporteKiloVivoSinIva(new BigDecimal(ld_importe_kilos_vivos_sin_iva));
+        registroModDetalle.setImporteKiloVivoImponible(new BigDecimal(ld_importe_kilos_vivos_imponible));
+        registroModDetalle.setIvaKiloVivo(new BigDecimal(ld_iva_kilos_vivos));
+        registroModDetalle.setImporteKiloVivo(new BigDecimal(ld_importe_kilos_vivos));
+        registroModDetalle.setValorIngBrutos(new BigDecimal(ld_valor_ing_brutos));
+        registroModDetalle.setPagoCuentaIva(new BigDecimal(ld_pago_cuenta_iva));
+        registroModDetalle.setImporteComisionSinIva(new BigDecimal(ld_importe_comision_sin_iva));
+        registroModDetalle.setEntregaEfectivoComision(new BigDecimal(ld_entrega_efectivo_comision));
+        registroModDetalle.setImporteComisionImponible(new BigDecimal(ld_importe_comision_imponible));
+        registroModDetalle.setIvaComision(new BigDecimal(ld_iva_comision));
+        registroModDetalle.setImporteComision(new BigDecimal(ld_importe_comision));
+        registroModDetalle.setImporteCostoTotalSinIva(new BigDecimal(ld_costo_total_sin_iva));
+        registroModDetalle.setImporteCostoTotal(new BigDecimal(ld_costo_total));
+        return;
+    }
+
     //Actualiza el costo total debido a actualización del pago a cuenta de iva
     public void actualizaValorPagoCuentaIva() {
         double ld_pago_cuenta_iva = 0, ld_importe_kilos_vivos = 0, ld_importe_faena = 0, ld_valor_ing_brutos = 0;
@@ -1309,6 +1743,36 @@ public class TropaController extends BeanBase implements Serializable {
         //Calculo el costo total
         ld_costo_total = ld_importe_kilos_vivos + ld_importe_faena + ld_valor_ing_brutos
                 + ld_pago_cuenta_iva + ld_importe_comision;
+
+        registroModDetalle.setImporteCostoTotal(new BigDecimal(ld_costo_total));
+        registroModDetalle.setPorcIngBrutos(new BigDecimal(ld_porc_ing_brutos));
+        return;
+
+    }
+    
+    //Actualiza el costo total debido a actualización del valor de ingresos brutos
+    public void actualizaValorIngBrutosInvernada() {
+        double ld_importe_kilos_vivos = 0, ld_valor_ing_brutos = 0;
+        double ld_importe_comision = 0, ld_costo_total = 0, ld_porc_ing_brutos;
+
+        if (registroModDetalle.getImporteKiloVivo() != null) {
+            ld_importe_kilos_vivos = registroModDetalle.getImporteKiloVivo().doubleValue();
+        }
+
+        if (registroModDetalle.getValorIngBrutos() != null) {
+            ld_valor_ing_brutos = registroModDetalle.getValorIngBrutos().doubleValue();
+        }
+
+        //Calculo el nuevo porcentaje de ingresos brutos
+        ld_porc_ing_brutos = (ld_valor_ing_brutos / ld_importe_kilos_vivos) * 100;
+
+        if (registroModDetalle.getImporteComision() != null) {
+            ld_importe_comision = registroModDetalle.getImporteComision().doubleValue();
+        }
+
+        //Calculo el costo total
+        ld_costo_total = ld_importe_kilos_vivos +  ld_valor_ing_brutos +
+                         ld_importe_comision;
 
         registroModDetalle.setImporteCostoTotal(new BigDecimal(ld_costo_total));
         registroModDetalle.setPorcIngBrutos(new BigDecimal(ld_porc_ing_brutos));
@@ -1622,7 +2086,7 @@ public class TropaController extends BeanBase implements Serializable {
     public AsientoRealizado contabilizaCostoTropa() {
         //Cargo la empresa para obtener las cuentas contables
         Empresa empresa = cargaEmpresa();
-
+        
         Asiento asiento = new Asiento();
         asiento.setIdEmpresa(1);
         asiento.setNumPlantilla(0);  //No tiene plantilla relacionada
@@ -1712,7 +2176,101 @@ public class TropaController extends BeanBase implements Serializable {
         AsientoRealizado resul = realizaAsiento(asiento);
         return resul;
     }
+    //Realizo asiento de faena
+    public AsientoRealizado contabilizaCostoTropaInvernada() {
+        //Cargo la empresa para obtener las cuentas contables
+        Empresa empresa = cargaEmpresa();
+        
+        Asiento asiento = new Asiento();
+        asiento.setIdEmpresa(1);
+        asiento.setNumPlantilla(0);  //No tiene plantilla relacionada
+        System.out.println("iva comision contabiliza" + registroMod.getIvaComision());
+        asiento.setDescripcion("Costo de Tropa Invernada: " + registroMod.getNumeroTropa() + " Deposito: " + registroMod.getDeposito().getNombre());
+//        java.util.Calendar fecha=java.util.Calendar.getInstance();
+//        java.sql.Date lda_fecha=new java.sql.Date(fecha.getTimeInMillis());
+//        asiento.setFecMov(lda_fecha);
 
+        //Fecha del movimiento
+        java.util.Calendar fecha_mov = java.util.Calendar.getInstance();
+        fecha_mov.setTimeZone(TimeZone.getTimeZone("America/Buenos_Aires"));
+        fecha_mov.setTime(new Date());
+
+        //Convierto la fecha a String para no tener problemas con JSON
+        TimeZone gmtZone = TimeZone.getTimeZone("America/Buenos_Aires");
+        DateFormat destDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        destDateFormat.setTimeZone(gmtZone);
+        String ls_fecha;
+        ls_fecha = destDateFormat.format(fecha_mov.getTime());
+        System.out.println("Fecha string: " + ls_fecha);
+        asiento.setFecMov(ls_fecha);
+
+        asiento.setIdUsuario(getUsuarioConectado().getIdUsuario());
+
+        //Todas las cuentas contables del asiento se pasan desde aquí
+        AsientoCuentaAdicional cuentaAdic = null;
+
+        //FEED LOT TERNEROS INVERNADA
+        if (registroMod.getCategoria() != null) {
+            cuentaAdic = new AsientoCuentaAdicional();
+            cuentaAdic.setNumeroCuenta(registroMod.getCategoria().getCcCostoInvernada());
+            cuentaAdic.setDc("D");
+            cuentaAdic.setValor(Math.round(registroMod.getImporteCostoTotalTropaSinIva().doubleValue() * 100d) / 100d);
+            asiento.getListaCuentasAdic().add(cuentaAdic);
+        }
+        //IVA CREDITO FISCAL FEEDLOT
+        if (registroMod.getDeposito() != null) {
+            cuentaAdic = new AsientoCuentaAdicional();
+            cuentaAdic.setNumeroCuenta(registroMod.getDeposito().getCcIvaCreditoFiscal());
+            cuentaAdic.setDc("D");
+            double ld_ivas = registroMod.getIvaKiloVivo().doubleValue()
+                    + registroMod.getIvaComision().doubleValue() + registroMod.getIvaFlete().doubleValue();
+            cuentaAdic.setValor(ld_ivas);
+            asiento.getListaCuentasAdic().add(cuentaAdic);
+        }
+
+        //Agrego cuenta contable de Ingresos Brutos
+        if (registroMod.getValorIngBrutos().doubleValue() > 0) {
+            cuentaAdic = new AsientoCuentaAdicional();
+            cuentaAdic.setNumeroCuenta(empresa.getCcIngBrutos());
+            cuentaAdic.setDc("C");
+            cuentaAdic.setValor(Math.round(registroMod.getValorIngBrutos().doubleValue() * 100d) / 100d);
+            asiento.getListaCuentasAdic().add(cuentaAdic);
+        }
+        if (registroMod.getProductor() != null) {
+            //Agrego cuenta contable del productor
+            cuentaAdic = new AsientoCuentaAdicional();
+            //cuentaAdic.setNumeroCuenta(registroMod.getProductor().getCcCostoTropa());
+            cuentaAdic.setNumeroCuenta("112101003");
+            cuentaAdic.setDc("C");
+            double importe_kilos_vivos_mas_iva = registroMod.getImporteKiloVivoSinIva().doubleValue() + registroMod.getIvaKiloVivo().doubleValue();
+            cuentaAdic.setValor(Math.round(importe_kilos_vivos_mas_iva * 100d) / 100d);
+            asiento.getListaCuentasAdic().add(cuentaAdic);
+        }
+
+        if (registroMod.getComisionista() != null) {
+            //Agrego cuenta contable del comisionista
+            cuentaAdic = new AsientoCuentaAdicional();
+            //cuentaAdic.setNumeroCuenta(registroMod.getComisionista().getCcCostoTropa());
+            cuentaAdic.setNumeroCuenta("112101004");
+            cuentaAdic.setDc("C");
+            cuentaAdic.setValor(Math.round((registroMod.getImporteComision().doubleValue() + registroMod.getEntregaEfectivoComision().doubleValue()) * 100d) / 100d);
+            asiento.getListaCuentasAdic().add(cuentaAdic);
+        }
+
+        //Agrego cuenta contable por cada uno de los fletes
+        Iterator i = this.getRegistroMod().getTropaViajes().iterator();
+        while (i.hasNext()) {
+            TropaViaje viaje = (TropaViaje) i.next();
+            cuentaAdic = new AsientoCuentaAdicional();
+            cuentaAdic.setNumeroCuenta(viaje.getViaje().getChofer().getCcCostoTropa());
+            cuentaAdic.setDc("C");
+            cuentaAdic.setValor(Math.round(viaje.getValorAfectado().doubleValue() * 100d) / 100d);
+            asiento.getListaCuentasAdic().add(cuentaAdic);
+        }
+
+        AsientoRealizado resul = realizaAsiento(asiento);
+        return resul;
+    }
     public void buscaComisionista() {
         FacesMessage msg;
         comisionistaSel = null;
@@ -1864,5 +2422,8 @@ public class TropaController extends BeanBase implements Serializable {
             PrimeFaces current = PrimeFaces.current();
             current.executeScript("'CreateDialogDetalleTerceros').show();");
         }
+    }
+    public double obtenerPorcentajeDisponible(BigDecimal valor){
+        return Math.abs(valor.doubleValue() - 100d);
     }
 }

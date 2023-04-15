@@ -49,6 +49,13 @@
                             </f:facet>
                             <h:outputText  value="#{item.nombre}"/>
                         </p:column>
+
+                        <p:column style="font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="CC costo Invernada"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.ccCostoInvernada}"/>
+                        </p:column>
                         <f:facet name="footer">
                             <p:commandButton id="createButton" ajax="false" icon="ui-icon-plus"   value="#{bundle.Create}"
                                              action="#{categoriacontroller.nuevo()}" 

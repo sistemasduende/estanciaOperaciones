@@ -17,6 +17,9 @@
         <property name="nombre" type="string">
             <column name="nombre" length="100" not-null="true" />
         </property>
+        <property name="ccCostoInvernada" type="string">
+            <column name="cc_costo_invernada" length="30" not-null="false" />
+        </property>        
         <set name="tropaDets" table="tropa_det" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="idCategoria" not-null="true">

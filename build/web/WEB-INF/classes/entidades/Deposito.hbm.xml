@@ -64,6 +64,11 @@
                 <comment>Número de cuenta contable asociada al asiento de costo de tropa</comment>
             </column>
         </property>
+        <property name="ccIvaCreditoFiscal" type="string">
+            <column name="cc_iva_credito_fiscal">
+                <comment></comment>
+            </column>
+        </property>        
         <set name="tropas" table="tropa" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="idDeposito">
