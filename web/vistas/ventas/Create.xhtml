@@ -6,6 +6,7 @@
       xmlns:em="http://java.sun.com/jsf/composite/componentes">
     <body>
     <ui:composition template="./../../Template04.xhtml">
+
             <ui:define name="content">
             <div style="align: center">
             <h:form id="EditForm">
@@ -85,15 +86,16 @@
                     </p:panelGrid>
                         
                     <p:dataTable id="detalleVenta" 
-                                   paginatorPosition="top"
-                                   value="#{ventaestanciacontroller.registroMod.ventaEstanciaDets}" 
+                                   paginatorPosition="top"                
+                                   value="#{ventaestanciacontroller.ventaEstanciaDetalle}"
                                    var="item"
                                    rowIndexVar="fila"
                                    style="font-size: 10pt; color: #045491"
                                    reflow="true"
+                                   sortBy="#{item.id}"
                                    >
                             
-                        <p:column style="font-size: 8pt; color: #045491; text-align: center">
+                        <p:column colspan="2"  style="width: 15%; font-size: 8pt; color: #045491; text-align: center">
                             <f:facet name="header">
                                 <h:outputText value="Cantidad"/>
                             </f:facet>
@@ -146,12 +148,22 @@
                                 <f:convertNumber pattern="#,##0.00" />
                             </h:outputText>
                         </p:column>
-                        
-                        
-                        </p:dataTable>                        
-                        
-                        
-                    
+                        <p:summaryRow>
+                        </p:summaryRow>
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="1" style="text-align:right" footerText="Total: " />
+                                <p:column colspan="6" style="text-align:left">
+                                    <f:facet name="footer">
+                                        <h:outputText  value="#{ventaestanciacontroller.ventaEstanciaDetalle.stream().map(e->e.cantidad).sum()}">
+                                            <f:convertNumber pattern="#,##0.00 kg" />
+                                        </h:outputText>                                    
+                                    </f:facet>
+                                </p:column>   
+                            </p:row>
+                        </p:columnGroup> 
+                    </p:dataTable>                        
+
                     </p:tab>
                     
                     <p:tab title="Remitos relacionados" id="tabRemitos">
@@ -212,8 +224,9 @@
                 </p:tabView>
                 <br/>                    
                 <p:commandButton action="#{ventaestanciacontroller.graba()}" value="#{bundle.Save}" update=":growl" ajax="false" style="font-size: 10pt; color: #045491"/>                        
-                <p:commandButton action="/vistas/ventas/Ventas" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
-
+                <p:commandButton actionListener="#{ventaestanciacontroller.cancelar()}" action="/vistas/ventas/Ventas" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
+                <p:commandButton action="#{ventaestanciacontroller.cancelar()}" update="EditForm:tabViewVenta:detalleVenta,EditForm:tabViewVenta:porcIVA,
+                                               EditForm:tabViewVenta:valorIVA,EditForm:tabViewVenta:subTotal,EditForm:tabViewVenta:total, tabRemitos, datosRemitos" value="Limpiar" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>
             </h:form>
             <ui:include src="BuscaRemitos.xhtml"/> 
             <ui:include src="BuscaCliente.xhtml"/> 
