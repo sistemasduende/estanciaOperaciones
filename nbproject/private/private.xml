@@ -3,14 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/controllers/TropaController.java</file>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/vistas/tropas/Edit.xhtml</file>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/vistas/tropas/Create.xhtml</file>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/vistas/tropas/CreateInvernada.xhtml</file>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/vistas/tropas/BuscaViajes.xhtml</file>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/entidades/Viaje.java</file>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/vistas/tropas/CreateDetalle.xhtml</file>
-            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/vistas/tropas/EditInvernada.xhtml</file>
+            <file>file:/C:/ProyectosDuende/estanciaOperaciones/web/vistas/ventas/Create.xhtml</file>
+            <file>file:/C:/ProyectosDuende/estanciaOperaciones/src/java/controllers/VentaEstanciaController.java</file>
         </group>
     </open-files>
 </project-private>
