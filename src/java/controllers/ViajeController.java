@@ -178,6 +178,7 @@ public class ViajeController extends BeanBase implements Serializable {
         this.registroMod.setTipoJaula('S'); //Jaula simple
         this.registroMod.setTipoProducto('A'); //Animales
         this.registroMod.setPorcIva(BigDecimal.ZERO);
+        this.registroMod.setPorcUsado(BigDecimal.ZERO);
         this.registroMod.setDistancia(BigDecimal.ZERO);
         this.registroMod.setProcesado('0');
         

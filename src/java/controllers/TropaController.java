@@ -605,6 +605,14 @@ public class TropaController extends BeanBase implements Serializable {
                 Hibernate.initialize(this.registroMod.getTropaDets());
                 Hibernate.initialize(this.registroMod.getTropaDetGarrons());
                 Hibernate.initialize(this.registroMod.getTropaViajes());
+                this.registroMod.getTropaViajes().forEach(new Consumer<TropaViaje>() {
+                    @Override
+                    public void accept(TropaViaje x) {
+                        x.setPorUsadoAnterior(x.getViaje().getPorcUsado());
+                        x.setPorcAfectadoAnterior(x.getPorcAfectado());
+                        x.setPorcDisponible(new BigDecimal(obtenerPorcentajeDisponible(x.getViaje().getPorcUsado()) + x.getPorcAfectado().doubleValue()));
+                    }
+                });
                 Hibernate.initialize(this.registroMod.getTropaPagoCivas());
                 session.getTransaction().commit();
             } catch (HibernateException e) {
