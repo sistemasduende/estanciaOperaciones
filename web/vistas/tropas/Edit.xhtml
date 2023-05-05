@@ -9,15 +9,27 @@
     <ui:composition template="./../../Template04.xhtml">
             <ui:define name="content">
             <div style="align: center">
-            <h:form id="EditForm">
+           <h:form id="EditForm">
                 <p:tabView id="tabViewCab">
-                    <p:ajax event="tabChange"  update="botonesCrearDetalle, datosDetalles" />
+                    <p:ajax event="tabChange"  update="botonesCrearDetalle, datosDetalles" /> 
                     <p:tab title="Tropa" >
                     <p:panelGrid columns="4"  rendered="#{tropacontroller.registroMod != null}" style="background: white; width: 100%; border-width: thin; border-style: hidden">
                         
                         <h:outputText value="Usuario:" style="font-size: 10pt; color: #045491"/>
-                        <h:outputText id="usuario" value="#{tropacontroller.obtenerNombreUsuario(tropacontroller.registroMod.idUsuario)} " style="font-size: 10pt; color: #045491"/>                        
+                        <h:outputText id="usuario" value="#{tropacontroller.obtenerNombreUsuario(tropacontroller.registroMod.idUsuario)} " style="font-size: 10pt; color: #045491"/>
 
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+
+                        <p:outputLabel value="Tipo:" for="tipo" style="font-size: 10pt; color: #045491"/>                        
+                        <p:selectOneMenu id="tipo" value="#{tropacontroller.registroMod.tipo}" 
+                                         required="true" style="width: 100%; font-size: 10pt; color: #045491 "
+                                         disabled="#{tropacontroller.registroMod.procesada eq '1'}">
+                            <f:selectItem itemLabel="Faena" itemValue="F"  />
+                            <f:selectItem itemLabel="Terceros" itemValue="T"  />
+                            <p:ajax update="tabDetalle, tabViewCab"/>
+                        </p:selectOneMenu> 
+                        
                         <p:outputLabel for="fecha" value="Fecha ingreso:" style="font-size: 10pt; color: #045491"/>
                         <p:calendar id="fecha"  pattern="dd/MM/yyyy" required="true" value="#{tropacontroller.registroMod.fecIng}" style="font-size: 10pt; color: #045491" showOn="button"
                                     disabled="#{tropacontroller.registroMod.procesada eq '1'}" >
@@ -35,7 +47,7 @@
                                      style="width: 100%; text-align: right; font-size: 10pt; color: #045491" size="40" maxlength="15" 
                                      autocomplete="off" 
                                      readonly="#{tropacontroller.registroMod.procesada eq '1'}">
-                        </p:inputText>  
+                        </p:inputText>   
                         
                         <p:outputLabel value="Número de factura" for="numFactura" style="font-size: 10pt; color: #045491"/>
                         <p:panelGrid columns="3"  rendered="#{tropacontroller.registroMod != null}" style="background: white; width: 100%; border-width: thin; border-style: hidden">
@@ -56,26 +68,18 @@
                                 <f:selectItem itemLabel="B" itemValue="B"  />
                                 <f:selectItem itemLabel="C" itemValue="C"  />
                             </p:selectOneMenu> 
-                        </p:panelGrid>                        
+                        </p:panelGrid>
                         
-
                         <p:outputLabel value="Dte" for="dte" style="font-size: 10pt; color: #045491"/>
-                        <p:inputText id="dte" value="#{tropacontroller.registroMod.dte}" required="true" 
+                        <p:inputText id="dte" value="#{tropacontroller.registroMod.dte}" required="#{tropacontroller.registroMod.tipo eq 'F'}" 
                                      style="width: 100%; text-align: right; font-size: 10pt; color: #045491" maxlength="15" 
                                      autocomplete="off" readonly="#{tropacontroller.registroMod.procesada eq '1'}">
                                 <f:convertNumber pattern="#,##0" />
                         </p:inputText>    
-                                               
-                        <p:outputLabel value="Tipo:" for="tipo" style="font-size: 10pt; color: #045491"/>                        
-                        <p:selectOneMenu id="tipo" value="#{tropacontroller.registroMod.tipo}" 
-                                         required="true" style="width: 100%; font-size: 10pt; color: #045491 "
-                                         disabled="#{tropacontroller.registroMod.procesada eq '1'}" >
-                                <f:selectItem itemLabel="Faena" itemValue="F"  />
-                                <f:selectItem itemLabel="Terceros" itemValue="T"  />
-                                <p:ajax process="@all" update=":CreateFormDetalle"/>
-                                <p:ajax update="tabDetalle"/>
-                        </p:selectOneMenu> 
 
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        <h:outputText value="" style="font-size: 10pt; color: #045491"/>
+                        
                         <p:outputLabel value="Depósito:" for="deposito" style="font-size: 10pt; color: #045491"/>                        
                         <p:selectOneMenu id="deposito" value="#{tropacontroller.codDepositoSel}"   
                                          required="true" style="width: 100%; font-size: 10pt; color: #045491" 
@@ -92,8 +96,8 @@
                             <p:commandButton icon="ui-icon-trash" actionListener="#{tropacontroller.eliminaComisionista()}" update="nombreComisionista"
                                                         style="font-size: 10pt; color: #045491" disabled="#{tropacontroller.registroMod.procesada eq '1'}"/>                                                    
                         </p:panelGrid>                        
-
-
+                        
+                        
                         <p:outputLabel value="Producto:" for="producto" style="font-size: 10pt; color: #045491"/>
                         <p:selectOneMenu id="producto" value="#{tropacontroller.registroMod.categoria.id}" 
                                      required="true" style="width: 100%; font-size: 10pt; color: #045491 "
@@ -262,6 +266,7 @@
                     </p:tab>
                     
                     <p:tab title="Detalle de tropa" id="tabDetalle">
+                        
                         <h:panelGroup id="botonesCrearDetalle" >
                         <br/>
                         <p:commandButton id="createDetTropa" icon="ui-icon-plus"   value="Crear detalle"  
@@ -497,17 +502,17 @@
                         <p:column  style="width: 10%; text-align: center; font-size: 10pt; color: #045491">
                             <f:facet name="header">
                             </f:facet>
-                            <p:commandButton icon="ui-icon-trash" immediate="true" actionListener="#{tropacontroller.eliminaDetalleGarron(item)}" update="EditForm:tabViewCab, EditForm:tabViewCab:datosDetallesGarron" 
-                                             alt="Eliminar" disabled="#{tropacontroller.registroMod.procesada eq '1' or tropacontroller.registroMod.procesada eq '2'}"/>
+                            <p:commandButton icon="ui-icon-trash" immediate="true" actionListener="#{tropacontroller.eliminaDetalleGarron(item)}"
+                                             disabled="#{tropacontroller.registroMod.procesada eq '1' or tropacontroller.registroMod.procesada eq '2'}" update="EditForm:tabViewCab, EditForm:tabViewCab:datosDetallesGarron" alt="Eliminar"/>
                         </p:column>
                             
                         <p:columnGroup type="footer">
                             <p:row>
                                 <p:column colspan="3" style="text-align:right" footerText="Cantidad de registros: #{tropacontroller.listaGarrones.size()}"/>
-                                <p:column colspan="1" style="text-align:right" footerText="Total de kilos: #{tropacontroller.listaGarrones.stream().map(item->item.kilos).sum()}" />
+                                <p:column colspan="1" style="text-align:right" footerText="Total de kilos: #{tropacontroller.totalKilosGarrones}" />
                                 <p:column/>
                             </p:row>
-                        </p:columnGroup>                                   
+                        </p:columnGroup>                                
                             
                         </p:dataTable>
                     </p:tab>
@@ -584,7 +589,17 @@
                             <h:outputText  value="#{item.viaje.valorTotal}">
                                 <f:convertNumber pattern="#,##0.00" />
                             </h:outputText>
-                        </p:column>                                 
+                        </p:column>
+                            
+                        <p:column style="font-size: 8pt; color: #045491;text-align: right"
+                                  rendered="#{tropacontroller.registroMod.procesada eq '0' ? true:(tropacontroller.registroMod.procesada eq '2' ? true : false)}">
+                            <f:facet name="header">
+                                <h:outputText value="Max.% Disponible"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.porcDisponible}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </p:column>                             
                         
                         <p:column style="font-size: 8pt; color: #045491;text-align: right">
                             <f:facet name="header">
@@ -593,10 +608,11 @@
                             <p:inputNumber value="#{item.porcAfectado}" required="true" size="10"
                                      inputStyle="text-align: right"
                                      style="font-size: 10pt; color: #045491" maxlength="15" 
-                                     readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                                     readonly="#{tropacontroller.registroMod.procesada eq '1'}"
+                                     maxValue="#{item.porcDisponible}">
                                 <f:validateLongRange minimum="1" maximum="100"/>
                                 <p:ajax process="@this" 
-                                    listener="#{tropacontroller.calculaValorAfectadoViaje(item)}" event="keyup" 
+                                    listener="#{tropacontroller.calculaValorAfectadoViaje(item)}" event="change" 
                                     update="EditForm:tabViewCab:datosViajes,EditForm:tabViewCab:fletes,
                                             EditForm:tabViewCab:importeCostoTotalTropa,
                                             EditForm:tabViewCab:costoUnitarioTropa"/>                                                                                        
@@ -610,10 +626,11 @@
                             <p:inputNumber value="#{item.valorAfectado}" required="true" size="10"
                                      inputStyle="text-align: right"
                                      style="font-size: 10pt; color: #045491" maxlength="15" 
-                                     readonly="#{tropacontroller.registroMod.procesada eq '1'}">
+                                     readonly="#{tropacontroller.registroMod.procesada eq '1'}"
+                                     >
                                 <f:validateLongRange minimum="1"/>
                                 <p:ajax process="@this" 
-                                        listener="#{tropacontroller.calculaPorcAfectadoViaje(item)}" event="keyup" 
+                                        listener="#{tropacontroller.calculaPorcAfectadoViaje(item)}" event="change" 
                                     update="EditForm:tabViewCab:datosViajes,EditForm:tabViewCab:fletes,
                                             EditForm:tabViewCab:importeCostoTotalTropa,
                                             EditForm:tabViewCab:costoUnitarioTropa"/>                                                                                        
@@ -636,8 +653,7 @@
                     
                 </p:tabView>
                 <br/>                    
-                <p:commandButton action="#{tropacontroller.graba()}" value="#{bundle.Save}" disabled="#{tropacontroller.registroMod.procesada eq '1'}"
-                                 update=":growl" ajax="false" style="font-size: 10pt; color: #045491"/>                        
+                <p:commandButton action="#{tropacontroller.graba()}" value="#{bundle.Save}" update=":growl" ajax="false" style="font-size: 10pt; color: #045491"/>                        
                 <p:commandButton action="#{tropacontroller.cancelar()}" value="#{bundle.Cancel}" ajax="false" immediate="true" style="font-size: 10pt; color: #045491"/>                        
 
             </h:form>

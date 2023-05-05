@@ -99,6 +99,11 @@
                 <comment>Valor total</comment>
             </column>
         </property>
+        <property name="porcUsado" type="big_decimal">
+            <column name="porcUsado" precision="10" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
         <property name="tipoJaula" type="java.lang.Character">
             <column name="tipoJaula" length="1">
                 <comment>Tipo de jaula usada en el viaje: Simple: S / Doble : D</comment>
