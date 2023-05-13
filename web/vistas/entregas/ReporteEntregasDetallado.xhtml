@@ -24,7 +24,7 @@
                     <h:outputLabel for="FEC_HASTA" id="FEC_HASTALabel" value="Hasta:" style="font-size: 10pt; color: #045491"/>
                     <p:calendar id="FEC_HASTA" tabindex="20" pattern="dd/MM/yyyy" value="#{reporteentregadetalladocontroller.fec_hasta}" showOn="button"
                                 style="font-size: 10pt; color: #045491">
-                        <f:convertDateTime timeZone="#{reporteentregadetalladodetalladocontroller.zona}" pattern="dd/MM/yyyy" />        
+                        <f:convertDateTime timeZone="#{reporteentregadetalladocontroller.zona}" pattern="dd/MM/yyyy" />        
                     </p:calendar> 
 
                     <p:commandButton ajax="true" actionListener="#{reporteentregadetalladocontroller.buscaListaDatos()}" value="Buscar"  

@@ -1398,7 +1398,7 @@ public class TropaController extends BeanBase implements Serializable {
             }
 
             session.getTransaction().commit();
-
+            viajesAEliminar.clear();
         } catch (HibernateException e) {
             session.getTransaction().rollback();
             if (estadoActual == EN_STOCK && ls_procesada == PROCESADA) {
