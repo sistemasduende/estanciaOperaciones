@@ -71,7 +71,7 @@ public class ReporteEntregaDetalladoController extends BeanBase{
         FacesMessage msg;
         CallableStatement s=null;
         ResultSet r=null;
-        String ls_numTropa,ls_nombreComercial;
+        String ls_numTropa,ls_nombreComercial, fechaFinal;
         char ls_tipoMov;
         Date lda_fec_ent;
         int li_idEntrega, li_idRemito,li_idLocal;
@@ -108,7 +108,8 @@ public class ReporteEntregaDetalladoController extends BeanBase{
         fecha_hasta.set(Calendar.MINUTE, 59);
         fecha_hasta.set(Calendar.SECOND, 59);
         fecha_hasta.set(Calendar.MILLISECOND, 0);
-        java.util.Date lda_fecha_hasta = new java.sql.Date(fecha_hasta.getTimeInMillis());
+        java.util.Date lda_fecha_hasta = new java.sql.Date(fecha_hasta.getTimeInMillis());  
+        
         try {
                //Conectamos a la base
                Conector conector = new Conector();  
@@ -118,7 +119,7 @@ public class ReporteEntregaDetalladoController extends BeanBase{
                s.setDate(1, (java.sql.Date) lda_fecha_desde);
                s.setDate(2, (java.sql.Date) lda_fecha_hasta);
                
-               r=s.executeQuery();
+               r=s.executeQuery(); 
                while (r.next()){
                    li_idEntrega=r.getInt("idEntrega");
                    li_idRemito=r.getInt("idRemito");
