@@ -590,6 +590,7 @@ public class VentaEstanciaController extends BeanBase{
                         ast.setId(asiento.getIdAsiento());
                         AsientoRealizado resul=eliminaAsiento(ast);  
                     }
+                    return null;
                 }
             }
             if (!tx.wasCommitted()){
