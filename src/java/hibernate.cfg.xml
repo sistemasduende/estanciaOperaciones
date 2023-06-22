@@ -96,6 +96,7 @@ Contributor(s):
     <mapping resource="entidades/VentaEstancia.hbm.xml"/>
     <mapping resource="entidades/Comisionista.hbm.xml"/>
     <mapping resource="entidades/Tarjeta.hbm.xml"/>
+    <mapping resource="entidades/TarjetaPlan.hbm.xml"/>    
     <mapping resource="entidades/PersonaDireccion.hbm.xml"/>
     <mapping resource="entidades/UsuarioCliente.hbm.xml"/>
     <mapping resource="entidades/TipoGasto.hbm.xml"/>
