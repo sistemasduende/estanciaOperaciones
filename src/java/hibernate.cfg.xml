@@ -41,10 +41,10 @@ Contributor(s):
 -->
 <hibernate-configuration>
   <session-factory>
-        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-        <property name="hibernate.connection.datasource">jdbc/estancia</property>
-        <property name="hibernate.current_session_context_class">thread</property>
+    <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.datasource">jdbc/estancia</property>
+    <property name="hibernate.current_session_context_class">thread</property>
     <mapping resource="entidades/TropaViaje.hbm.xml"/>
     <mapping resource="entidades/Repartidor.hbm.xml"/>
     <mapping resource="entidades/LiquidacionFlete.hbm.xml"/>
