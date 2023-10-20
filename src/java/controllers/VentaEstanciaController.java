@@ -590,11 +590,14 @@ public class VentaEstanciaController extends BeanBase{
                         ast.setId(asiento.getIdAsiento());
                         AsientoRealizado resul=eliminaAsiento(ast);  
                     }
+                    return null;
                 }
             }
+            
             if (!tx.wasCommitted()){
                 tx.commit();
             }
+            
             ventaEstanciaDetalle.clear();
             msg = new FacesMessage("Actualización exitosa!");
             FacesContext.getCurrentInstance().addMessage(null, msg);

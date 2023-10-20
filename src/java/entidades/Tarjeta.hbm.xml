@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 8 oct. 2022 10:23:08 by Hibernate Tools 4.3.1 -->
+<!-- Generated 22 jun. 2023 20:30:48 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="entidades.Tarjeta" table="tarjeta" catalog="estancia" optimistic-lock="version">
         <comment>Tarjetas de cr&#233;dito y/o d&#233;bito</comment>
@@ -19,6 +19,12 @@
                 </column>
             </key>
             <one-to-many class="entidades.VentaCc" />
+        </set>
+        <set name="tarjetaPlans" table="tarjeta_plan" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idTarjeta" not-null="true" />
+            </key>
+            <one-to-many class="entidades.TarjetaPlan" />
         </set>
     </class>
 </hibernate-mapping>
