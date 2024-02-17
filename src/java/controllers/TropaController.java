@@ -99,7 +99,7 @@ public class TropaController extends BeanBase implements Serializable {
     private String nombreComisionista;
     private List<Comisionista> listaComisionistas = new ArrayList<Comisionista>();
     private Comisionista comisionistaSel;
-    private String tipoTropa;
+    private String tipoTropa = "";
     private ArrayList<TropaViaje> viajesAEliminar = new ArrayList<TropaViaje>();
     
     //Stock
@@ -542,13 +542,21 @@ public class TropaController extends BeanBase implements Serializable {
                 listaGarrones.add(g);
             }
             totalKilosGarrones = Math.round(totalKilosGarrones * 100.0) / 100.0;
-            estadoActual = registroMod.getProcesada();  //Guardo el estado actual
-            if(!this.tipoTropa.toString().equals("I")){
-                return "/vistas/tropas/Edit";
-            }else{
-                return "/vistas/tropas/EditInvernada";
-            }
-        } else {
+            estadoActual = registroMod.getProcesada();  //Guardo el estado actual   
+            if(this.origen.equals("/vistas/tropas/TropasPorNumero")){
+                if(!this.tipoTropa.toString().equals("I")){
+                    return "/vistas/tropas/Edit";
+                }else{
+                    return "/vistas/tropas/EditInvernada";
+                }
+            }else{ 
+                if(registroMod.getTipo()!='I'){
+                    return "/vistas/tropas/Edit";
+                }else{
+                    return "/vistas/tropas/EditInvernada";
+                }
+            }        
+            } else {
             return null;
         }
     }
