@@ -1,0 +1,91 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://java.sun.com/jsf/composite/componentes">
+    <body>
+        
+       
+    <ui:composition template="./../../Template04.xhtml">
+            <ui:define name="content">
+            <div align="center">
+            <h:form id="EditaForm">
+                <p:growl id="growl" showDetail="true"/>
+                    <p:panelGrid columns="2" rendered="#{tarjetaController.registroMod != null}" style="background: white; border-width: thin; border-style: hidden; ">
+                        <f:facet name="header">
+                            <h:outputText value="Ingresar tarjeta"/>
+                        </f:facet>
+                        
+                        <p:outputLabel value="Nombre" for="nombre" style="font-size: 10pt; color: #045491 "/>
+                        <p:inputText id="nombre" maxlength="40" size="35" value="#{tarjetaController.registroMod.nombre}" style="font-size: 10pt; color: #045491 "/>                      
+                    </p:panelGrid>
+
+                    <p:separator/>
+                    
+                    <p:dataTable id="datos" 
+                                   paginatorPosition="top"
+                                   value="#{tarjetaController.registroMod.tarjetaPlans}" 
+                                   var="item"
+                                   selectionMode="single" selection="#{tarjetaController.registroSelPlan}"
+                                   rowIndexVar="fila"
+                                   rowKey="#{item.id}"
+                                   paginator="true"
+                                   rows="10"
+                                   paginatorAlwaysVisible="false"
+                                   style="font-size: 10pt; color: #045491"
+                                   reflow="true"
+                                   >
+                    
+                        <p:ajax event="rowSelect" update="createButton editButton deleteButton"/>
+                        <p:ajax event="rowUnselect"  update="createButton editButton deleteButton"/>                    
+
+                        <p:column  style="font-size: 10pt; color: #045491; width:0%;">
+                            <f:facet name="header">
+                                <h:outputText value="Id"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.id}" />
+                        </p:column>
+                    
+                        <p:column style="font-size: 10pt; color: #045491">
+                            <f:facet name="header">
+                                <h:outputText value="Nombre"/>
+                            </f:facet>
+                            <h:outputText  value="#{item.nombre}"/>
+                        </p:column>
+                        
+
+                        <f:facet name="footer">
+                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}"
+                                             actionListener="#{tarjetaController.nuevoPlan()}" update="CreateForm,datos" oncomplete="PF('CreateDialog').show()"
+                                             style="font-size: 10pt; color: #045491"/>
+                            <p:commandButton id="editButton" icon="ui-icon-pencil" value="#{bundle.Edit}" disabled="#{empty tarjetaController.registroSelPlan}"
+                                             actionListener="#{tarjetaController.editarPlan()}" update="EditForm,datos" oncomplete="PF('EditDialog').show()"
+                                             style="font-size: 10pt; color: #045491"/>
+
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}"
+                                             onclick="PF('cd').show()" disabled="#{empty tarjetaController.registroSelPlan}"
+                                             style="font-size: 10pt; color: #045491"/>
+                            <p:confirmDialog message="Está seguro de eliminar el registro seleccionado?" appendTo="@(body)"
+                                header="Eliminar registro" severity="alert" widgetVar="cd" style="font-size: 10pt; color: #045491">
+                                <p:commandButton actionListener="#{tarjetaController.eliminaPlan()}" 
+                                                 update="datos,:growl" value="Sí" oncomplete="PF('cd').hide()" style="font-size: 10pt; color: #045491"/>
+                                <p:commandButton value="No" onclick="PF('cd').hide();" type="button" style="font-size: 10pt; color: #045491"/>
+                             </p:confirmDialog>
+                        </f:facet>                        
+                        
+                    </p:dataTable>     
+                
+                    <p:panelGrid columns="2"  columnClasses="list-column-right,list-column-left" style="background: white; border-width: thin; border-style: hidden" >
+                        <p:commandButton action="#{tarjetaController.graba()}" value="#{bundle.Save}" update=":growl" ajax="false" style="font-size: 10pt; color: #045491"/>                        
+                        <p:commandButton  action="/vistas/tarjetas/Tarjetas" value="#{bundle.Cancel}" style="font-size: 10pt; color: #045491" ajax="false" immediate="true" />                        
+                    </p:panelGrid>
+            </h:form>  
+            </div>  
+            <ui:include src="CreatePlan.xhtml"/>  
+            <ui:include src="EditPlan.xhtml"/>
+            </ui:define>
+    </ui:composition>
+
+    </body>
+</html>

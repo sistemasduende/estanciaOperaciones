@@ -4,6 +4,7 @@ package entidades;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -72,12 +73,15 @@ public class Tarjeta  implements java.io.Serializable {
         this.ventaCcs = ventaCcs;
     }
 
-@OneToMany(fetch=FetchType.LAZY, mappedBy="tarjeta")
+@OneToMany(fetch=FetchType.LAZY, mappedBy="tarjeta", cascade = CascadeType.ALL,orphanRemoval=true)
     public Set<TarjetaPlan> getTarjetaPlans() {
         return this.tarjetaPlans;
     }
     
     public void setTarjetaPlans(Set<TarjetaPlan> tarjetaPlans) {
+        tarjetaPlans.forEach((t) -> {
+            t.setTarjeta(this);
+        });
         this.tarjetaPlans = tarjetaPlans;
     }
 

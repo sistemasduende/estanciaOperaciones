@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>        
+        <p:dialog id="EditDlg" style="font-size: 10pt; color: #045491" widgetVar="EditDialog" modal="true" resizable="false" appendTo="@(body)" header="Editar Plan"
+            onShow="PF('EditDialog').initPosition()">
+            <h:form id="EditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{tarjetaController.registroModPlan != null}">
+                        <p:outputLabel value="Nombre: " for="nombre" style="font-size: 10pt; color: #045491"/>
+                        <p:inputText id="nombre" value="#{tarjetaController.registroModPlan.nombre}" size="30" required="true" style="font-size: 10pt; color: #045491"/>
+                        <p:outputLabel value="Cuotas" for="cuotas" style="font-size: 10pt; color: #045491"/>
+                        
+                        <p:inputNumber id="cuotas" value="#{tarjetaController.registroModPlan.cuotas}" size="30" required="true" style="font-size: 10pt; color: #045491" 
+                                       minValue="1" decimalPlaces="0" inputStyle="text-align: right" autocomplete="off">
+                        </p:inputNumber>
+                        <p:outputLabel value="% de recargo: " for="porcRecargo"  style="font-size: 10pt; color: #045491"/>
+                        <p:inputNumber id="porcRecargo" required="true"  value="#{tarjetaController.registroSelPlan.porcRecargo}" 
+                                     style="width: 100%;font-size: 10pt; color: #045491" size="30" maxlength="15"
+                                     inputStyle="text-align: right" minValue="0"
+                                     autocomplete="off"/>
+                    </p:panelGrid>
+                    <p:commandButton ajax="true" actionListener="#{tarjetaController.actualizarPlan()}" value="#{bundle.Save}" update="display,EditaForm:datos,:growl" oncomplete="handleSubmit(args,'EditDialog');"
+                                     style="font-size: 10pt; color: #045491"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="EditDialog.hide()"
+                                     style="font-size: 10pt; color: #045491" immediate="true"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>
