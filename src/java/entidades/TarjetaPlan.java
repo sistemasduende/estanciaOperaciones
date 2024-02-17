@@ -3,6 +3,7 @@ package entidades;
 
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,13 +24,14 @@ import javax.persistence.Table;
 public class TarjetaPlan  implements java.io.Serializable {
 
 
-     private Integer id;
+     private Integer id = 0;
      private Tarjeta tarjeta;
      private String nombre;
-     private int cuotas;
-     private BigDecimal porcRecargo;
+     private int cuotas = 0;
+     private BigDecimal porcRecargo = new BigDecimal(BigInteger.ZERO);
 
     public TarjetaPlan() {
+        
     }
 
     public TarjetaPlan(Tarjeta tarjeta, String nombre, int cuotas, BigDecimal porcRecargo) {

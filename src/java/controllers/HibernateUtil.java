@@ -46,16 +46,4 @@ public class HibernateUtil {
     }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }
