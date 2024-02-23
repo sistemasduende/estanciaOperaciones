@@ -44,11 +44,6 @@ public class ListaCargos extends BeanBase {
         List resultados=new ArrayList();
         session= HibernateUtil.getSessionFactory().openSession();
 
-        item=new SelectItem();
-        item.setValue(0);
-        item.setLabel("Seleccione...");
-        resultados.add(item);
-
         try{
             org.hibernate.Transaction tx =  session.beginTransaction();
             Query q=session.createQuery("from Cargo a order by a.nombre");

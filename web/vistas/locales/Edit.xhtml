@@ -135,19 +135,28 @@
                             <h:outputText  value="#{item.empleado.legajo}" />
                         </p:column>
 
-                        <p:column style="width: 60%; font-size: 8pt; color: #045491">
+                        <p:column style="width: 40%; font-size: 8pt; color: #045491">
                             <f:facet name="header">
                                 <h:outputText value="Nombre"/>
                             </f:facet>
                             <h:outputText  value="#{item.empleado.apellido} #{item.empleado.nombre}" />
                         </p:column>
                             
-                        <p:column style="width: 25%; font-size: 8pt; color: #045491">
+                        <p:column style="width: 30%; font-size: 8pt; color: #045491">
                             <f:facet name="header">
                                 <h:outputText value="Cargo"/>
                             </f:facet>
                             <h:outputText  value="#{item.empleado.cargo.nombre}" />
                         </p:column>
+                            
+                        <p:column style="width: 15%; font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Código"/>
+                            </f:facet>
+                            <p:inputText value="#{item.codigo}" size="10"
+                                     style="font-size: 10pt; color: #045491" maxlength="8">
+                            </p:inputText>
+                        </p:column>                              
                             
                         <p:column  style="width: 5%;text-align: center; font-size: 8pt; color: #045491">
                             <f:facet name="header">
@@ -155,7 +164,7 @@
                             <p:commandButton icon="ui-icon-trash" actionListener="#{localcontroller.eliminaEmpleado(item)}"
                                              update="EditForm:tabViewCab,EditForm:tabViewCab:datosEmpleados" alt="Eliminar" 
                                              immediate="true"/>
-                        </p:column>   
+                        </p:column>  
                    
                         </p:dataTable>
                     </p:tab>

@@ -9,6 +9,9 @@
             <column name="id" />
             <generator class="identity" />
         </id>
+        <property name="codigo" type="string">
+            <column name="codigo" length="5"/>
+        </property>        
         <many-to-one name="empleado" class="entidades.Empleado" fetch="select">
             <column name="idEmpleado" not-null="true" />
         </many-to-one>

@@ -134,19 +134,28 @@
                             <h:outputText  value="#{item.empleado.legajo}" />
                         </p:column>
 
-                        <p:column style="width: 60%; font-size: 8pt; color: #045491">
+                        <p:column style="width: 55%; font-size: 8pt; color: #045491">
                             <f:facet name="header">
                                 <h:outputText value="Nombre"/>
                             </f:facet>
                             <h:outputText  value="#{item.empleado.apellido} #{item.empleado.nombre}" />
                         </p:column>
                             
-                        <p:column style="width: 25%; font-size: 8pt; color: #045491">
+                        <p:column style="width: 20%; font-size: 8pt; color: #045491">
                             <f:facet name="header">
                                 <h:outputText value="Cargo"/>
                             </f:facet>
                             <h:outputText  value="#{item.empleado.cargo.nombre}" />
                         </p:column>
+                            
+                        <p:column style="width: 10%; font-size: 8pt; color: #045491;text-align: right">
+                            <f:facet name="header">
+                                <h:outputText value="Código"/>
+                            </f:facet>
+                            <p:inputText value="#{item.codigo}" size="10"
+                                     style="font-size: 10pt; color: #045491" maxlength="15">
+                            </p:inputText>
+                        </p:column>                              
                             
                         <p:column  style="width: 5%;text-align: center; font-size: 8pt; color: #045491">
                             <f:facet name="header">

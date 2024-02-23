@@ -61,12 +61,12 @@
                         </p:selectOneMenu>     
                         
                         <p:outputLabel for="fecha_ing" value="Fecha de ingreso:" style="font-size: 10pt; color: #045491"/>
-                        <p:calendar id="fecha_ing"  pattern="dd/MM/yyyy" required="true" value="#{empleadocontroller.registroMod.fecIng}" style="font-size: 10pt; color: #045491" showOn="button">
+                        <p:calendar id="fecha_ing"  pattern="dd/MM/yyyy" value="#{empleadocontroller.registroMod.fecIng}" style="font-size: 10pt; color: #045491" showOn="button">
                                 <f:convertDateTime timeZone="#{empleadocontroller.zona}" pattern="dd/MM/yyyy" />        
                         </p:calendar>                           
 
                         <p:outputLabel for="fecha_alta" value="Fecha de alta:" style="font-size: 10pt; color: #045491"/>
-                        <p:calendar id="fecha_alta"  pattern="dd/MM/yyyy" required="true" value="#{empleadocontroller.registroMod.fecAlta}" style="font-size: 10pt; color: #045491" showOn="button">
+                        <p:calendar id="fecha_alta"  pattern="dd/MM/yyyy"  value="#{empleadocontroller.registroMod.fecAlta}" style="font-size: 10pt; color: #045491" showOn="button">
                                 <f:convertDateTime timeZone="#{empleadocontroller.zona}" pattern="dd/MM/yyyy" />        
                         </p:calendar>                           
 

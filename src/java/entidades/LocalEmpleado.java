@@ -12,6 +12,7 @@ public class LocalEmpleado  implements java.io.Serializable {
      private Integer id;
      private Empleado empleado;
      private LocalCarniceria localCarniceria;
+     private String codigo;
 
     public LocalEmpleado() {
     }
@@ -41,6 +42,14 @@ public class LocalEmpleado  implements java.io.Serializable {
     
     public void setLocalCarniceria(LocalCarniceria localCarniceria) {
         this.localCarniceria = localCarniceria;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
 
