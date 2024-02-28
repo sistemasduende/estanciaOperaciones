@@ -33,6 +33,7 @@
                                    paginatorAlwaysVisible="false"
                                    style="font-size: 10pt; color: #045491"
                                    reflow="true"
+                                   sortBy="#{item.apellido} #{item.nombre} "
                                    multiViewState="true"
                                    >
                     
@@ -50,14 +51,14 @@
                             <h:outputText  value="#{item.id}" />
                         </p:column>
                     
-                        <p:column filterBy="#{item.nombre} #{item.apellido}" sortBy="#{item.nombre} #{item.apellido}" style="width: 30%; font-size: 8pt; color: #045491">
+                        <p:column filterBy="#{item.apellido} #{item.nombre}" sortBy="#{item.apellido} #{item.nombre}" style="width: 30%; font-size: 8pt; color: #045491">
                             <f:facet name="header">
-                                <h:outputText value="Nombre"/>
+                                <h:outputText value="Apellido y Nombre"/>
                             </f:facet>
                             
                             <p:commandLink actionListener="#{empleadocontroller.onClick(item)}" style="text-decoration: underline; color: blue"
                                            update=":EditForm" oncomplete="PF('EditDialog').show()">
-                                <h:outputText  value="#{item.nombre} #{item.apellido}"/>
+                                <h:outputText  value="#{item.apellido} #{item.nombre}"/>
                             </p:commandLink>
                             
                         </p:column>
